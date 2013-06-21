@@ -21,6 +21,10 @@ class Greeter {
 
 }
 
+class JXRChaser {
+
+}
+
 class JXRase {
 
 }
