@@ -21,13 +21,52 @@ class Greeter {
 
 }
 
-class JXRChaser {
+class JxrBindingDomain {
 
 }
 
-class JXRase {
-    react() {
+class ActiveSite {
+    react(file: ArrayBuffer) {
+
         alert('reacted');
+    }
+}
+
+class ArrayedStream {
+    private index: number;
+    private filearray: Uint8Array;
+
+    constructor(file: ArrayBuffer) {
+        var filearray = new Uint8Array(file);
+    }
+
+    readAsArrayBy(length: number) {
+        if (this.index + length <= this.filearray.length)
+            return this.filearray.subarray(this.index, this.index + length);
+        else
+            throw "File reached to the end.";
+    }
+
+    readAsByte() {
+        if (this.index + 1 <= this.filearray.length) {
+            this.index++;
+            return this.filearray[this.index];
+        }
+    }
+
+    readAsText(length: number) {
+        if (this.index + length < this.filearray.length)
+            return this.filearray.subarray(this.index, this.index + length);
+        else
+            throw "File reached to the end.";
+    }
+
+    moveBy(position: number) {
+        var indexafter = this.index + position;
+        if (indexafter >= 0)
+            this.index = indexafter;
+        else
+            throw "The stream couldn't seek that position.";
     }
 }
 
@@ -39,6 +78,6 @@ window.onload = () => {
 };
 
 function startReaction() {
-    var jxrase = new JXRase();
-    jxrase.react();
+    var jxrase = new ActiveSite();
+    jxrase.react;
 }
