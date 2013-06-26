@@ -1,24 +1,3 @@
-var Greeter = (function () {
-    function Greeter(element) {
-        this.element = element;
-        this.element.innerHTML += "The time is: ";
-        this.span = document.createElement('span');
-        this.element.appendChild(this.span);
-        this.span.innerText = new Date().toUTCString();
-    }
-    Greeter.prototype.start = function () {
-        var _this = this;
-        this.timerToken = setInterval(function () {
-            return _this.span.innerHTML = new Date().toUTCString();
-        }, 500);
-    };
-
-    Greeter.prototype.stop = function () {
-        clearTimeout(this.timerToken);
-    };
-    return Greeter;
-})();
-
 var JxrBindingDomain = (function () {
     function JxrBindingDomain() {
     }
@@ -47,6 +26,121 @@ var ActiveSite = (function () {
         }
 
         stream.seek(stream.readAsUint32());
+         {
+            var pfdEntries = stream.readAsUint16();
+            if (pfdEntries == 0 && pfdEntries == 0xFFFF)
+                throw JxrInvalidMessage;
+        }
+    };
+
+    ActiveSite.prototype.parsePFDEntries = function (stream, pfdEntries) {
+        for (var i = 0; i < pfdEntries; i++) {
+            this.parsePFD(stream, stream.readAsUint16(), stream.readAsUint16(), stream.readAsUint32(), stream.readAsUint32());
+        }
+    };
+
+    ActiveSite.prototype.parsePFD = function (stream, tag, type, count, value) {
+        switch (tag) {
+            case 0xBC01: {
+                break;
+            }
+            case 0xBC02: {
+                break;
+            }
+            case 0xBC80: {
+                break;
+            }
+            case 0xBC81: {
+                break;
+            }
+            case 0xBCC0: {
+                break;
+            }
+            case 0xBCC1: {
+                break;
+            }
+            case 0xBCC2: {
+                break;
+            }
+            case 0xBCC3: {
+                break;
+            }
+            case 0xBC82: {
+                break;
+            }
+            case 0xBC83: {
+                break;
+            }
+            case 0x8773: {
+                break;
+            }
+            case 0x02BC: {
+                break;
+            }
+            case 0x8769: {
+                break;
+            }
+            case 0x8825: {
+                break;
+            }
+            case 0x83BB: {
+                break;
+            }
+            case 0x8649: {
+                break;
+            }
+            case 0xBC03:
+            case 0xBC04:
+            case 0xBCC4:
+            case 0xBCC5:
+                break;
+
+            case 0x010E: {
+                break;
+            }
+            case 0x010F: {
+                break;
+            }
+            case 0x0110: {
+                break;
+            }
+            case 0x0131: {
+                break;
+            }
+            case 0x0132: {
+                break;
+            }
+            case 0x013B: {
+                break;
+            }
+            case 0x8298: {
+                break;
+            }
+            case 0x4746: {
+                break;
+            }
+            case 0x4749: {
+                break;
+            }
+            case 0x9C9B: {
+                break;
+            }
+            case 0x010D: {
+                break;
+            }
+            case 0x011D: {
+                break;
+            }
+            case 0x0129: {
+                break;
+            }
+            case 0x013c: {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
     };
     return ActiveSite;
 })();
@@ -108,6 +202,10 @@ var ArrayedStream = (function () {
         if (position >= 0 && position <= this.filearray.length)
             this.index = position; else
             throw "The stream couldn't seek that position.";
+    };
+
+    ArrayedStream.prototype.getCurrentPosition = function () {
+        return this.index;
     };
     return ArrayedStream;
 })();
