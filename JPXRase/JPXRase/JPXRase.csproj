@@ -24,6 +24,12 @@
     <Content Include="app.min.js">
       <DependentUpon>app.ts</DependentUpon>
     </Content>
+    <Content Include="arrayedstream.js">
+      <DependentUpon>arrayedstream.ts</DependentUpon>
+    </Content>
+    <Content Include="arrayedstream.min.js">
+      <DependentUpon>arrayedstream.ts</DependentUpon>
+    </Content>
     <Content Include="default.htm" />
     <Content Include="app.js">
       <DependentUpon>app.ts</DependentUpon>
@@ -33,10 +39,24 @@
     <TypeScriptCompile Include="app.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="arrayedstream.ts" />
+    <Content Include="pixelformats.js">
+      <DependentUpon>pixelformats.ts</DependentUpon>
+    </Content>
+    <Content Include="pixelformats.min.js">
+      <DependentUpon>pixelformats.ts</DependentUpon>
+    </Content>
+    <Content Include="pixelformats.ts" />
     <Content Include="temp.txt" />
     <Content Include="web.config" />
     <Content Include="app.js.map">
       <DependentUpon>app.ts</DependentUpon>
+    </Content>
+    <Content Include="arrayedstream.js.map">
+      <DependentUpon>arrayedstream.ts</DependentUpon>
+    </Content>
+    <Content Include="pixelformats.js.map">
+      <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -76,12 +96,14 @@
     <TypeScriptTarget>ES3</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptOutFile>jxrpicturase.js</TypeScriptOutFile>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES3</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptOutFile>jxrpicturase.js</TypeScriptOutFile>
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" />
