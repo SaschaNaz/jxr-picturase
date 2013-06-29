@@ -40,6 +40,7 @@ module JxrPicturase {
 
         //ported version of ParsePFD
         private parsePFDEntries(stream: ArrayedStream, pfdEntries: number) {
+
             for (var i = 0; i < pfdEntries; i++) {
                 this.parsePFD(
                     stream,
@@ -56,9 +57,8 @@ module JxrPicturase {
                 case 0xBC01: //pixel format tag
                     {
                         stream.seek(value);
-                        var guid = stream.readAsGuidHexString();
-                        
-
+                        var pixelFormat = PixelFormats.getPixelFormatByGuid(stream.readAsGuidHexString());
+                        //have to 
                         break;
                     }
                 case 0xBC02: //transformation tag

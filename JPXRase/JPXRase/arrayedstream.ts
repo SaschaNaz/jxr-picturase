@@ -82,5 +82,9 @@
         getCurrentPosition() {
             return this.index;
         }
+
+        //makeChildStream() {
+        //    return new ArrayedStream(this.filearray, this.index);
+        //}
     }
 }
