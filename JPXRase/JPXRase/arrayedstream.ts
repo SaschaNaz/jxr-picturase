@@ -3,9 +3,9 @@
         private index: number;
         private filearray: Uint8Array;
 
-        constructor(file: ArrayBuffer) {
+        constructor(file: ArrayBuffer, initialIndex: number) {
             this.filearray = new Uint8Array(file);
-            this.index = 0;
+            this.index = initialIndex;
         }
 
         readAsArray(length: number) {
@@ -83,8 +83,8 @@
             return this.index;
         }
 
-        //makeChildStream() {
-        //    return new ArrayedStream(this.filearray, this.index);
-        //}
+        makeChildStream() {
+            return new ArrayedStream(this.filearray.buffer, this.index);
+        }
     }
 }

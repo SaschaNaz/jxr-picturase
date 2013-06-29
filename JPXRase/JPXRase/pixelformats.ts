@@ -29,7 +29,7 @@
             public channelCount: number,
             public colorFormat: ColorFormat,
             public bitDepth: BitDepth,
-            public bitUnit: number,
+            public bitsPerUnit: number,
             public hasAlpha: Boolean,
             public isPremultiplied: Boolean,
             public isBgr: Boolean) {
@@ -43,7 +43,7 @@
             return (format.channelCount == this.channelCount
                 && format.colorFormat == this.colorFormat
                 && format.bitDepth == this.bitDepth
-                && format.bitUnit == this.bitUnit
+                && format.bitsPerUnit == this.bitsPerUnit
                 && format.hasAlpha == this.hasAlpha
                 && format.isPremultiplied == this.isPremultiplied
                 && format.isBgr == this.isBgr);
