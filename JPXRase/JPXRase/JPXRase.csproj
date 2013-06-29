@@ -30,6 +30,7 @@
     <Content Include="arrayedstream.min.js">
       <DependentUpon>arrayedstream.ts</DependentUpon>
     </Content>
+    <Content Include="containerinfo.ts" />
     <Content Include="default.htm" />
     <Content Include="app.js">
       <DependentUpon>app.ts</DependentUpon>

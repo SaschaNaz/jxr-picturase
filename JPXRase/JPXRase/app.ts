@@ -1,7 +1,17 @@
 ///<reference path="arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
+///<reference path="containerinfo.ts"/>
 module JxrPicturase {
-    class JxrBindingDomain {
+    class SubstrateWithCoenzyme {
+        stream: ArrayedStream;
+        containerInfo: ContainerInfo;
+
+        constructor(file: ArrayBuffer) {
+            this.stream = new ArrayedStream(file, 0);
+        }
+    }
+
+    class BindingDomain {
 
     }
 
@@ -12,7 +22,8 @@ module JxrPicturase {
             var JxrInvalidMessage = "This format is not a valid JPEG XR format for JXR Picturase.";
             var JxrVersionTooHighMessage = "Current version of JXR Picturase doesn't support this version of JPEG XR.";
 
-            var stream = new ArrayedStream(file);
+            var substrate = new SubstrateWithCoenzyme(file);
+            var stream = substrate.stream;
 
             //signiture
             if (stream.readAsText(2) !== 'II')
@@ -34,16 +45,16 @@ module JxrPicturase {
                 var pfdEntries = stream.readAsUint16();
                 if (pfdEntries == 0 && pfdEntries == 0xFFFF)
                     throw JxrInvalidMessage;
-                this.parsePFDEntries(stream, pfdEntries);
+                this.parsePFDEntries(substrate, pfdEntries);
             }
         }
 
         //ported version of ParsePFD
-        private parsePFDEntries(stream: ArrayedStream, pfdEntries: number) {
-
+        private parsePFDEntries(substrate: SubstrateWithCoenzyme, pfdEntries: number) {
+            var stream = substrate.stream;
             for (var i = 0; i < pfdEntries; i++) {
                 this.parsePFD(
-                    stream,
+                    substrate,
                     stream.readAsUint16(),
                     stream.readAsUint16(),
                     stream.readAsUint32(),
@@ -52,17 +63,24 @@ module JxrPicturase {
         }
 
         //ported version of ParsePFDEntry
-        private parsePFD(stream: ArrayedStream, tag: number, type: number, count: number, value: number) {
+        private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, value: number) {
+            var stream = substrate.stream;
             switch (tag) {
                 case 0xBC01: //pixel format tag
                     {
-                        stream.seek(value);
+                        var childStream = stream.makeChildStream();
+                        childStream.seek(value);
                         var pixelFormat = PixelFormats.getPixelFormatByGuid(stream.readAsGuidHexString());
-                        //have to 
+
+                        var containerInfo = substrate.containerInfo;
+                        containerInfo.hasAlpha = pixelFormat.hasAlpha;
+                        containerInfo.imageInfo.bitsPerUnit = pixelFormat.bitsPerUnit;
+                        containerInfo.imageInfo.isRgb = !pixelFormat.isBgr;
                         break;
                     }
                 case 0xBC02: //transformation tag
                     {
+
                         break;
                     }
                 case 0xBC80: //image width tag
