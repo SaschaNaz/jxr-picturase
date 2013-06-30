@@ -15,7 +15,7 @@ module JxrPicturase {
 
     }
 
-    class ActiveSite {
+    class CatalyticDomain {
         react(file: ArrayBuffer) {
             //porting ReadContainer method
             var JxrInvalidMessage = "This format is not a valid JPEG XR format for JXR Picturase.";
@@ -72,8 +72,8 @@ module JxrPicturase {
 
                         var containerInfo = substrate.containerInfo;
                         containerInfo.hasAlpha = pixelFormat.hasAlpha;
-                        containerInfo.imageInfo.bitsPerUnit = pixelFormat.bitsPerUnit;
-                        containerInfo.imageInfo.isRgb = !pixelFormat.isBgr;
+                        containerInfo.bitsPerUnit = pixelFormat.bitsPerUnit;
+                        containerInfo.isRgb = !pixelFormat.isBgr;
                         break;
                     }
                 case 0xBC02: //transformation tag
@@ -85,53 +85,78 @@ module JxrPicturase {
                     }
                 case 0xBC80: //image width tag
                     {
-                        if (valueAsSubstream.readAsUint32() == 0)
+                        var value = valueAsSubstream.readAsUint32();
+                        if (value == 0)
                             throw 'Invalid width tag';
+                        substrate.containerInfo.sizeX = value;
                         break;
                     }
                 case 0xBC81: //image height tag
                     {
-                        if (valueAsSubstream.readAsUint32() == 0)
+                        var value = valueAsSubstream.readAsUint32();
+                        if (value == 0)
                             throw 'Invalid height tag';
+                        substrate.containerInfo.sizeY = value;
                         break;
                     }
                 case 0xBCC0: //image offset tag
                     {
+                        if (count != 1)
+                            throw 'Invalid image offset tag';
+                        substrate.containerInfo.imageOffset = valueAsSubstream.readAsUint32();
                         break;
                     }
                 case 0xBCC1: //image byte count tag
                     {
+                        if (count != 1)
+                            throw 'Invalid image byte count tag';
+                        substrate.containerInfo.imageByteCount = valueAsSubstream.readAsUint32();
                         break;
                     }
                 case 0xBCC2: //alpha offset tag
                     {
+                        if (count != 1)
+                            throw 'Invalid alpha offset tag';
+                        substrate.containerInfo.alphaOffset = valueAsSubstream.readAsUint32();
                         break;
                     }
                 case 0xBCC3: // alpha byte count tag
                     {
+                        if (count != 1)
+                            throw 'Invalid alpha byte count tag';
+                        substrate.containerInfo.alphaByteCount = valueAsSubstream.readAsUint32();
                         break;
                     }
-                case 0xBC82: // width resolution tag
+                case 0xBC82: // x resolution tag
                     {
                         if (count != 1)
-                            throw 'Invalid with resolution tag';
-                        var value = valueAsSubstream.readAsUint32();
+                            throw 'Invalid x resolution tag';
+                        substrate.containerInfo.resolutionX = valueAsSubstream.readAsFloat();
                         break;
                     }
-                case 0xBC83: // height resolution tag
+                case 0xBC83: // y resolution tag
                     {
+                        if (count != 1)
+                            throw 'Invalid y resolution tag';
+                        substrate.containerInfo.resolutionY = valueAsSubstream.readAsFloat();
                         break;
                     }
                 case 0x8773: // ICC profile tag - same as TIFF
                     {
+                        substrate.containerInfo.iccProfileOffset = valueAsSubstream.readAsUint32();
+                        substrate.containerInfo.iccProfileByteCount = count;
                         break;
                     }
                 case 0x02BC: // XMP metadata tag
                     {
+                        substrate.containerInfo.xmpMetadataOffset = valueAsSubstream.readAsUint32();
+                        substrate.containerInfo.xmpMetadataByteCount = count;
                         break;
                     }
                 case 0x8769: // EXIF metadata tag
                     {
+                        substrate.containerInfo.exifMetadataOffset = valueAsSubstream.readAsUint32();
+                        //substrate.containerInfo.exifMetadataByteCount = count;
                         break;
                     }
                 case 0x8825: // GPS info metadata tag
@@ -235,7 +260,7 @@ module JxrPicturase {
         xhr.onload = () => {
             arraybuffer = xhr.response;
 
-            var jxrase = new ActiveSite();
+            var jxrase = new CatalyticDomain();
             jxrase.react(arraybuffer);
         }
     xhr.send();
