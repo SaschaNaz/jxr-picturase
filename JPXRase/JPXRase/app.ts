@@ -4,7 +4,7 @@
 module JxrPicturase {
     class SubstrateWithCoenzyme {
         stream: ArrayedStream;
-        containerInfo: ContainerInfo;
+        containerInfo = new ContainerInfo();
 
         constructor(file: ArrayBuffer) {
             this.stream = new ArrayedStream(file, 0);
@@ -18,9 +18,7 @@ module JxrPicturase {
     class ActiveSite {
         react(file: ArrayBuffer) {
             //porting ReadContainer method
-
             var JxrInvalidMessage = "This format is not a valid JPEG XR format for JXR Picturase.";
-            var JxrVersionTooHighMessage = "Current version of JXR Picturase doesn't support this version of JPEG XR.";
 
             var substrate = new SubstrateWithCoenzyme(file);
             var stream = substrate.stream;
@@ -36,7 +34,7 @@ module JxrPicturase {
             {
                 var versionNumber = (0xFF00 & jxrId) >> 8;
                 if (versionNumber != 0 && versionNumber != 1)
-                    throw JxrVersionTooHighMessage;
+                    throw "Current version of JXR Picturase doesn't support this version of JPEG XR.";
             }
 
             //PFD - what is PFD? format decoder?
@@ -58,19 +56,19 @@ module JxrPicturase {
                     stream.readAsUint16(),
                     stream.readAsUint16(),
                     stream.readAsUint32(),
-                    stream.readAsUint32());
+                    stream.readAsSubstream(4));
             }
         }
 
         //ported version of ParsePFDEntry
-        private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, value: number) {
+        private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
             var stream = substrate.stream;
             switch (tag) {
                 case 0xBC01: //pixel format tag
                     {
-                        var childStream = stream.makeChildStream();
-                        childStream.seek(value);
-                        var pixelFormat = PixelFormats.getPixelFormatByGuid(stream.readAsGuidHexString());
+                        var childStream = stream.duplicateStream();
+                        childStream.seek(valueAsSubstream.readAsUint32());
+                        var pixelFormat = PixelFormats.getPixelFormatByGuid(childStream.readAsGuidHexString());
 
                         var containerInfo = substrate.containerInfo;
                         containerInfo.hasAlpha = pixelFormat.hasAlpha;
@@ -80,15 +78,21 @@ module JxrPicturase {
                     }
                 case 0xBC02: //transformation tag
                     {
-
+                        if (count != 1)
+                            throw 'Failed to read transformation tag.';
+                        substrate.containerInfo.orientationState = ImageOrientationState.getOrientationState(valueAsSubstream.readAsUint32());
                         break;
                     }
                 case 0xBC80: //image width tag
                     {
+                        if (valueAsSubstream.readAsUint32() == 0)
+                            throw 'Invalid width tag';
                         break;
                     }
                 case 0xBC81: //image height tag
                     {
+                        if (valueAsSubstream.readAsUint32() == 0)
+                            throw 'Invalid height tag';
                         break;
                     }
                 case 0xBCC0: //image offset tag
@@ -109,6 +113,9 @@ module JxrPicturase {
                     }
                 case 0xBC82: // width resolution tag
                     {
+                        if (count != 1)
+                            throw 'Invalid with resolution tag';
+                        var value = valueAsSubstream.readAsUint32();
                         break;
                     }
                 case 0xBC83: // height resolution tag
