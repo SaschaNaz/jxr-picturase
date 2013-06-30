@@ -57,9 +57,12 @@
         }
 
         readAsFloat() {
-            0x80000000; //check sign value
-            0x7F800000; //check exponential
-            0x007FFFFF; //check fraction
+            var uint32 = this.readAsUint32();
+            var minussign = ((uint32 & 0x80000000) >> 31) != 0; //check sign value
+            var exponential = ((uint32 & 0x7F800000) >> 23);
+            var fraction = 1 + ((uint32 & 0x007FFFFF) / 0x007FFFFF);
+
+            return minussign ? (-1) * (fraction * Math.pow(2, exponential - 127)) : (fraction * Math.pow(2, exponential - 127));
         }
 
         readAsGuidHexString() {

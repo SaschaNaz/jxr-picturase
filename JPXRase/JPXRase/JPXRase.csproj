@@ -48,7 +48,7 @@
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
     <Content Include="pixelformats.ts" />
-    <Content Include="temp.txt" />
+    <Content Include="temp.jxr" />
     <Content Include="web.config" />
     <Content Include="app.js.map">
       <DependentUpon>app.ts</DependentUpon>

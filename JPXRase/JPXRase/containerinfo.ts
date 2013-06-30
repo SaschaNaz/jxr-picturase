@@ -1,13 +1,52 @@
 ﻿///<reference path="pixelformats.ts"/>
 module JxrPicturase {
+    //this is not a requested decoding info, but the info about image from container
     export class ContainerInfo {
-        imageInfo = new ImageInfo();
+        resolutionX: number;
+        resolutionY: number;
+
         hasAlpha: Boolean;
 
         orientationState: ImageOrientationState;//initally null
-    }
+        
+        sizeX: number;
+        sizeY: number;
+        get width() { return (this.orientationState != null && this.orientationState.RotatedClockwise) ? this.sizeY : this.sizeX; }
+        get height() { return (this.orientationState != null && this.orientationState.RotatedClockwise) ? this.sizeX : this.sizeY; }
+        colorFormat: ColorFormat;
+        bitDepth: BitDepth;
+        bitsPerUnit: number;
+        leadingPadding: number;
+        isRgb: Boolean;
 
-    export enum PostProcessingStrength { None, Light, Medium, Strong, VeryStrong }
+        //user buffer is always padded to whole MB - what is MB?
+        //Anyway it is used for optimization for SSE command set, which is not possible with JavaScript.
+        //paddedUserBuffer: Boolean;
+
+        //misc
+        imageOffset: number;
+        imageByteCount: number;
+        alphaOffset: number;
+        alphaByteCount: number;
+
+        iccProfileOffset: number;
+        iccProfileByteCount: number;
+
+        xmpMetadataOffset: number;
+        xmpMetadataByteCount: number;
+
+        exifMetadataOffset: number;
+        exifMetadataByteCount: number;
+        
+        gpsInfoMetadataOffset: number;
+        gpsInfoMetadataByteCount: number;
+
+        iptcNaaMetadataOffset: number;
+        iptcNaaMetadataByteCount: number;
+
+        photoshopMetadataOffset: number;
+        photoshopMetadataByteCount: number;
+    }
     export class ImageOrientationState {
         constructor(
             public RotatedClockwise: Boolean,
@@ -28,29 +67,5 @@ module JxrPicturase {
                 default: return null;
             }
         }
-    }
-
-    export class ImageInfo {
-        width: number;
-        height: number;
-        colorFormat: ColorFormat;
-        bitDepth: BitDepth;
-        bitsPerUnit: number;
-        leadingPadding: number;
-        isRgb: Boolean;
-
-        //ROI is not implemented here
-
-        //thumbnail too
-
-        //orientation
-        orientationState: ImageOrientationState;
-
-        //post processing
-        postProcessingStrength: PostProcessingStrength;
-
-        //user buffer is always padded to whole MB - what is MB?
-        //Anyway it is used for optimization for SSE command set, which is not possible with JavaScript.
-        //paddedUserBuffer: Boolean;
     }
 }

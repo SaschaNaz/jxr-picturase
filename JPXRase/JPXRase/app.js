@@ -171,7 +171,7 @@ var JxrPicturase;
 
     function startReaction() {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "temp.txt", true);
+        xhr.open("GET", "temp.jxr", true);
         xhr.responseType = "arraybuffer";
 
         var arraybuffer;
