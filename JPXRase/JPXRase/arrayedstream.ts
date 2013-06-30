@@ -8,12 +8,23 @@
             this.index = initialIndex;
         }
 
-        readAsArray(length: number) {
+        readAsByteArray(length: number) {
             var indexbefore = this.index;
             var indexafter = this.index + length;
             if (indexafter <= this.filearray.length) {
                 this.index = indexafter;
                 return this.filearray.subarray(indexbefore, indexafter);
+            }
+            else
+                throw "File reached to the end.";
+        }
+        
+        readAsSubstream(length: number) {
+            var indexbefore = this.index;
+            var indexafter = this.index + length;
+            if (indexafter <= this.filearray.length) {
+                this.index = indexafter;
+                return new ArrayedStream(this.filearray.subarray(indexbefore, indexafter), 0);
             }
             else
                 throw "File reached to the end.";
@@ -45,13 +56,19 @@
                 throw "File reached to the end.";
         }
 
+        readAsFloat() {
+            0x80000000; //check sign value
+            0x7F800000; //check exponential
+            0x007FFFFF; //check fraction
+        }
+
         readAsGuidHexString() {
             var byteToHex = (i: number) => { var hexstring = i.toString(16).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };
 
-            var guid1 = (Array.prototype.map.call(this.readAsArray(4), byteToHex)).reverse();
-            var guid2 = (Array.prototype.map.call(this.readAsArray(2), byteToHex)).reverse();
-            var guid3 = (Array.prototype.map.call(this.readAsArray(2), byteToHex)).reverse();
-            var guid4 = (Array.prototype.map.call(this.readAsArray(8), byteToHex));
+            var guid1 = (Array.prototype.map.call(this.readAsByteArray(4), byteToHex)).reverse();
+            var guid2 = (Array.prototype.map.call(this.readAsByteArray(2), byteToHex)).reverse();
+            var guid3 = (Array.prototype.map.call(this.readAsByteArray(2), byteToHex)).reverse();
+            var guid4 = (Array.prototype.map.call(this.readAsByteArray(8), byteToHex));
             var guid = "";
             guid = String.prototype.concat.apply(guid, guid1);
             guid = String.prototype.concat.apply(guid, guid2);
@@ -61,7 +78,7 @@
         }
 
         readAsText(length: number) {
-            return String.fromCharCode.apply(null, this.readAsArray(length));
+            return String.fromCharCode.apply(null, this.readAsByteArray(length));
         }
 
         moveBy(length: number) {
@@ -83,8 +100,8 @@
             return this.index;
         }
 
-        makeChildStream() {
-            return new ArrayedStream(this.filearray.buffer, this.index);
+        duplicateStream() {
+            return new ArrayedStream(this.filearray, this.index);
         }
     }
 }
