@@ -1,6 +1,7 @@
 ///<reference path="arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
 ///<reference path="containerinfo.ts"/>
+///<reference path="tags.ts"/>
 module JxrPicturase {
     class SubstrateWithCoenzyme {
         stream: ArrayedStream;
@@ -64,7 +65,7 @@ module JxrPicturase {
         private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
             var stream = substrate.stream;
             switch (tag) {
-                case 0xBC01: //pixel format tag
+                case TagIds.PixelFormat: //pixel format tag
                     {
                         var childStream = stream.duplicateStream();
                         childStream.seek(valueAsSubstream.readAsUint32());
@@ -76,14 +77,14 @@ module JxrPicturase {
                         containerInfo.isRgb = !pixelFormat.isBgr;
                         break;
                     }
-                case 0xBC02: //transformation tag
+                case TagIds.Transformation: //transformation tag
                     {
                         if (count != 1)
                             throw 'Failed to read transformation tag.';
                         substrate.containerInfo.orientationState = ImageOrientationState.getOrientationState(valueAsSubstream.readAsUint32());
                         break;
                     }
-                case 0xBC80: //image width tag
+                case TagIds.ImageSizeX: //image width tag
                     {
                         var value = valueAsSubstream.readAsUint32();
                         if (value == 0)
@@ -91,7 +92,7 @@ module JxrPicturase {
                         substrate.containerInfo.sizeX = value;
                         break;
                     }
-                case 0xBC81: //image height tag
+                case TagIds.ImageSizeY: //image height tag
                     {
                         var value = valueAsSubstream.readAsUint32();
                         if (value == 0)
@@ -99,138 +100,138 @@ module JxrPicturase {
                         substrate.containerInfo.sizeY = value;
                         break;
                     }
-                case 0xBCC0: //image offset tag
+                case TagIds.ImageOffset: //image offset tag
                     {
                         if (count != 1)
                             throw 'Invalid image offset tag';
                         substrate.containerInfo.imageOffset = valueAsSubstream.readAsUint32();
                         break;
                     }
-                case 0xBCC1: //image byte count tag
+                case TagIds.ImageByteCount: //image byte count tag
                     {
                         if (count != 1)
                             throw 'Invalid image byte count tag';
                         substrate.containerInfo.imageByteCount = valueAsSubstream.readAsUint32();
                         break;
                     }
-                case 0xBCC2: //alpha offset tag
+                case TagIds.AlphaOffset: //alpha offset tag
                     {
                         if (count != 1)
                             throw 'Invalid alpha offset tag';
                         substrate.containerInfo.alphaOffset = valueAsSubstream.readAsUint32();
                         break;
                     }
-                case 0xBCC3: // alpha byte count tag
+                case TagIds.AlphaByteCount: // alpha byte count tag
                     {
                         if (count != 1)
                             throw 'Invalid alpha byte count tag';
                         substrate.containerInfo.alphaByteCount = valueAsSubstream.readAsUint32();
                         break;
                     }
-                case 0xBC82: // x resolution tag
+                case TagIds.ResolutionX: // x resolution tag
                     {
                         if (count != 1)
                             throw 'Invalid x resolution tag';
                         substrate.containerInfo.resolutionX = valueAsSubstream.readAsFloat();
                         break;
                     }
-                case 0xBC83: // y resolution tag
+                case TagIds.ResolutionY: // y resolution tag
                     {
                         if (count != 1)
                             throw 'Invalid y resolution tag';
                         substrate.containerInfo.resolutionY = valueAsSubstream.readAsFloat();
                         break;
                     }
-                case 0x8773: // ICC profile tag - same as TIFF
+                case TagIds.IccProfile: // ICC profile tag - same as TIFF
                     {
                         substrate.containerInfo.iccProfileOffset = valueAsSubstream.readAsUint32();
                         substrate.containerInfo.iccProfileByteCount = count;
                         break;
                     }
-                case 0x02BC: // XMP metadata tag
+                case TagIds.XmpMetadata: // XMP metadata tag
                     {
                         substrate.containerInfo.xmpMetadataOffset = valueAsSubstream.readAsUint32();
                         substrate.containerInfo.xmpMetadataByteCount = count;
                         break;
                     }
-                case 0x8769: // EXIF metadata tag
+                case TagIds.ExifMetadata: // EXIF metadata tag
                     {
                         substrate.containerInfo.exifMetadataOffset = valueAsSubstream.readAsUint32();
                         //substrate.containerInfo.exifMetadataByteCount = count;
                         break;
                     }
-                case 0x8825: // GPS info metadata tag
+                case TagIds.GpsInfoMetadata: // GPS info metadata tag
                     {
                         break;
                     }
-                case 0x83BB: // IPTC-NAA metadata tag
+                case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
                     {
                         break;
                     }
-                case 0x8649: // Photoshop metadata tag
+                case TagIds.PhotoshopMetadata: // Photoshop metadata tag
                     {
                         break;
                     }
-                case 0xBC03: // compression tag
-                case 0xBC04: // image type tag
-                case 0xBCC4: // (discarded) image data tag
-                case 0xBCC5: // (discarded) alpha data tag
+                case TagIds.Compression: // compression tag
+                case TagIds.ImageType: // image type tag
+                case TagIds.ImageDataDiscarded: // (discarded) image data tag
+                case TagIds.AlphaDataDiscarded: // (discarded) alpha data tag
                     break;
 
                 //descriptive metadata
-                case 0x010E: // image description tag
+                case TagIds.ImageDescription: // image description tag
                     {
                         break;
                     }
-                case 0x010F: // camera manufacturer tag
+                case TagIds.CameraManufacturer: // camera manufacturer tag
                     {
                         break;
                     }
-                case 0x0110: // camera model name tag
+                case TagIds.CameraModel: // camera model name tag
                     {
                         break;
                     }
-                case 0x0131: // software tag
+                case TagIds.Software: // software tag
                     {
                         break;
                     }
-                case 0x0132: // date and time tag
+                case TagIds.DateAndTime: // date and time tag
                     {
                         break;
                     }
-                case 0x013B: // artist tag
+                case TagIds.Artist: // artist tag
                     {
                         break;
                     }
-                case 0x8298: // copyright tag
+                case TagIds.Copyright: // copyright tag
                     {
                         break;
                     }
-                case 0x4746: // rating stars tag
+                case TagIds.RatingStars: // rating stars tag
                     {
                         break;
                     }
-                case 0x4749: // rating value tag
+                case TagIds.RatingValue: // rating value tag
                     {
                         break;
                     }
-                case 0x9C9B: // caption tag
+                case TagIds.Caption: // caption tag
                     {
                         break;
                     }
-                case 0x010D: // document name tag
+                case TagIds.DocumentName: // document name tag
                     {
                         break;
                     }
-                case 0x011D: // page name tag
+                case TagIds.PageName: // page name tag
                     {
                         break;
                     }
-                case 0x0129: // page number tag
+                case TagIds.PageNumber: // page number tag
                     {
                         break;
                     }
-                case 0x013c: // host computer tag
+                case TagIds.HostComputer: // host computer tag
                     {
                         break;
                     }
