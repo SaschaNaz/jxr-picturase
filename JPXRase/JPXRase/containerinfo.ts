@@ -46,6 +46,9 @@ module JxrPicturase {
 
         photoshopMetadataOffset: number;
         photoshopMetadataByteCount: number;
+
+        //descriptive metadata
+        //metadataDescription: 
     }
     export class ImageOrientationState {
         constructor(

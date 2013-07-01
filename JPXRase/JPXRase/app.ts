@@ -63,11 +63,10 @@ module JxrPicturase {
 
         //ported version of ParsePFDEntry
         private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
-            var stream = substrate.stream;
             switch (tag) {
                 case TagIds.PixelFormat: //pixel format tag
                     {
-                        var childStream = stream.duplicateStream();
+                        var childStream = substrate.stream.duplicateStream();
                         childStream.seek(valueAsSubstream.readAsUint32());
                         var pixelFormat = PixelFormats.getPixelFormatByGuid(childStream.readAsGuidHexString());
 
@@ -156,12 +155,16 @@ module JxrPicturase {
                     }
                 case TagIds.ExifMetadata: // EXIF metadata tag
                     {
-                        substrate.containerInfo.exifMetadataOffset = valueAsSubstream.readAsUint32();
-                        //substrate.containerInfo.exifMetadataByteCount = count;
+                        var value = valueAsSubstream.readAsUint32();
+                        substrate.containerInfo.exifMetadataOffset = value;
+                        substrate.containerInfo.exifMetadataByteCount = this.getIFDSize(substrate.stream, value);
                         break;
                     }
                 case TagIds.GpsInfoMetadata: // GPS info metadata tag
                     {
+                        var value = valueAsSubstream.readAsUint32();
+                        substrate.containerInfo.gpsInfoMetadataOffset = value;
+                        substrate.containerInfo.gpsInfoMetadataByteCount = this.getIFDSize(substrate.stream, value);
                         break;
                     }
                 case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
@@ -241,12 +244,85 @@ module JxrPicturase {
                     }
             }
         }
+
+        private readProperty(stream: ArrayedStream, type: number, count: number, value: number) {
+
+        }
+
+        //IFD = Image File Directory
+        private getIFDSize(stream: ArrayedStream, ifdOffset: number) {
+            var childStream = stream.duplicateStream();
+            childStream.seek(ifdOffset);
+            //var ifdEntryAsStream = stream.duplicateStream().readAsSubstream(12);
+            var ifdCount = childStream.readAsUint16();
+            var exifIfdByteCount = 0;
+            var gpsInfoIfdByteCount = 0;
+            var interoperabilityIfdByteCount = 0;
+            var ifdByteCount = 6 + ifdCount * 12;
+
+            for (var i = 0; i < ifdCount; i++) {
+                var tag = childStream.readAsUint16();
+                var type = childStream.readAsUint16();
+                var count = childStream.readAsUint32();
+                var value = childStream.readAsUint32();
+                var datasize: number;
+
+                if (type == 0 || type >= 13)
+                    throw "The image has unsupported IFD type";
+                switch (tag) {
+                    case TagIds.ExifMetadata: {
+                        exifIfdByteCount = this.readIFDSize(stream, value); break;
+                    }
+                    case TagIds.GpsInfoMetadata: {
+                        gpsInfoIfdByteCount = this.readIFDSize(stream, value); break;
+                    }
+                    case TagIds.InteroperabilityIfd: {
+                        interoperabilityIfdByteCount = this.readIFDSize(stream, value); break;
+                    }
+                    default:
+                        {
+                            switch (type) {
+                                //case 0:
+                                //    datasize = 0 * count; break;
+                                case 1:
+                                case 2:
+                                case 6:
+                                case 7:
+                                    datasize = 1 * count; break;
+                                case 3:
+                                case 8:
+                                    datasize = 2 * count; break;
+                                case 4:
+                                case 9:
+                                case 11:
+                                    datasize = 4 * count; break;
+                                case 5:
+                                case 10:
+                                case 12:
+                                    datasize = 8 * count; break;
+                            }
+                            if (datasize > 4)
+                                ifdByteCount += datasize;
+                            break;
+                        }
+                }
+            }
+            
+            if (exifIfdByteCount != 0)
+                ifdByteCount += (ifdByteCount & 1) + exifIfdByteCount;
+            if (gpsInfoIfdByteCount != 0)
+                ifdByteCount += (ifdByteCount & 1) + gpsInfoIfdByteCount;
+            if (interoperabilityIfdByteCount != 0)
+                ifdByteCount += (ifdByteCount & 1) + interoperabilityIfdByteCount;
+
+            return ifdByteCount;
+        }
     }
 
     window.onload = () => {
         var image = new Image();
         //image.onload = () => { if (image.height != 3 || image.width != 2) startReaction(); };
-        image.onerror = () => { startReaction(); };
+        //image.onerror = () => { startReaction(); };
         image.src = "data:image/vnd.ms-photo;base64,SUm8AQgAAAAJAAG8AQAQAAAAegAAAAK8BAABAAAAAAAAAAS8BAABAAAAAAAAAIC8BAABAAAAAgAAAIG8BAABAAAAAwAAAIK8CwABAAAAAADAQoO8CwABAAAAAADAQsC8BAABAAAAigAAAMG8BAABAAAADgEAAAAAAAAkw91vA07+S7GFPXd2jckMV01QSE9UTwARRMBxAAEAAmAAoAAKAACgAAAAAQAAAAkAPv8ABEKAAAEAAAEByQ1Yf8AAAAEC+CFiBD4ggohx4eEAEYaNG1TNAiQC9xR+0RLkCyGAAABAMAALCApgSCe/8AAAAAAAAAAAAQMjN6DL0wTgiCRowm+GEBEEfCCSwwmmGEqhBEogj4QTUjCSQgl5wQ2CPqCiemEkSMJ8QQQUOaQT+kAJnaCiemEkSMJ8QVBRPTCSJGE+IIIKHNIJ/SAEzoQUOaQT+kAJnaCVUgksQgjTF0EqpBJYhBGmLoJVSCSyQRpy6CVUgksiCNMTsKHMwn9QhM7wocmE/pBCZ3hQ5MJ/SCEzvChyYT+oQmdA";
 
         startReaction();
@@ -254,7 +330,7 @@ module JxrPicturase {
 
     function startReaction() {
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "temp.txt", true);
+        xhr.open("GET", "temp.jxr", true);
         xhr.responseType = "arraybuffer";
 
         var arraybuffer: ArrayBuffer;
@@ -264,6 +340,6 @@ module JxrPicturase {
             var jxrase = new CatalyticDomain();
             jxrase.react(arraybuffer);
         }
-    xhr.send();
+        xhr.send();
     }
 }
