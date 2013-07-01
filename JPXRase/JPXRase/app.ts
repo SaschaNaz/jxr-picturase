@@ -25,7 +25,7 @@ module JxrPicturase {
             var stream = substrate.stream;
 
             //signiture
-            if (stream.readAsText(2) !== 'II')
+            if (stream.readAsUtf8Text(2) !== 'II')
                 throw JxrInvalidMessage;
             var jxrId = stream.readAsUint16();
             if ((0xFF & jxrId) != 0xBC)
@@ -184,7 +184,7 @@ module JxrPicturase {
                 //descriptive metadata
                 case TagIds.ImageDescription: // image description tag
                     {
-                        this.readPropertyFromStream(substrate.stream.duplicateStream(), type, count, valueAsSubstream);
+                         this.getAnyPropertyFromStream(substrate.stream, type, count, valueAsSubstream);
                         break;
                     }
                 case TagIds.CameraManufacturer: // camera manufacturer tag
@@ -246,25 +246,38 @@ module JxrPicturase {
             }
         }
 
-        private readPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
+        private getAnyPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
             if (count == 0)
                 return null;
             
             switch (type) {
                 case DataTypeIds.TextAscii: {
+                    if (count <= 4)
+                        return valueAsSubstream.readAsUtf8Text(count);
+                    else {
+                        var childStream = stream.duplicateStream();
+                        childStream.seek(valueAsSubstream.readAsUint32());
+                        return childStream.readAsUtf8Text(count);
+                    }
                     break;
                 }
-                case DataTypeIds.Byte: {
-                    break;
-                }
+                case DataTypeIds.Byte:
                 case DataTypeIds.Undefined: {
+                    return valueAsSubstream.readAsByteArray(count);
                     break;
                 }
                 case DataTypeIds.Uint16: {
+                    var valueAsUint16;
+                    if (count == 1) {
+                        valueAsSubstream.moveBy(2);
+                        return valueAsSubstream.readAsUint16();
+                    }
+                    else
+                        return valueAsSubstream.readAsUint32();
                     break;
                 }
                 default: {
-                    break;
+                    throw 'This property type is not supported yet.';
                 }
             }
         }

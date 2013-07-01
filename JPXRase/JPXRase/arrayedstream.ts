@@ -80,7 +80,7 @@
             return guid;
         }
 
-        readAsText(length: number) {
+        readAsUtf8Text(length: number) {
             return String.fromCharCode.apply(null, this.readAsByteArray(length));
         }
 
