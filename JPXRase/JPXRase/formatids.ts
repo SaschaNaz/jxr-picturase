@@ -44,4 +44,19 @@
         /** Returns 0xBCC4 */ static get ImageDataDiscarded() { return 0xBCC4; }
         /** Returns 0xBCC5 */ static get AlphaDataDiscarded() { return 0xBCC5; }
     }
+
+    export class DataTypeIds {
+        static get Byte() { return 1 }
+        static get TextAscii() { return 2; }
+        static get Uint16() { return 3; }
+        static get Uint32() { return 4; }
+        static get RationalNumber() { return 5; }
+        static get Int8() { return 6; }
+        static get Undefined() { return 7; }
+        static get Int16() { return 8; }
+        static get Int32() { return 9; }
+        static get SignedRationalNumber() { return 10; }
+        static get Float() { return 11; }
+        static get Double() { return 12; }
+    }
 }

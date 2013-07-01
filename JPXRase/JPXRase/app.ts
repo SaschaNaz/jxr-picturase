@@ -1,7 +1,7 @@
 ///<reference path="arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
 ///<reference path="containerinfo.ts"/>
-///<reference path="tags.ts"/>
+///<reference path="formatids.ts"/>
 module JxrPicturase {
     class SubstrateWithCoenzyme {
         stream: ArrayedStream;
@@ -157,14 +157,14 @@ module JxrPicturase {
                     {
                         var value = valueAsSubstream.readAsUint32();
                         substrate.containerInfo.exifMetadataOffset = value;
-                        substrate.containerInfo.exifMetadataByteCount = this.getIFDSize(substrate.stream, value);
+                        substrate.containerInfo.exifMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
                         break;
                     }
                 case TagIds.GpsInfoMetadata: // GPS info metadata tag
                     {
                         var value = valueAsSubstream.readAsUint32();
                         substrate.containerInfo.gpsInfoMetadataOffset = value;
-                        substrate.containerInfo.gpsInfoMetadataByteCount = this.getIFDSize(substrate.stream, value);
+                        substrate.containerInfo.gpsInfoMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
                         break;
                     }
                 case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
@@ -184,6 +184,7 @@ module JxrPicturase {
                 //descriptive metadata
                 case TagIds.ImageDescription: // image description tag
                     {
+                        this.readPropertyFromStream(substrate.stream.duplicateStream(), type, count, valueAsSubstream);
                         break;
                     }
                 case TagIds.CameraManufacturer: // camera manufacturer tag
@@ -245,12 +246,31 @@ module JxrPicturase {
             }
         }
 
-        private readProperty(stream: ArrayedStream, type: number, count: number, value: number) {
-
+        private readPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
+            if (count == 0)
+                return null;
+            
+            switch (type) {
+                case DataTypeIds.TextAscii: {
+                    break;
+                }
+                case DataTypeIds.Byte: {
+                    break;
+                }
+                case DataTypeIds.Undefined: {
+                    break;
+                }
+                case DataTypeIds.Uint16: {
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
         }
 
         //IFD = Image File Directory
-        private getIFDSize(stream: ArrayedStream, ifdOffset: number) {
+        private getIfdSizeFromStream(stream: ArrayedStream, ifdOffset: number) {
             var childStream = stream.duplicateStream();
             childStream.seek(ifdOffset);
             //var ifdEntryAsStream = stream.duplicateStream().readAsSubstream(12);
@@ -271,13 +291,13 @@ module JxrPicturase {
                     throw "The image has unsupported IFD type";
                 switch (tag) {
                     case TagIds.ExifMetadata: {
-                        exifIfdByteCount = this.readIFDSize(stream, value); break;
+                        exifIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     case TagIds.GpsInfoMetadata: {
-                        gpsInfoIfdByteCount = this.readIFDSize(stream, value); break;
+                        gpsInfoIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     case TagIds.InteroperabilityIfd: {
-                        interoperabilityIfdByteCount = this.readIFDSize(stream, value); break;
+                        interoperabilityIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     default:
                         {
