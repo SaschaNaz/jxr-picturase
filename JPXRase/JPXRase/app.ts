@@ -184,7 +184,7 @@ module JxrPicturase {
                 //descriptive metadata
                 case TagIds.ImageDescription: // image description tag
                     {
-                         this.getAnyPropertyFromStream(substrate.stream, type, count, valueAsSubstream);
+                        var str = this.getAnyPropertyFromStream(substrate.stream, type, count, valueAsSubstream);
                         break;
                     }
                 case TagIds.CameraManufacturer: // camera manufacturer tag

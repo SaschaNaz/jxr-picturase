@@ -80,8 +80,60 @@
             return guid;
         }
 
-        readAsUtf8Text(length: number) {
-            return String.fromCharCode.apply(null, this.readAsByteArray(length));
+        readAsUtf8Text(bytelength: number) {
+            //return String.fromCharCode.apply(null, this.readAsByteArray(length));
+            var array = this.readAsByteArray(bytelength);
+            var result = '';
+            var current = 0;
+            while (current < bytelength) {
+                var firstbyte = array[current];
+
+                if (firstbyte < 0x80) {
+                    result += String.fromCharCode(firstbyte);
+                    current += 1;
+                }
+                else if (firstbyte < 0xE0) {
+                    result += String.fromCharCode(
+                        ((firstbyte & 0x1F) << 6)
+                        + (array[current + 1] & 0x3F));
+                    current += 2;
+                }
+                else if (firstbyte < 0xF0) {
+                    result += String.fromCharCode(
+                        ((firstbyte & 0xF) << 12)
+                        + ((array[current + 1] & 0x3F) << 6)
+                        + (array[current + 2] & 0x3F));
+                    current += 3;
+                }
+                else if (firstbyte < 0xF8) {
+                    result += String.fromCharCode(
+                        ((firstbyte & 0x7) << 18)
+                        + ((array[current + 1] & 0x3F) << 12)
+                        + ((array[current + 2] & 0x3F) << 6)
+                        + (array[current + 3] & 0x3F));
+                    current += 4;
+                }
+                else if (firstbyte < 0xFC) {
+                    result += String.fromCharCode(
+                        ((firstbyte & 0x3) << 24)
+                        + ((array[current + 1] & 0x3F) << 18)
+                        + ((array[current + 2] & 0x3F) << 12)
+                        + ((array[current + 3] & 0x3F) << 6)
+                        + (array[current + 4] & 0x3F));
+                    current += 5;
+                }
+                else if (firstbyte < 0xFE) {
+                    result += String.fromCharCode(
+                        ((firstbyte & 0x1) << 30)
+                        + ((array[current + 1] & 0x3F) << 24)
+                        + ((array[current + 2] & 0x3F) << 18)
+                        + ((array[current + 3] & 0x3F) << 12)
+                        + ((array[current + 4] & 0x3F) << 6)
+                        + (array[current + 5] & 0x3F));
+                    current += 6;
+                }
+            }
+            return result;
         }
 
         moveBy(length: number) {
