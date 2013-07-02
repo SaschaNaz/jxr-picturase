@@ -1,4 +1,4 @@
-///<reference path="arrayedstream.ts"/>
+﻿///<reference path="arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
 ///<reference path="containerinfo.ts"/>
 ///<reference path="formatids.ts"/>
@@ -64,6 +64,9 @@ module JxrPicturase {
 
         //ported version of ParsePFDEntry
         private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
+            //value to offset, auto type check feature
+            //아래 태그들을 propertyXbox 사용하게 통합
+            var propertyXbox = new PropertyExporter(substrate.stream, type, count, valueAsSubstream);
             switch (tag) {
                 case TagIds.PixelFormat: //pixel format tag
                     {
@@ -214,6 +217,8 @@ module JxrPicturase {
                     }
                 case TagIds.RatingStars: // rating stars tag
                     {
+                        var value = valueAsSubstream.readAsUint16();
+                        
                         break;
                     }
                 case TagIds.RatingValue: // rating value tag
