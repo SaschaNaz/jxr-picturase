@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="arrayedstream.ts" />
+    <Content Include="jxrproperties.ts" />
     <Content Include="pixelformats.js">
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
