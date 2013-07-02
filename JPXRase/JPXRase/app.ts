@@ -2,6 +2,7 @@
 ///<reference path="pixelformats.ts"/>
 ///<reference path="containerinfo.ts"/>
 ///<reference path="formatids.ts"/>
+///<reference path="jxrproperties.ts"/>
 module JxrPicturase {
     class SubstrateWithCoenzyme {
         stream: ArrayedStream;
@@ -184,7 +185,7 @@ module JxrPicturase {
                 //descriptive metadata
                 case TagIds.ImageDescription: // image description tag
                     {
-                        var str = this.getAnyPropertyFromStream(substrate.stream, type, count, valueAsSubstream);
+                        var str = new PropertyExporter(substrate.stream, type, count, valueAsSubstream).getTextPropertyFromStream();
                         break;
                     }
                 case TagIds.CameraManufacturer: // camera manufacturer tag
@@ -243,45 +244,6 @@ module JxrPicturase {
                     {
                         break;
                     }
-            }
-        }
-
-        private getTextPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
-
-        }
-
-        private getAnyPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
-            if (count == 0)
-                return null;
-            
-            switch (type) {
-                case DataTypeIds.TextUtf8: {
-                    if (count <= 4)
-                        return valueAsSubstream.readAsUtf8Text(count);
-                    else {
-                        var childStream = stream.duplicateStream();
-                        childStream.seek(valueAsSubstream.readAsUint32());
-                        return childStream.readAsUtf8Text(count);
-                    }
-                    break;
-                }
-                case DataTypeIds.Byte:
-                case DataTypeIds.Undefined: {
-                    return valueAsSubstream.readAsSubstream(count);
-                    break;
-                }
-                case DataTypeIds.Uint16: {
-                    if (count == 1) {
-                        valueAsSubstream.moveBy(2);
-                        return valueAsSubstream.readAsUint16();
-                    }
-                    else
-                        return valueAsSubstream.readAsUint32();//no it's not uint32, it shouln't be as A.7.11 PAGE NUMBER uses real TWO numbers. Is it to be devided later?
-                    break;
-                }
-                default: {
-                    throw 'This property type is not supported yet.';
-                }
             }
         }
 
