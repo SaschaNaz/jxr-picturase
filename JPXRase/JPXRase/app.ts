@@ -255,7 +255,7 @@ module JxrPicturase {
                 return null;
             
             switch (type) {
-                case DataTypeIds.TextAscii: {
+                case DataTypeIds.TextUtf8: {
                     if (count <= 4)
                         return valueAsSubstream.readAsUtf8Text(count);
                     else {
@@ -267,17 +267,16 @@ module JxrPicturase {
                 }
                 case DataTypeIds.Byte:
                 case DataTypeIds.Undefined: {
-                    return valueAsSubstream.readAsByteArray(count);
+                    return valueAsSubstream.readAsSubstream(count);
                     break;
                 }
                 case DataTypeIds.Uint16: {
-                    var valueAsUint16;
                     if (count == 1) {
                         valueAsSubstream.moveBy(2);
                         return valueAsSubstream.readAsUint16();
                     }
                     else
-                        return valueAsSubstream.readAsUint32();
+                        return valueAsSubstream.readAsUint32();//no it's not uint32, it shouln't be as A.7.11 PAGE NUMBER uses real TWO numbers.
                     break;
                 }
                 default: {
@@ -362,20 +361,17 @@ module JxrPicturase {
         //image.onerror = () => { startReaction(); };
         image.src = "data:image/vnd.ms-photo;base64,SUm8AQgAAAAJAAG8AQAQAAAAegAAAAK8BAABAAAAAAAAAAS8BAABAAAAAAAAAIC8BAABAAAAAgAAAIG8BAABAAAAAwAAAIK8CwABAAAAAADAQoO8CwABAAAAAADAQsC8BAABAAAAigAAAMG8BAABAAAADgEAAAAAAAAkw91vA07+S7GFPXd2jckMV01QSE9UTwARRMBxAAEAAmAAoAAKAACgAAAAAQAAAAkAPv8ABEKAAAEAAAEByQ1Yf8AAAAEC+CFiBD4ggohx4eEAEYaNG1TNAiQC9xR+0RLkCyGAAABAMAALCApgSCe/8AAAAAAAAAAAAQMjN6DL0wTgiCRowm+GEBEEfCCSwwmmGEqhBEogj4QTUjCSQgl5wQ2CPqCiemEkSMJ8QQQUOaQT+kAJnaCiemEkSMJ8QVBRPTCSJGE+IIIKHNIJ/SAEzoQUOaQT+kAJnaCVUgksQgjTF0EqpBJYhBGmLoJVSCSyQRpy6CVUgksiCNMTsKHMwn9QhM7wocmE/pBCZ3hQ5MJ/SCEzvChyYT+oQmdA";
 
-        startReaction();
+        Activate();
     };
 
-    function startReaction() {
+    function Activate() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "temp.jxr", true);
         xhr.responseType = "arraybuffer";
 
-        var arraybuffer: ArrayBuffer;
         xhr.onload = () => {
-            arraybuffer = xhr.response;
-
             var jxrase = new CatalyticDomain();
-            jxrase.react(arraybuffer);
+            jxrase.react(xhr.response);
         }
         xhr.send();
     }
