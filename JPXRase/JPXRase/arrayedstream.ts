@@ -25,6 +25,7 @@
             if (indexafter <= this.filearray.length) {
                 this.index = indexafter;
                 return new ArrayedStream(this.filearray.subarray(indexbefore, indexafter), 0);
+
             }
             else
                 throw "File reached to the end.";
@@ -51,6 +52,17 @@
                     uint += (this.filearray[this.index + i] << (i * 8))
                 this.index += bytes;
                 return uint;
+            }
+            else
+                throw "File reached to the end.";
+        }
+
+        readAsUint16Array(arraylength: number) {
+            var indexbefore = this.index;
+            var indexafter = this.index + arraylength * 2;
+            if (indexafter <= this.filearray.length) {
+                this.index = indexafter;
+                return new Uint16Array(this.filearray.subarray(indexbefore, indexafter));
             }
             else
                 throw "File reached to the end.";

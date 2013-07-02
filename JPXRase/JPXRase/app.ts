@@ -276,7 +276,7 @@ module JxrPicturase {
                         return valueAsSubstream.readAsUint16();
                     }
                     else
-                        return valueAsSubstream.readAsUint32();//no it's not uint32, it shouln't be as A.7.11 PAGE NUMBER uses real TWO numbers.
+                        return valueAsSubstream.readAsUint32();//no it's not uint32, it shouln't be as A.7.11 PAGE NUMBER uses real TWO numbers. Is it to be devided later?
                     break;
                 }
                 default: {
