@@ -246,6 +246,10 @@ module JxrPicturase {
             }
         }
 
+        private getTextPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
+
+        }
+
         private getAnyPropertyFromStream(stream: ArrayedStream, type: number, count: number, valueAsSubstream: ArrayedStream) {
             if (count == 0)
                 return null;
