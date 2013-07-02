@@ -47,7 +47,7 @@
 
     export class DataTypeIds {
         static get Byte() { return 1 }
-        static get TextAscii() { return 2; }
+        static get TextUtf8() { return 2; }
         static get Uint16() { return 3; }
         static get Uint32() { return 4; }
         static get RationalNumber() { return 5; }
