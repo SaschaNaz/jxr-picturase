@@ -106,30 +106,32 @@
                     current += 3;
                 }
                 else if (firstbyte < 0xF8) {
-                    result += String.fromCharCode(
+                    var charcode = 
                         ((firstbyte & 0x7) << 18)
                         + ((array[current + 1] & 0x3F) << 12)
                         + ((array[current + 2] & 0x3F) << 6)
-                        + (array[current + 3] & 0x3F));
+                        + (array[current + 3] & 0x3F);
+                    var charcodeprocessed = charcode - 0x10000;
+                    result += String.fromCharCode(0xD800 + (charcodeprocessed >> 10), 0xDC00 + (charcodeprocessed & 0x3FF))
                     current += 4;
                 }
                 else if (firstbyte < 0xFC) {
-                    result += String.fromCharCode(
-                        ((firstbyte & 0x3) << 24)
-                        + ((array[current + 1] & 0x3F) << 18)
-                        + ((array[current + 2] & 0x3F) << 12)
-                        + ((array[current + 3] & 0x3F) << 6)
-                        + (array[current + 4] & 0x3F));
+                    //result += String.fromCharCode(
+                    //    ((firstbyte & 0x3) << 24)
+                    //    + ((array[current + 1] & 0x3F) << 18)
+                    //    + ((array[current + 2] & 0x3F) << 12)
+                    //    + ((array[current + 3] & 0x3F) << 6)
+                    //    + (array[current + 4] & 0x3F));
                     current += 5;
                 }
                 else if (firstbyte < 0xFE) {
-                    result += String.fromCharCode(
-                        ((firstbyte & 0x1) << 30)
-                        + ((array[current + 1] & 0x3F) << 24)
-                        + ((array[current + 2] & 0x3F) << 18)
-                        + ((array[current + 3] & 0x3F) << 12)
-                        + ((array[current + 4] & 0x3F) << 6)
-                        + (array[current + 5] & 0x3F));
+                    //result += String.fromCharCode(
+                    //    ((firstbyte & 0x1) << 30)
+                    //    + ((array[current + 1] & 0x3F) << 24)
+                    //    + ((array[current + 2] & 0x3F) << 18)
+                    //    + ((array[current + 3] & 0x3F) << 12)
+                    //    + ((array[current + 4] & 0x3F) << 6)
+                    //    + (array[current + 5] & 0x3F));
                     current += 6;
                 }
             }
