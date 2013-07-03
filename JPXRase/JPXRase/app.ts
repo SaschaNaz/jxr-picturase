@@ -268,6 +268,7 @@ module JxrPicturase {
                 if (type == 0 || type >= 13)
                     throw "The image has unsupported IFD type";
                 switch (tag) {
+                    //if it founds the tag then register the stream to ContainerInfo, if it is not already registered.
                     case TagIds.ExifMetadata: {
                         //exifIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
