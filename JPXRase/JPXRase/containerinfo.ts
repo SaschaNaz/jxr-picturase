@@ -29,23 +29,17 @@ module JxrPicturase {
         alphaOffset: number;
         alphaByteCount: number;
 
-        iccProfileOffset: number;
-        iccProfileByteCount: number;
+        iccProfileByteStream: ArrayedStream;
 
-        xmpMetadataOffset: number;
-        xmpMetadataByteCount: number;
+        xmpMetadataByteStream: ArrayedStream;
 
-        exifMetadataOffset: number;
-        exifMetadataByteCount: number;
+        exifMetadataByteStream: ArrayedStream;
         
-        gpsInfoMetadataOffset: number;
-        gpsInfoMetadataByteCount: number;
+        gpsInfoMetadataByteStream: ArrayedStream;
 
-        iptcNaaMetadataOffset: number;
-        iptcNaaMetadataByteCount: number;
+        iptcNaaMetadataByteStream: ArrayedStream;
 
-        photoshopMetadataOffset: number;
-        photoshopMetadataByteCount: number;
+        photoshopMetadataByteStream: ArrayedStream;
 
         //descriptive metadata
         metadataDescription: String;

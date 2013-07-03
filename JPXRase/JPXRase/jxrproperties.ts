@@ -25,6 +25,10 @@ module JxrPicturase {
                 console.log('Number is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
+            if (this.count != 1) {
+                console.log('length 1 is expected, but length ' + this.count + ' is observed');
+                return;
+            }
 
             switch (this.type) {
                 case DataTypeIds.Byte:
@@ -45,9 +49,26 @@ module JxrPicturase {
             return this.valueAsSubstream.readAsUint16Array(this.count);
         }
 
+        getUint16ArrayFromStreamFixedLength() {
+            if (this.type != DataTypeIds.Uint16) {
+                console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+            if (this.count != length) {
+                console.log('length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed');
+                return;
+            }
+
+            return this.valueAsSubstream.readAsUint16Array(this.count);
+        }
+
         getFloatPropertyFromStream() {
             if (this.type != DataTypeIds.Float) {
                 console.log('Float is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+            if (this.count != 1) {
+                console.log('length 1 is expected, but length ' + this.count + ' is observed');
                 return;
             }
 
@@ -57,6 +78,19 @@ module JxrPicturase {
         getByteStreamFromStream() {
             if (this.type != DataTypeIds.Byte) {
                 console.log('Byte is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+
+            return this.valueAsSubstream.readAsSubstream(this.count);
+        }
+
+        getByteStreamFromStreamFixedLength(length: number) {
+            if (this.type != DataTypeIds.Byte) {
+                console.log('Byte is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+            if (this.count != length) {
+                console.log('length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed');
                 return;
             }
 

@@ -28,14 +28,13 @@ module JxrPicturase {
             //signiture
             if (stream.readAsUtf8Text(2) !== 'II')
                 throw JxrInvalidMessage;
-            var jxrId = stream.readAsUint16();
-            if ((0xFF & jxrId) != 0xBC)
+            if (stream.readAsUint8() != 0xBC)
                 throw JxrInvalidMessage;
 
             //JXR version check - only 00 and 01 will be accepted
             {
-                var versionNumber = (0xFF00 & jxrId) >> 8;
-                if (versionNumber != 0 && versionNumber != 1)
+                var versionNumber = stream.readAsUint8();
+                if (versionNumber != 1)
                     throw "Current version of JXR Picturase doesn't support this version of JPEG XR.";
             }
 
@@ -45,34 +44,34 @@ module JxrPicturase {
                 var pfdEntries = stream.readAsUint16();
                 if (pfdEntries == 0 && pfdEntries == 0xFFFF)
                     throw JxrInvalidMessage;
-                this.parsePFDEntries(substrate, pfdEntries);
+                this.parseIfd(substrate, pfdEntries);
             }
         }
 
         //ported version of ParsePFD
-        private parsePFDEntries(substrate: SubstrateWithCoenzyme, pfdEntries: number) {
+        private parseIfd(substrate: SubstrateWithCoenzyme, pfdEntries: number) {
             var stream = substrate.stream;
             for (var i = 0; i < pfdEntries; i++) {
-                this.parsePFD(
+                this.parseIfdEntry(
                     substrate,
                     stream.readAsUint16(),
                     stream.readAsUint16(),
                     stream.readAsUint32(),
                     stream.readAsSubstream(4));
             }
+            var nextIfdOffset = stream.readAsUint32();
         }
 
         //ported version of ParsePFDEntry
-        private parsePFD(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
+        private parseIfdEntry(substrate: SubstrateWithCoenzyme, tag: number, type: number, count: number, valueAsSubstream: ArrayedStream) {
             //value to offset, auto type check feature
             //아래 태그들을 propertyXbox 사용하게 통합
             var propertyXbox = new PropertyExporter(substrate.stream, type, count, valueAsSubstream);
             switch (tag) {
                 case TagIds.PixelFormat: //pixel format tag
                     {
-                        var childStream = substrate.stream.duplicateStream();
-                        childStream.seek(valueAsSubstream.readAsUint32());
-                        var pixelFormat = PixelFormats.getPixelFormatByGuid(childStream.readAsGuidHexString());
+                        var pixelFormat
+                            = PixelFormats.getPixelFormatByGuid(propertyXbox.getByteStreamFromStream().readAsGuidHexString());
 
                         var containerInfo = substrate.containerInfo;
                         containerInfo.hasAlpha = pixelFormat.hasAlpha;
@@ -84,12 +83,12 @@ module JxrPicturase {
                     {
                         if (count != 1)
                             throw 'Failed to read transformation tag.';
-                        substrate.containerInfo.orientationState = ImageOrientationState.getOrientationState(valueAsSubstream.readAsUint32());
+                        substrate.containerInfo.orientationState = ImageOrientationState.getOrientationState(propertyXbox.getUintPropertyFromStream());
                         break;
                     }
                 case TagIds.ImageSizeX: //image width tag
                     {
-                        var value = valueAsSubstream.readAsUint32();
+                        var value = propertyXbox.getUintPropertyFromStream();
                         if (value == 0)
                             throw 'Invalid width tag';
                         substrate.containerInfo.sizeX = value;
@@ -97,7 +96,7 @@ module JxrPicturase {
                     }
                 case TagIds.ImageSizeY: //image height tag
                     {
-                        var value = valueAsSubstream.readAsUint32();
+                        var value = propertyXbox.getUintPropertyFromStream();
                         if (value == 0)
                             throw 'Invalid height tag';
                         substrate.containerInfo.sizeY = value;
@@ -105,70 +104,66 @@ module JxrPicturase {
                     }
                 case TagIds.ImageOffset: //image offset tag
                     {
-                        if (count != 1)
-                            throw 'Invalid image offset tag';
-                        substrate.containerInfo.imageOffset = valueAsSubstream.readAsUint32();
+                        if ((substrate.containerInfo.imageOffset = propertyXbox.getUintPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.ImageByteCount: //image byte count tag
                     {
-                        if (count != 1)
-                            throw 'Invalid image byte count tag';
-                        substrate.containerInfo.imageByteCount = valueAsSubstream.readAsUint32();
+                        if ((substrate.containerInfo.imageByteCount = propertyXbox.getUintPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.AlphaOffset: //alpha offset tag
                     {
-                        if (count != 1)
-                            throw 'Invalid alpha offset tag';
-                        substrate.containerInfo.alphaOffset = valueAsSubstream.readAsUint32();
+                        if ((substrate.containerInfo.alphaOffset = propertyXbox.getUintPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.AlphaByteCount: // alpha byte count tag
                     {
-                        if (count != 1)
-                            throw 'Invalid alpha byte count tag';
-                        substrate.containerInfo.alphaByteCount = valueAsSubstream.readAsUint32();
+                        if ((substrate.containerInfo.alphaByteCount = propertyXbox.getUintPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.ResolutionX: // x resolution tag
                     {
-                        if (count != 1)
-                            throw 'Invalid x resolution tag';
-                        substrate.containerInfo.resolutionX = valueAsSubstream.readAsFloat();
+                        if ((substrate.containerInfo.resolutionX = propertyXbox.getFloatPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.ResolutionY: // y resolution tag
                     {
-                        if (count != 1)
-                            throw 'Invalid y resolution tag';
-                        substrate.containerInfo.resolutionY = valueAsSubstream.readAsFloat();
+                        if ((substrate.containerInfo.resolutionY = propertyXbox.getFloatPropertyFromStream()) === undefined)
+                            throw 'cannot parse this image because of this critical format error.';
                         break;
                     }
                 case TagIds.IccProfile: // ICC profile tag - same as TIFF
                     {
-                        substrate.containerInfo.iccProfileOffset = valueAsSubstream.readAsUint32();
-                        substrate.containerInfo.iccProfileByteCount = count;
+                        substrate.containerInfo.iccProfileByteStream = propertyXbox.getByteStreamFromStream();
                         break;
                     }
                 case TagIds.XmpMetadata: // XMP metadata tag
                     {
-                        substrate.containerInfo.xmpMetadataOffset = valueAsSubstream.readAsUint32();
-                        substrate.containerInfo.xmpMetadataByteCount = count;
+                        substrate.containerInfo.xmpMetadataByteStream = propertyXbox.getByteStreamFromStream();
                         break;
                     }
                 case TagIds.ExifMetadata: // EXIF metadata tag
                     {
-                        var value = valueAsSubstream.readAsUint32();
-                        substrate.containerInfo.exifMetadataOffset = value;
-                        substrate.containerInfo.exifMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
+                        //var value = valueAsSubstream.readAsUint32();
+                        //substrate.containerInfo.exifMetadataOffset = value;
+                        //substrate.containerInfo.exifMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
+
+                        //substrate.containerInfo.exifMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
                         break;
                     }
                 case TagIds.GpsInfoMetadata: // GPS info metadata tag
                     {
-                        var value = valueAsSubstream.readAsUint32();
-                        substrate.containerInfo.gpsInfoMetadataOffset = value;
-                        substrate.containerInfo.gpsInfoMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
+                        //var value = valueAsSubstream.readAsUint32();
+                        //substrate.containerInfo.gpsInfoMetadataOffset = value;
+                        //substrate.containerInfo.gpsInfoMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
+
+                        //substrate.containerInfo.gpsInfoMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
                         break;
                     }
                 case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
@@ -188,7 +183,7 @@ module JxrPicturase {
                 //descriptive metadata
                 case TagIds.ImageDescription: // image description tag
                     {
-                        var str = new PropertyExporter(substrate.stream, type, count, valueAsSubstream).getTextPropertyFromStream();
+                        var str = propertyXbox.getTextPropertyFromStream();
                         break;
                     }
                 case TagIds.CameraManufacturer: // camera manufacturer tag
@@ -217,7 +212,7 @@ module JxrPicturase {
                     }
                 case TagIds.RatingStars: // rating stars tag
                     {
-                        var value = valueAsSubstream.readAsUint16();
+                        var value = propertyXbox.getUintPropertyFromStream();
                         
                         break;
                     }
@@ -253,7 +248,7 @@ module JxrPicturase {
         }
 
         //IFD = Image File Directory
-        private getIfdSizeFromStream(stream: ArrayedStream, ifdOffset: number) {
+        private getIfdSubstreamFromStream(stream: ArrayedStream, ifdOffset: number) {
             var childStream = stream.duplicateStream();
             childStream.seek(ifdOffset);
             //var ifdEntryAsStream = stream.duplicateStream().readAsSubstream(12);
@@ -274,13 +269,13 @@ module JxrPicturase {
                     throw "The image has unsupported IFD type";
                 switch (tag) {
                     case TagIds.ExifMetadata: {
-                        exifIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
+                        //exifIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     case TagIds.GpsInfoMetadata: {
-                        gpsInfoIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
+                        //gpsInfoIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     case TagIds.InteroperabilityIfd: {
-                        interoperabilityIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
+                        //interoperabilityIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
                     }
                     default:
                         {
