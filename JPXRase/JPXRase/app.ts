@@ -73,7 +73,7 @@ module JxrPicturase {
                 case TagIds.PixelFormat: //pixel format tag
                     {
                         var pixelFormat
-                            = PixelFormats.getPixelFormatByGuid(propertyXbox.getByteStreamFromStream().readAsGuidHexString());
+                            = PixelFormats.getPixelFormatByGuid(propertyXbox.getByteStreamFromStream().readAsHexString(16));
 
                         var containerInfo = substrate.containerInfo;
                         containerInfo.hasAlpha = pixelFormat.hasAlpha;
@@ -156,7 +156,7 @@ module JxrPicturase {
                         //substrate.containerInfo.exifMetadataOffset = value;
                         //substrate.containerInfo.exifMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
 
-                        //substrate.containerInfo.exifMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
+                        substrate.containerInfo.exifMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
                         break;
                     }
                 case TagIds.GpsInfoMetadata: // GPS info metadata tag
@@ -165,9 +165,14 @@ module JxrPicturase {
                         //substrate.containerInfo.gpsInfoMetadataOffset = value;
                         //substrate.containerInfo.gpsInfoMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
 
-                        //substrate.containerInfo.gpsInfoMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
+                        substrate.containerInfo.gpsInfoMetadataByteStream = this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
                         break;
                     }
+                //case TagIds.InteroperabilityIfd: //JPEG XR cannot be DCF basic file (that always uses normal JPEG format) or THM file.
+                //    {
+                //        this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
+                //        break;
+                //    }
                 case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
                     {
                         break;
@@ -249,7 +254,7 @@ module JxrPicturase {
             }
         }
 
-        //IFD = Image File Directory
+        //IFD = Image File Directory. as EXIF 2.2 and TIFF 6.0 specification
         private getIfdSubstreamFromStream(stream: ArrayedStream, ifdOffset: number) {
             var childStream = stream.duplicateStream();
             childStream.seek(ifdOffset);
@@ -290,7 +295,8 @@ module JxrPicturase {
                     ifdByteCount += datasize;
             }
 
-            return ifdByteCount;
+            childStream.seek(ifdOffset);
+            return childStream.readAsSubstream(ifdByteCount);
         }
     }
 

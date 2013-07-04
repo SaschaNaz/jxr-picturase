@@ -8,6 +8,10 @@
             this.index = initialIndex;
         }
 
+        getSize() {
+            return this.filearray.length;
+        }
+
         readAsByteArray(length: number) {
             var indexbefore = this.index;
             var indexafter = this.index + length;
@@ -77,19 +81,10 @@
             return minussign ? (-1) * (fraction * Math.pow(2, exponential - 127)) : (fraction * Math.pow(2, exponential - 127));
         }
 
-        readAsGuidHexString() {
-            var byteToHex = (i: number) => { var hexstring = i.toString(16).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };
+        readAsHexString(length: number) {
+            var byteToHex = (i: number) => { var hexstring = i.toString(length).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };
 
-            var guid1 = (Array.prototype.map.call(this.readAsByteArray(4), byteToHex)).reverse();
-            var guid2 = (Array.prototype.map.call(this.readAsByteArray(2), byteToHex)).reverse();
-            var guid3 = (Array.prototype.map.call(this.readAsByteArray(2), byteToHex)).reverse();
-            var guid4 = (Array.prototype.map.call(this.readAsByteArray(8), byteToHex));
-            var guid = "";
-            guid = String.prototype.concat.apply(guid, guid1);
-            guid = String.prototype.concat.apply(guid, guid2);
-            guid = String.prototype.concat.apply(guid, guid3);
-            guid = String.prototype.concat.apply(guid, guid4);
-            return guid;
+            return <String>String.prototype.concat.apply('', (Array.prototype.map.call(this.readAsByteArray(16), byteToHex)));
         }
 
         readAsUtf8Text(bytelength: number) {
