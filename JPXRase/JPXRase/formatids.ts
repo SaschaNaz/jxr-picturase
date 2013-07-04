@@ -18,10 +18,10 @@
         /** Returns 0x8298. This is descriptive metadata tag. */ static get Copyright() { return 0x8298; }
 
         /** Returns 0x8769 */ static get ExifMetadata() { return 0x8769; }
-        /** Returns 0x8825 */ static get GpsInfoMetadata() { return 0x8825; }
+        /** Returns 0x8825. Belongs to EXIF 2.2 specification. */ static get GpsInfoMetadata() { return 0x8825; }
         /** Returns 0x83BB */ static get IptcNaaMetadata() { return 0x83BB; }
         /** Returns 0x8649 */ static get PhotoshopMetadata() { return 0x8649; }
-        /** Returns 0xA005 */ static get InteroperabilityIfd() { return 0xA005; }
+        /** Returns 0xA005. Belongs to EXIF 2.2 specification. */ static get InteroperabilityIfd() { return 0xA005; }
         /** Returns 0x8773 */ static get IccProfile() { return 0x8773; }
 
         /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Caption() { return 0x9C9B; }
@@ -50,12 +50,12 @@
         static get TextUtf8() { return 2; }
         static get Uint16() { return 3; }
         static get Uint32() { return 4; }
-        static get RationalNumber() { return 5; }
+        static get URationalNumber() { return 5; }
         static get Int8() { return 6; }
         static get Undefined() { return 7; }
         static get Int16() { return 8; }
         static get Int32() { return 9; }
-        static get SignedRationalNumber() { return 10; }
+        static get RationalNumber() { return 10; }
         static get Float() { return 11; }
         static get Double() { return 12; }
     }
