@@ -59,7 +59,9 @@ module JxrPicturase {
                     stream.readAsUint32(),
                     stream.readAsSubstream(4));
             }
-            var nextIfdOffset = stream.readAsUint32();
+
+            //var nextIfdOffset = stream.readAsUint32();
+            //This can be used to read multiple subfiles, but HTML img tag doesn't support it
         }
 
         //ported version of ParsePFDEntry
@@ -253,66 +255,40 @@ module JxrPicturase {
             childStream.seek(ifdOffset);
             //var ifdEntryAsStream = stream.duplicateStream().readAsSubstream(12);
             var ifdCount = childStream.readAsUint16();
-            var exifIfdByteCount = 0;
-            var gpsInfoIfdByteCount = 0;
-            var interoperabilityIfdByteCount = 0;
             var ifdByteCount = 6 + ifdCount * 12;
 
             for (var i = 0; i < ifdCount; i++) {
                 var tag = childStream.readAsUint16();
                 var type = childStream.readAsUint16();
                 var count = childStream.readAsUint32();
-                var value = childStream.readAsUint32();
+                var valueAsSubstream = childStream.readAsSubstream(4);
                 var datasize: number;
 
                 if (type == 0 || type >= 13)
                     throw "The image has unsupported IFD type";
-                switch (tag) {
-                    //if it founds the tag then register the stream to ContainerInfo, if it is not already registered.
-                    case TagIds.ExifMetadata: {
-                        //exifIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
-                    }
-                    case TagIds.GpsInfoMetadata: {
-                        //gpsInfoIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
-                    }
-                    case TagIds.InteroperabilityIfd: {
-                        //interoperabilityIfdByteCount = this.getIfdSizeFromStream(stream, value); break;
-                    }
-                    default:
-                        {
-                            switch (type) {
-                                //case 0:
-                                //    datasize = 0 * count; break;
-                                case 1:
-                                case 2:
-                                case 6:
-                                case 7:
-                                    datasize = 1 * count; break;
-                                case 3:
-                                case 8:
-                                    datasize = 2 * count; break;
-                                case 4:
-                                case 9:
-                                case 11:
-                                    datasize = 4 * count; break;
-                                case 5:
-                                case 10:
-                                case 12:
-                                    datasize = 8 * count; break;
-                            }
-                            if (datasize > 4)
-                                ifdByteCount += datasize;
-                            break;
-                        }
+                
+                switch (type) {
+                    //case 0://reserved, not specified
+                    case DataTypeIds.Byte://byte
+                    case DataTypeIds.TextUtf8://utf8text
+                    case DataTypeIds.Int8://Signed byte
+                    case DataTypeIds.Undefined://Undefined
+                        datasize = 1 * count; break;
+                    case DataTypeIds.Uint16://Uint16
+                    case DataTypeIds.Int16://Int16
+                        datasize = 2 * count; break;
+                    case DataTypeIds.Uint32://UInt32
+                    case DataTypeIds.Int32://Int32
+                    case DataTypeIds.Float://Float
+                        datasize = 4 * count; break;
+                    case DataTypeIds.URationalNumber://URationalNumber
+                    case DataTypeIds.RationalNumber://RationalNumber
+                    case DataTypeIds.Double://Double
+                        datasize = 8 * count; break;
                 }
+                if (datasize > 4)//real value would be in position right after the IFD
+                    ifdByteCount += datasize;
             }
-            
-            if (exifIfdByteCount != 0)
-                ifdByteCount += (ifdByteCount & 1) + exifIfdByteCount;
-            if (gpsInfoIfdByteCount != 0)
-                ifdByteCount += (ifdByteCount & 1) + gpsInfoIfdByteCount;
-            if (interoperabilityIfdByteCount != 0)
-                ifdByteCount += (ifdByteCount & 1) + interoperabilityIfdByteCount;
 
             return ifdByteCount;
         }
