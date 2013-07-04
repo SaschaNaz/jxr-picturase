@@ -17,7 +17,12 @@ module JxrPicturase {
                 return;
             }
 
-            return this.valueAsSubstream.readAsUtf8Text(this.count);
+            var text = this.valueAsSubstream.readAsUtf8Text(this.count);
+            if (text.charCodeAt(text.length - 1) != 0)
+                console.log('Possibly invalid text property, as it is not properly terminated.');
+            else
+                text = text.substr(0, text.length - 1);
+            return text;
         }
 
         getUintPropertyFromStream() {
