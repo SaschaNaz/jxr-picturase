@@ -87,6 +87,10 @@
             return <String>String.prototype.concat.apply('', (Array.prototype.map.call(this.readAsByteArray(16), byteToHex)));
         }
 
+        readAsUtf16Text(bytelength: number) {
+
+        }
+
         readAsUtf8Text(bytelength: number) {
             //return String.fromCharCode.apply(null, this.readAsByteArray(length));
             var array = this.readAsByteArray(bytelength);
