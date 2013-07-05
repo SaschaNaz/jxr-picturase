@@ -8,14 +8,14 @@
         /** Returns 0x0129. This is descriptive metadata tag.  */ static get PageNumber() { return 0x0129; }
         /** Returns 0x0131. This is descriptive metadata tag.  */ static get Software() { return 0x131; }
         /** Returns 0x0132. This is descriptive metadata tag.  */ static get DateAndTime() { return 0x132; }
-        /** Returns 0x013B. This is descriptive metadata tag.  */ static get Artist() { return 0x013B; }
+        /** Returns 0x013B. This is descriptive metadata tag.  */ static get ArtistName() { return 0x013B; }
         /** Returns 0x013C. This is descriptive metadata tag.  */ static get HostComputer() { return 0x013C; }
 
         /** Returns 0x02BC */ static get XmpMetadata() { return 0x02BC; }
 
         /** Returns 0x4746. This is descriptive metadata tag. */ static get RatingStars() { return 0x4746; }
         /** Returns 0x4749. This is descriptive metadata tag. */ static get RatingValue() { return 0x4749; }
-        /** Returns 0x8298. This is descriptive metadata tag. */ static get Copyright() { return 0x8298; }
+        /** Returns 0x8298. This is descriptive metadata tag. */ static get CopyrightNotice() { return 0x8298; }
 
         /** Returns 0x8769 */ static get ExifMetadata() { return 0x8769; }
         /** Returns 0x8825. Belongs to EXIF 2.2 specification. */ static get GpsInfoMetadata() { return 0x8825; }
