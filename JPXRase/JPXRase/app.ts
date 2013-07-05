@@ -107,37 +107,37 @@ module JxrPicturase {
                 case TagIds.ImageOffset: //image offset tag
                     {
                         if ((substrate.containerInfo.imageOffset = propertyXbox.getUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with image offset.';
                         break;
                     }
                 case TagIds.ImageByteCount: //image byte count tag
                     {
                         if ((substrate.containerInfo.imageByteCount = propertyXbox.getUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with image byte count.';
                         break;
                     }
                 case TagIds.AlphaOffset: //alpha offset tag
                     {
                         if ((substrate.containerInfo.alphaOffset = propertyXbox.getUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with alpha offset.';
                         break;
                     }
                 case TagIds.AlphaByteCount: // alpha byte count tag
                     {
                         if ((substrate.containerInfo.alphaByteCount = propertyXbox.getUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with alpha byte count.';
                         break;
                     }
                 case TagIds.ResolutionX: // x resolution tag
                     {
                         if ((substrate.containerInfo.resolutionX = propertyXbox.getFloatPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with x resolution.';
                         break;
                     }
                 case TagIds.ResolutionY: // y resolution tag
                     {
                         if ((substrate.containerInfo.resolutionY = propertyXbox.getFloatPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of this critical format error.';
+                            throw 'cannot parse this image because of the critical format error with y resolution.';
                         break;
                     }
                 case TagIds.IccProfile: // ICC profile tag - same as TIFF
@@ -175,10 +175,12 @@ module JxrPicturase {
                 //    }
                 case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
                     {
+                        substrate.containerInfo.iptcNaaMetadataByteStream = propertyXbox.getByteStreamFromStream();
                         break;
                     }
                 case TagIds.PhotoshopMetadata: // Photoshop metadata tag
                     {
+                        substrate.containerInfo.photoshopMetadataByteStream = propertyXbox.getByteStreamFromStream();
                         break;
                     }
                 case TagIds.Compression: // compression tag
