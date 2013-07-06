@@ -353,12 +353,14 @@ module JxrPicturase {
             if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\u0000')
                 throw 'Contained image is not valid JPEG XR image';
 
+            var bitstream = new ArrayedBitStream(imageSubstream);
             //codec version
-            if (imageSubstream.readAsUint32() != 1)
+            if (bitstream.readBits(4) != 1)
                 throw "Current version of JXR Picturase doesn't support this version of JPEG XR.";
 
             //codec subversion
-            if (imageSubstream.readAsUint32() != 0)
+            var codecsubversion = bitstream.readBits(4);
+            if (codecsubversion != 0 && codecsubversion != 1 && codecsubversion != 9)
                 throw "Current version of JXR Picturase doesn't support this version of JPEG XR.";
         }
     }
