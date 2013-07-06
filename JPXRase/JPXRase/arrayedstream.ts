@@ -201,16 +201,16 @@ module JxrPicturase {
             if (length <= 0)
                 throw 'length is invalid';
 
-            var result = this.getBit();
-            for (var i = 1; i < length; i++)
-                result += this.getBit() << i;
+            var result = 0
+            for (var i = 1; i <= length; i++)
+                result += this.getBit() << (length - i);
 
             return result;
         }
 
         private getBit() {
-            var bit = this.temporaryByte & 1;
-            this.temporaryByte >>= 1;
+            var bit = (this.temporaryByte & 0x80) >> 7;
+            this.temporaryByte = (this.temporaryByte << 1) & 0xFF;
             this.bitindex++;
             if (this.bitindex == 8) {
                 this.temporaryByte = this.stream.readAsUint8();
