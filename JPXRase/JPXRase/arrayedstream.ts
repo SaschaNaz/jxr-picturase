@@ -1,4 +1,5 @@
-﻿module JxrPicturase {
+﻿///<reference path="rationalnumber.ts"/>
+module JxrPicturase {
 	export class ArrayedStream {
         private index: number;
         private filearray: Uint8Array;
@@ -81,8 +82,8 @@
             return minussign ? (-1) * (fraction * Math.pow(2, exponential - 127)) : (fraction * Math.pow(2, exponential - 127));
         }
 
-        readAsURational() {
-
+        readAsURationalNumber() {
+            return new RationalNumber(this.readAsUint32(), this.readAsUint32());
         }
 
         readAsHexString(length: number) {
@@ -180,6 +181,13 @@
 
         duplicateStream() {
             return new ArrayedStream(this.filearray, this.index);
+        }
+
+        cleaveStream(startIndex: number, length: number) {
+            var endIndex = startIndex + length
+            if (startIndex < 0 || endIndex > this.filearray.length)
+                throw 'Invalid index for stream cleavage';
+            return new ArrayedStream(this.filearray.subarray(startIndex, endIndex), 0);
         }
     }
 }
