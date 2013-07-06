@@ -30,7 +30,6 @@ module JxrPicturase {
             if (indexafter <= this.filearray.length) {
                 this.index = indexafter;
                 return new ArrayedStream(this.filearray.subarray(indexbefore, indexafter), 0);
-
             }
             else
                 throw "File reached to the end.";
@@ -188,6 +187,36 @@ module JxrPicturase {
             if (startIndex < 0 || endIndex > this.filearray.length)
                 throw 'Invalid index for stream cleavage';
             return new ArrayedStream(this.filearray.subarray(startIndex, endIndex), 0);
+        }
+    }
+
+    export class ArrayedBitStream {
+        private temporaryByte: number;
+        private bitindex = 0;
+        constructor(private stream: ArrayedStream) {
+            this.temporaryByte = stream.readAsUint8();
+        }
+
+        readBits(length: number) {
+            if (length <= 0)
+                throw 'length is invalid';
+
+            var result = this.getBit();
+            for (var i = 1; i < length; i++)
+                result += this.getBit() << i;
+
+            return result;
+        }
+
+        private getBit() {
+            var bit = this.temporaryByte & 1;
+            this.temporaryByte >>= 1;
+            this.bitindex++;
+            if (this.bitindex == 8) {
+                this.temporaryByte = this.stream.readAsUint8();
+                this.bitindex = 0;
+            }
+            return bit;
         }
     }
 }
