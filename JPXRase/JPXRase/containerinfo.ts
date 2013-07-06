@@ -54,9 +54,15 @@ module JxrPicturase {
         metadataHostComputer: String;
         metadataCopyrightNotice: String;
 
+        //non-EXIF descriptive metadata
         metadataRatingStars: number;
-        metadataRatingValue: number;
-        metadataCaption: String;
+        metadataRatingPercent: number;
+
+        metadataTitle: String;
+        metadataComment: String;
+        metadataAuthor: String;
+        metadataKeywords: String;
+        metadataSubject: String;
     }
     export class ImageOrientationState {
         constructor(

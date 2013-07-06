@@ -24,7 +24,11 @@
         /** Returns 0xA005. Belongs to EXIF 2.2 specification. */ static get InteroperabilityIfd() { return 0xA005; }
         /** Returns 0x8773 */ static get IccProfile() { return 0x8773; }
 
-        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Caption() { return 0x9C9B; }
+        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Title() { return 0x9C9B; }
+        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Comment() { return 0x9C9C; }
+        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Author() { return 0x9C9D; }
+        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Keywords() { return 0x9C9E; }
+        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Subject() { return 0x9C9F; }
 
         /** Returns 0xBC01 */ static get PixelFormat() { return 0xBC01; }
         /** Returns 0xBC02 */ static get Transformation() { return 0xBC02; }

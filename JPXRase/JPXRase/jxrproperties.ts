@@ -21,11 +21,13 @@ module JxrPicturase {
             if (this.type == DataTypeIds.TextUtf8)
                 text = this.valueAsSubstream.readAsUtf8Text(this.count);
             else
-                text = '';
+                text = this.valueAsSubstream.readAsUtf16Text(this.count);
+
             if (text.charCodeAt(text.length - 1) != 0)
                 console.log('Possibly invalid text property, as it is not properly terminated.');
             else
                 text = text.substr(0, text.length - 1);
+            
             return text;
         }
 
@@ -95,6 +97,9 @@ module JxrPicturase {
             }
 
             return this.valueAsSubstream.readAsFloat();
+        }
+
+        getURationalPropertyFromStream() {
         }
 
         getByteStreamFromStream() {

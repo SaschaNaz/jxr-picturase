@@ -81,6 +81,10 @@
             return minussign ? (-1) * (fraction * Math.pow(2, exponential - 127)) : (fraction * Math.pow(2, exponential - 127));
         }
 
+        readAsURational() {
+
+        }
+
         readAsHexString(length: number) {
             var byteToHex = (i: number) => { var hexstring = i.toString(length).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };
 
@@ -88,7 +92,13 @@
         }
 
         readAsUtf16Text(bytelength: number) {
-
+            var result = '';
+            var current = 0;
+            while (current < bytelength) {
+                result += String.fromCharCode(this.readAsUint16());
+                current += 2;
+            }
+            return result;
         }
 
         readAsUtf8Text(bytelength: number) {
