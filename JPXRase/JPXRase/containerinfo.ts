@@ -1,9 +1,14 @@
 ﻿///<reference path="pixelformats.ts"/>
+///<reference path="rationalnumber.ts"/>
 module JxrPicturase {
     //this is not a requested decoding info, but the info about image from container
-    export class ContainerInfo {
+    export class IfdEntry {
         resolutionX: number;
         resolutionY: number;
+
+        resolutionTiffX: RationalNumber;
+        resolutionTiffY: RationalNumber;
+        resolutionTiffUnit: ResolutionTiffUnit;
 
         hasAlpha: Boolean;
 
@@ -64,6 +69,7 @@ module JxrPicturase {
         metadataKeywords: String;
         metadataSubject: String;
     }
+
     export class ImageOrientationState {
         constructor(
             public RotatedClockwise: Boolean,
@@ -84,5 +90,9 @@ module JxrPicturase {
                 default: return null;
             }
         }
+    }
+
+    export enum ResolutionTiffUnit {
+        Inches = 2, Centimeters = 3
     }
 }

@@ -25,10 +25,10 @@
         /** Returns 0x8773 */ static get IccProfile() { return 0x8773; }
 
         /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Title() { return 0x9C9B; }
-        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Comment() { return 0x9C9C; }
-        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Author() { return 0x9C9D; }
-        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Keywords() { return 0x9C9E; }
-        /** Returns 0x9C9B. This is descriptive metadata tag. */ static get Subject() { return 0x9C9F; }
+        /** Returns 0x9C9C. This is descriptive metadata tag. */ static get Comment() { return 0x9C9C; }
+        /** Returns 0x9C9D. This is descriptive metadata tag. */ static get Author() { return 0x9C9D; }
+        /** Returns 0x9C9E. This is descriptive metadata tag. */ static get Keywords() { return 0x9C9E; }
+        /** Returns 0x9C9F. This is descriptive metadata tag. */ static get Subject() { return 0x9C9F; }
 
         /** Returns 0xBC01 */ static get PixelFormat() { return 0xBC01; }
         /** Returns 0xBC02 */ static get Transformation() { return 0xBC02; }
@@ -41,12 +41,17 @@
         /** Returns 0xBC82 */ static get ResolutionX() { return 0xBC82; }
         /** Returns 0xBC83 */ static get ResolutionY() { return 0xBC83; }
 
+        /** Returns 0x011A */ static get ResolutionTiffX() { return 0x011A; }
+        /** Returns 0x011B */ static get ResolutionTiffY() { return 0x011B; }
+        /** Returns 0x0128 */ static get ResolutionTiffUnit() { return 0x0128; }
+
         /** Returns 0xBCC0 */ static get ImageOffset() { return 0xBCC0; }
         /** Returns 0xBCC1 */ static get ImageByteCount() { return 0xBCC1; }
         /** Returns 0xBCC2 */ static get AlphaOffset() { return 0xBCC2; }
         /** Returns 0xBCC3 */ static get AlphaByteCount() { return 0xBCC3; }
         /** Returns 0xBCC4 */ static get ImageDataDiscarded() { return 0xBCC4; }
         /** Returns 0xBCC5 */ static get AlphaDataDiscarded() { return 0xBCC5; }
+        /** Returns 0xEA1C */ static get PaddingData() { return 0xEA1C; }
     }
 
     export class DataTypeIds {

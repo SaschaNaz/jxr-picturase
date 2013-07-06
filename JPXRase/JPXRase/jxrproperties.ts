@@ -1,14 +1,38 @@
 ﻿///<reference path="arrayedstream.ts"/>
 ///<reference path="formatids.ts"/>
 module JxrPicturase {
-    export class PropertyExporter {
-        constructor(public stream: ArrayedStream, public type: number, public count: number, public valueAsSubstream: ArrayedStream) {
+    export class PropertyReader {
+        constructor(public basestream: ArrayedStream, public type: number, public count: number, public valueAsSubstream: ArrayedStream) {
             //if count is larger than 4, then the value is an offset rather than the property value.
-            if (this.count > 4) {
+            if (PropertyReader.getPropertyDataSize(this.type, this.count) > 4) {
                 var offset = this.valueAsSubstream.readAsUint32();
-                this.valueAsSubstream = this.stream.duplicateStream();
+                this.valueAsSubstream = this.basestream.duplicateStream();
                 this.valueAsSubstream.seek(offset);
             }
+        }
+        
+        static getPropertyDataSize(type: number, count: number) {
+            var datasize: number;
+            switch (type) {
+                //case 0://reserved, not specified
+                case DataTypeIds.Byte://byte
+                case DataTypeIds.TextUtf8://utf8text
+                case DataTypeIds.Int8://Signed byte
+                case DataTypeIds.Undefined://Undefined
+                    datasize = 1 * count; break;
+                case DataTypeIds.Uint16://Uint16
+                case DataTypeIds.Int16://Int16
+                    datasize = 2 * count; break;
+                case DataTypeIds.Uint32://UInt32
+                case DataTypeIds.Int32://Int32
+                case DataTypeIds.Float://Float
+                    datasize = 4 * count; break;
+                case DataTypeIds.URationalNumber://URationalNumber
+                case DataTypeIds.RationalNumber://RationalNumber
+                case DataTypeIds.Double://Double
+                    datasize = 8 * count; break;
+            }
+            return datasize;
         }
 
         getTextPropertyFromStream() {
@@ -64,6 +88,19 @@ module JxrPicturase {
             return this.valueAsSubstream.readAsUint16();
         }
 
+        getUint32PropertyFromStream() {
+            if (this.type != DataTypeIds.Uint32) {
+                console.log('Uint32 is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+            if (this.count != 1) {
+                console.log('length 1 is expected, but length ' + this.count + ' is observed');
+                return;
+            }
+
+            return this.valueAsSubstream.readAsUint32();
+        }
+
         getUint16ArrayFromStream() {
             if (this.type != DataTypeIds.Uint16) {
                 console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
@@ -100,6 +137,16 @@ module JxrPicturase {
         }
 
         getURationalPropertyFromStream() {
+            if (this.type != DataTypeIds.URationalNumber) {
+                console.log('URationalNumber is expected, but type ' + this.type.toString() + ' is observed');
+                return;
+            }
+            if (this.count != 1) {
+                console.log('length 1 is expected, but length ' + this.count + ' is observed');
+                return;
+            }
+
+            return this.valueAsSubstream.readAsURationalNumber();
         }
 
         getByteStreamFromStream() {

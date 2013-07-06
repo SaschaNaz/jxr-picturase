@@ -50,6 +50,7 @@
     </Content>
     <Content Include="pixelformats.ts" />
     <Content Include="formatids.ts" />
+    <Content Include="rationalnumber.ts" />
     <Content Include="temp.jxr" />
     <Content Include="web.config" />
     <Content Include="app.js.map">
