@@ -252,12 +252,32 @@ module JxrPicturase {
                     }
                 case TagIds.RatingValue: // rating value tag
                     {
-                        substrate.containerInfo.metadataRatingValue = propertyXbox.getUint16PropertyFromStream();
+                        substrate.containerInfo.metadataRatingPercent = propertyXbox.getUint16PropertyFromStream();
                         break;
                     }
-                case TagIds.Caption: // caption tag
+                case TagIds.Title:
                     {
-                        substrate.containerInfo.metadataCaption = propertyXbox.getTextPropertyFromStream();
+                        substrate.containerInfo.metadataTitle = propertyXbox.getTextPropertyFromStream();
+                        break;
+                    }
+                case TagIds.Comment:
+                    {
+                        substrate.containerInfo.metadataComment = propertyXbox.getTextPropertyFromStream();
+                        break;
+                    }
+                case TagIds.Author:
+                    {
+                        substrate.containerInfo.metadataAuthor = propertyXbox.getTextPropertyFromStream();
+                        break;
+                    }
+                case TagIds.Keywords:
+                    {
+                        substrate.containerInfo.metadataKeywords = propertyXbox.getTextPropertyFromStream();
+                        break;
+                    }
+                case TagIds.Subject:
+                    {
+                        substrate.containerInfo.metadataSubject = propertyXbox.getTextPropertyFromStream();
                         break;
                     }
                 default:
@@ -267,7 +287,7 @@ module JxrPicturase {
             }
         }
 
-        //IFD = Image File Directory. as EXIF 2.2 and TIFF 6.0 specification
+        //IFD = Image File Directory. as EXIF 2.3 and TIFF 6.0 specification
         private getIfdSubstreamFromStream(stream: ArrayedStream, ifdOffset: number) {
             var childStream = stream.duplicateStream();
             childStream.seek(ifdOffset);
