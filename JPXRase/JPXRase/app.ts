@@ -64,7 +64,7 @@ module JxrPicturase {
             }
             substrate.IfdEntries.push(ifdEntry);
 
-            this.parseImage(stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount));
+            this.parseImageHeader(stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount));
             //var nextIfdOffset = stream.readAsUint32();
             //This can be used to read multiple subfiles, but HTML img tag doesn't support it, but anyway...
         }
@@ -348,7 +348,7 @@ module JxrPicturase {
             return childStream.readAsSubstream(ifdByteCount);
         }
 
-        private parseImage(imageSubstream: ArrayedStream) {
+        private parseImageHeader(imageSubstream: ArrayedStream) {
             //signature
             if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\u0000')
                 throw 'Contained image is not valid JPEG XR image';
@@ -357,13 +357,13 @@ module JxrPicturase {
 
             //codec version check
             if (bitstream.readBits(4) != 1)
-                throw "Image cannot be digested with this version of JXR Picturase.";
+                throw 'Image cannot be digested with this version of JXR Picturase as the version of image is unsupported.';
 
             var isHardTileUsed = (bitstream.readBits(1) == 1);
             
             //codec version check 2
             if (bitstream.readBits(3) != 1)
-                console.log("Image may not be fully digested with this version of JXR Picturase.");
+                console.log('Image may not be fully digested with this version of JXR Picturase. Reserved C');
 
             var hasMultipleTiles = (bitstream.readBits(1) == 1);
             var isFrequencyMode = (bitstream.readBits(1) == 1);
@@ -373,6 +373,20 @@ module JxrPicturase {
                     (bitstream.readBits(1) == 1),
                     (bitstream.readBits(1) == 1));
             var hasIndexTable = (bitstream.readBits(1) == 1);
+            
+            var overlapMode = bitstream.readBits(2);
+            if (overlapMode == 3)
+                throw 'Image cannot be digested with this version of JXR Picturase as the image uses unsupported overlap mode.';
+
+            var hasShortHeader = (bitstream.readBits(1) == 1);
+            var useLongValues = (bitstream.readBits(1) == 1);
+            var useWindowing = (bitstream.readBits(1) == 1);
+            var hasTrimFlexbits = (bitstream.readBits(1) == 1);
+
+            //codec version check 3
+            if (bitstream.readBits(1) != 0)
+                console.log('Image may not be fully digested with this version of JXR Picturase. Reserved D');
+
         }
     }
 
