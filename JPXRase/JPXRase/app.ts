@@ -355,16 +355,24 @@ module JxrPicturase {
 
             var bitstream = new ArrayedBitStream(imageSubstream);
 
-            //redundancy check
+            //codec version check
             if (bitstream.readBits(4) != 1)
-                throw "Image is damaged. Picturase cannot react with it.";
+                throw "Image cannot be digested with this version of JXR Picturase.";
 
-            //codec subversion
             var isHardTileUsed = (bitstream.readBits(1) == 1);
             
-            //redundancy check
+            //codec version check 2
             if (bitstream.readBits(3) != 1)
-                throw "Image is damaged. Picturase cannot react with it.";
+                console.log("Image may not be fully digested with this version of JXR Picturase.");
+
+            var hasMultipleTiles = (bitstream.readBits(1) == 1);
+            var isFrequencyMode = (bitstream.readBits(1) == 1);
+            var spatialTransformation
+                = new ImageOrientationState(
+                    (bitstream.readBits(1) == 1),
+                    (bitstream.readBits(1) == 1),
+                    (bitstream.readBits(1) == 1));
+            var hasIndexTable = (bitstream.readBits(1) == 1);
         }
     }
 
