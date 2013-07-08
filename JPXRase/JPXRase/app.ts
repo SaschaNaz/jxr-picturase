@@ -412,7 +412,17 @@ module JxrPicturase {
             if (!hasIndexTable && (isFrequencyMode || numberOfVerticalTiles > 1 || numberOfHorizontalTiles > 1))
                 throw 'Image doesn\'t have index table while it should do. JXR Picturase cannot digest it.';
 
-
+            var leftBoundariesofTiles: number[] = [0];
+            var topBoundariesofTiles: number[] = [0];
+            for (var i = 1; i < numberOfVerticalTiles; i++)
+                leftBoundariesofTiles.push(
+                    bitstream.readBits(hasShortHeader ? 8 : 16)
+                    + leftBoundariesofTiles[i - 1]);
+            leftBoundariesofTiles.push(
+            for (var i = 1; i < numberOfHorizontalTiles; i++)
+                topBoundariesofTiles.push(
+                    bitstream.readBits(hasShortHeader ? 8 : 16)
+                    + topBoundariesofTiles[i - 1]);
         }
     }
 
@@ -431,8 +441,12 @@ module JxrPicturase {
         xhr.responseType = "arraybuffer";
 
         xhr.onload = () => {
-            var jxrase = new CatalyticDomain();
-            jxrase.react(xhr.response);
+            if (xhr.status == 200) {
+                var jxrase = new CatalyticDomain();
+                jxrase.react(xhr.response);
+            }
+            else
+                console.log('Image URL is invalid.');
         }
         xhr.send();
     }
