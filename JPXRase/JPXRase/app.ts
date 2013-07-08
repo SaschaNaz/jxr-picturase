@@ -409,6 +409,9 @@ module JxrPicturase {
                 numberOfVerticalTiles = bitstream.readBits(12);
                 numberOfHorizontalTiles = bitstream.readBits(12);
             }
+            if (!hasIndexTable && (isFrequencyMode || numberOfVerticalTiles > 1 || numberOfHorizontalTiles > 1))
+                throw 'Image doesn\'t have index table while it should do. JXR Picturase cannot digest it.';
+
 
         }
     }
