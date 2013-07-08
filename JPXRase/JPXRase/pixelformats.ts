@@ -5,7 +5,7 @@
         Yuv422 = 2,
         Yuv444 = 3,
         Cmyk = 4,
-        //CmykDirect = 5,
+        CmykDirect = 5,
         NComponent = 6, 
 
         //formats for external
@@ -21,7 +21,7 @@
         //irregular ones
         Bit5, Bit10, Bit565,
 
-        Bit1Alt = 0xf //Black is foreground
+        Bit1Black1 = 0xf //Black is foreground
     }
     
     export class PixelFormat {

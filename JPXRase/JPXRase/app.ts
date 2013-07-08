@@ -360,7 +360,7 @@ module JxrPicturase {
                 throw 'Image cannot be digested with this version of JXR Picturase as the version of image is unsupported.';
 
             var isHardTileUsed = (bitstream.readBits(1) == 1);
-            
+
             //codec version check 2
             if (bitstream.readBits(3) != 1)
                 console.log('Image may not be fully digested with this version of JXR Picturase. Reserved C');
@@ -373,7 +373,7 @@ module JxrPicturase {
                     (bitstream.readBits(1) == 1),
                     (bitstream.readBits(1) == 1));
             var hasIndexTable = (bitstream.readBits(1) == 1);
-            
+
             var overlapMode = bitstream.readBits(2);
             if (overlapMode == 3)
                 throw 'Image cannot be digested with this version of JXR Picturase as the image uses unsupported overlap mode.';
@@ -386,6 +386,29 @@ module JxrPicturase {
             //codec version check 3
             if (bitstream.readBits(1) != 0)
                 console.log('Image may not be fully digested with this version of JXR Picturase. Reserved D');
+
+            var isNotBgr = (bitstream.readBits(1) == 1);
+            var isAlphaPremultiplied = (bitstream.readBits(1) == 1);
+            var hasALphaImagePlane = (bitstream.readBits(1) == 1);
+            var outputColorFormat: ColorFormat = bitstream.readBits(4);
+            var outputBitDepth: BitDepth = bitstream.readBits(4);
+            var width: number;
+            var height: number;
+            if (hasShortHeader) {
+                width = bitstream.readBits(16) + 1;
+                height = bitstream.readBits(16) + 1;
+            }
+            else {
+                width = bitstream.readBits(32) + 1;
+                height = bitstream.readBits(32) + 1;
+            }
+
+            var numberOfVerticalTiles = 0;
+            var numberOfHorizontalTiles = 0;
+            if (hasMultipleTiles) {
+                numberOfVerticalTiles = bitstream.readBits(12);
+                numberOfHorizontalTiles = bitstream.readBits(12);
+            }
 
         }
     }

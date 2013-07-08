@@ -25,7 +25,7 @@ module JxrPicturase {
         leadingPadding: number;
         isRgb: Boolean;
 
-        //user buffer is always padded to whole MB - what is MB?
+        //user buffer is always padded to whole Macroblock
         //Anyway it is used for optimization for SSE command set, which is not possible with JavaScript.
         //paddedUserBuffer: Boolean;
 
