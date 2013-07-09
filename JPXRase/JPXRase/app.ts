@@ -349,6 +349,8 @@ module JxrPicturase {
         }
 
         private parseImageHeader(imageSubstream: ArrayedStream) {
+            var imageHeader = new ImageHeader();
+
             //signature
             if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\u0000')
                 throw 'Contained image is not valid JPEG XR image';
@@ -359,7 +361,7 @@ module JxrPicturase {
             if (bitstream.readBits(4) != 1)
                 throw 'Image cannot be digested with this version of JXR Picturase as the version of image is unsupported.';
 
-            var isHardTileUsed = (bitstream.readBits(1) == 1);
+            imageHeader.isHardTileUsed = (bitstream.readBits(1) == 1);
 
             //codec version check 2
             if (bitstream.readBits(3) != 1)
@@ -402,6 +404,10 @@ module JxrPicturase {
                 width = bitstream.readBits(32) + 1;
                 height = bitstream.readBits(32) + 1;
             }
+            if (width % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+                throw 'invalid image width';
+            if (height % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+                throw 'invalid image height';
 
             var numberOfVerticalTiles = 0;
             var numberOfHorizontalTiles = 0;
@@ -418,11 +424,12 @@ module JxrPicturase {
                 leftBoundariesofTiles.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + leftBoundariesofTiles[i - 1]);
-            //leftBoundariesofTiles.push(
+            //leftBoundariesofTiles.push(width in macroblock unit);
             for (var i = 1; i < numberOfHorizontalTiles; i++)
                 topBoundariesofTiles.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + topBoundariesofTiles[i - 1]);
+            //topBoundariesofTiles.push(height in macroblock unit);
 
             //var macroblocksInEachTile: number[] = [];
             //{
@@ -445,6 +452,34 @@ module JxrPicturase {
                 bottomMargin = bitstream.readBits(6);
                 rightMargin = bitstream.readBits(6);
             }
+            if (topMargin % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+                throw 'image top margin is invalid';
+            if (leftMargin % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+                throw 'image left margin is invalid';
+            if (height % 16 == 0) {
+                if (bottomMargin != 0)
+                    throw 'image bottom margin is invalid';
+            }
+            else
+                if (bottomMargin != 16 - (height % 16))
+                    throw 'image bottom margin is invalid';
+            if (bottomMargin % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+                throw 'image bottom margin is invalid';
+            if (width % 16 == 0) {
+                if (rightMargin != 0)
+                    throw 'image right margin is invalid';
+            }
+            else
+                if (rightMargin != 16 - (width % 16))
+                    throw 'image right margin is invalid';
+            if (rightMargin % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+                throw 'image right margin is invalid';
+
+            if ((width + leftMargin + rightMargin) % 16 != 0)
+                throw 'invalid width and horizontal margins';
+            if ((height + topMargin + bottomMargin) % 16 != 0)
+                throw 'invalid height and vertical margins';
+
 
         }
     }
