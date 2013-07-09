@@ -15,11 +15,11 @@
 
     export enum BitDepth {
         //regular ones
-        Bit1, //White is foreground
-        Bit8, Bit16, Bit16S, Bit16F, Bit32, Bit32S, Bit32F,
+        Bit1White1, //White is foreground
+        Bit8, Bit16, Bit16S, Bit16F, Bit32S = 6, Bit32F = 7,
 
         //irregular ones
-        Bit5, Bit10, Bit565,
+        Bit5 = 8, Bit10 = 9, Bit565 = 10,
 
         Bit1Black1 = 0xf //Black is foreground
     }
@@ -57,7 +57,7 @@
         //static get Bpp2Gray() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit8, 2, false, false, false); }
         //static get Bpp4Gray() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit8, 4, false, false, false); }
 
-        static get BlackWhite() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit1, 1, false, false, false); }
+        static get BlackWhite() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit1White1, 1, false, false, false); }
         static get Bpp8Gray() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit8, 8, false, false, false); }
         static get Bpp16Gray() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit16, 16, false, false, false); }
         static get Bpp16GrayFixedPoint() { return new PixelFormat(1, ColorFormat.YOnly, BitDepth.Bit16S, 16, false, false, false); }
