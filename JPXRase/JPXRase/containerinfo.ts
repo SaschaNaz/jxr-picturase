@@ -73,7 +73,37 @@ module JxrPicturase {
 
     export class ImageHeader {
         isHardTileUsed: Boolean;
+        hasMultipleTiles: Boolean;
+        isFrequencyMode: Boolean;
+        spatialTransformation: ImageOrientationState;
+        hasIndexTable: Boolean;
 
+        overlapMode: ImageOverlapMode;
+
+        useLongValues: Boolean;
+        hasTrimFlexbits: Boolean;
+
+        isNotBgr: Boolean;
+        isAlphaPremultiplied: Boolean;
+        hasAlphaImagePlane: Boolean;
+        outputColorFormat: ColorFormat;
+        outputBitDepth: BitDepth;
+        width: number;
+        height: number;
+
+        numberOfVerticalTiles = 1;
+        numberOfHorizontalTiles = 1;
+        tileBoundariesLeft: number[] = [0];
+        tileBoundariesTop: number[] = [0];
+
+        marginTop = 0;
+        marginLeft = 0;
+        marginBottom = 0;
+        marginRight = 0;
+    }
+
+    export enum ImageOverlapMode {
+        None, SecondLevel, FirstAndSecondLevel
     }
 
     export class ImageOrientationState {

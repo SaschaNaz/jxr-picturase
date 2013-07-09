@@ -64,7 +64,8 @@ module JxrPicturase {
             }
             substrate.IfdEntries.push(ifdEntry);
 
-            this.parseImageHeader(stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount));
+            var imageStream = stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount);
+            var imageHeader = this.readImageHeader(imageStream);
             //var nextIfdOffset = stream.readAsUint32();
             //This can be used to read multiple subfiles, but HTML img tag doesn't support it, but anyway...
         }
@@ -348,7 +349,7 @@ module JxrPicturase {
             return childStream.readAsSubstream(ifdByteCount);
         }
 
-        private parseImageHeader(imageSubstream: ArrayedStream) {
+        private readImageHeader(imageSubstream: ArrayedStream) {
             var imageHeader = new ImageHeader();
 
             //signature
@@ -367,68 +368,62 @@ module JxrPicturase {
             if (bitstream.readBits(3) != 1)
                 console.log('Image may not be fully digested with this version of JXR Picturase. Reserved C');
 
-            var hasMultipleTiles = (bitstream.readBits(1) == 1);
-            var isFrequencyMode = (bitstream.readBits(1) == 1);
-            var spatialTransformation
+            imageHeader.hasMultipleTiles = (bitstream.readBits(1) == 1);
+            imageHeader.isFrequencyMode = (bitstream.readBits(1) == 1);
+            imageHeader.spatialTransformation
                 = new ImageOrientationState(
                     (bitstream.readBits(1) == 1),
                     (bitstream.readBits(1) == 1),
                     (bitstream.readBits(1) == 1));
-            var hasIndexTable = (bitstream.readBits(1) == 1);
+            imageHeader.hasIndexTable = (bitstream.readBits(1) == 1);
 
-            var overlapMode = bitstream.readBits(2);
-            if (overlapMode == 3)
+            imageHeader.overlapMode = bitstream.readBits(2);
+            if (imageHeader.overlapMode == 3)
                 throw 'Image cannot be digested with this version of JXR Picturase as the image uses unsupported overlap mode.';
 
             var hasShortHeader = (bitstream.readBits(1) == 1);
-            var useLongValues = (bitstream.readBits(1) == 1);
+            imageHeader.useLongValues = (bitstream.readBits(1) == 1);
             var useWindowing = (bitstream.readBits(1) == 1);
-            var hasTrimFlexbits = (bitstream.readBits(1) == 1);
+            imageHeader.hasTrimFlexbits = (bitstream.readBits(1) == 1);
 
             //codec version check 3
             if (bitstream.readBits(1) != 0)
                 console.log('Image may not be fully digested with this version of JXR Picturase. Reserved D');
 
-            var isNotBgr = (bitstream.readBits(1) == 1);
-            var isAlphaPremultiplied = (bitstream.readBits(1) == 1);
-            var hasALphaImagePlane = (bitstream.readBits(1) == 1);
-            var outputColorFormat: ColorFormat = bitstream.readBits(4);
-            var outputBitDepth: BitDepth = bitstream.readBits(4);
-            var width: number;
-            var height: number;
+            imageHeader.isNotBgr = (bitstream.readBits(1) == 1);
+            imageHeader.isAlphaPremultiplied = (bitstream.readBits(1) == 1);
+            imageHeader.hasAlphaImagePlane = (bitstream.readBits(1) == 1);
+            imageHeader.outputColorFormat = bitstream.readBits(4);
+            imageHeader.outputBitDepth = bitstream.readBits(4);
             if (hasShortHeader) {
-                width = bitstream.readBits(16) + 1;
-                height = bitstream.readBits(16) + 1;
+                imageHeader.width = bitstream.readBits(16) + 1;
+                imageHeader.height = bitstream.readBits(16) + 1;
             }
             else {
-                width = bitstream.readBits(32) + 1;
-                height = bitstream.readBits(32) + 1;
+                imageHeader.width = bitstream.readBits(32) + 1;
+                imageHeader.height = bitstream.readBits(32) + 1;
             }
-            if (width % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+            if (imageHeader.width % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'invalid image width';
-            if (height % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+            if (imageHeader.height % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'invalid image height';
 
-            var numberOfVerticalTiles = 0;
-            var numberOfHorizontalTiles = 0;
-            if (hasMultipleTiles) {
-                numberOfVerticalTiles = bitstream.readBits(12);
-                numberOfHorizontalTiles = bitstream.readBits(12);
+            if (imageHeader.hasMultipleTiles) {
+                imageHeader.numberOfVerticalTiles = bitstream.readBits(12) + 1;
+                imageHeader.numberOfHorizontalTiles = bitstream.readBits(12) + 1;
             }
-            if (!hasIndexTable && (isFrequencyMode || numberOfVerticalTiles > 1 || numberOfHorizontalTiles > 1))
+            if (!imageHeader.hasIndexTable && (imageHeader.isFrequencyMode || imageHeader.numberOfVerticalTiles > 1 || imageHeader.numberOfHorizontalTiles > 1))
                 throw 'Image doesn\'t have index table while it should do. JXR Picturase cannot digest it.';
 
-            var leftBoundariesofTiles: number[] = [0];//
-            var topBoundariesofTiles: number[] = [0];
-            for (var i = 1; i < numberOfVerticalTiles; i++)
-                leftBoundariesofTiles.push(
+            for (var i = 1; i < imageHeader.numberOfVerticalTiles; i++)
+                imageHeader.tileBoundariesLeft.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
-                    + leftBoundariesofTiles[i - 1]);
+                    + imageHeader.tileBoundariesLeft[i - 1]);
             //leftBoundariesofTiles.push(width in macroblock unit);
-            for (var i = 1; i < numberOfHorizontalTiles; i++)
-                topBoundariesofTiles.push(
+            for (var i = 1; i < imageHeader.numberOfHorizontalTiles; i++)
+                imageHeader.tileBoundariesTop.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
-                    + topBoundariesofTiles[i - 1]);
+                    + imageHeader.tileBoundariesTop[i - 1]);
             //topBoundariesofTiles.push(height in macroblock unit);
 
             //var macroblocksInEachTile: number[] = [];
@@ -442,45 +437,41 @@ module JxrPicturase {
             //}
             //cannot count it completely because we don't know tiles' total width and height
 
-            var topMargin = 0;
-            var leftMargin = 0;
-            var bottomMargin = 0;
-            var rightMargin = 0;
             if (useWindowing) {
-                topMargin = bitstream.readBits(6);
-                leftMargin = bitstream.readBits(6);
-                bottomMargin = bitstream.readBits(6);
-                rightMargin = bitstream.readBits(6);
+                imageHeader.marginTop = bitstream.readBits(6);
+                imageHeader.marginLeft = bitstream.readBits(6);
+                imageHeader.marginBottom = bitstream.readBits(6);
+                imageHeader.marginRight = bitstream.readBits(6);
             }
-            if (topMargin % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+            if (imageHeader.marginTop % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image top margin is invalid';
-            if (leftMargin % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+            if (imageHeader.marginLeft % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image left margin is invalid';
-            if (height % 16 == 0) {
-                if (bottomMargin != 0)
+            if (imageHeader.height % 16 == 0) {
+                if (imageHeader.marginBottom != 0)
                     throw 'image bottom margin is invalid';
             }
             else
-                if (bottomMargin != 16 - (height % 16))
+                if (imageHeader.marginBottom != 16 - (imageHeader.height % 16))
                     throw 'image bottom margin is invalid';
-            if (bottomMargin % 2 != 0 && outputColorFormat == ColorFormat.Yuv420)
+            if (imageHeader.marginBottom % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image bottom margin is invalid';
-            if (width % 16 == 0) {
-                if (rightMargin != 0)
+            if (imageHeader.width % 16 == 0) {
+                if (imageHeader.marginRight != 0)
                     throw 'image right margin is invalid';
             }
             else
-                if (rightMargin != 16 - (width % 16))
+                if (imageHeader.marginRight != 16 - (imageHeader.width % 16))
                     throw 'image right margin is invalid';
-            if (rightMargin % 2 != 0 && (outputColorFormat == ColorFormat.Yuv420 || outputColorFormat == ColorFormat.Yuv422))
+            if (imageHeader.marginRight % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image right margin is invalid';
 
-            if ((width + leftMargin + rightMargin) % 16 != 0)
+            if ((imageHeader.width + imageHeader.marginLeft + imageHeader.marginRight) % 16 != 0)
                 throw 'invalid width and horizontal margins';
-            if ((height + topMargin + bottomMargin) % 16 != 0)
+            if ((imageHeader.height + imageHeader.marginTop + imageHeader.marginBottom) % 16 != 0)
                 throw 'invalid height and vertical margins';
 
-
+            return imageHeader;
         }
     }
 
