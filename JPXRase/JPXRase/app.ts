@@ -412,17 +412,40 @@ module JxrPicturase {
             if (!hasIndexTable && (isFrequencyMode || numberOfVerticalTiles > 1 || numberOfHorizontalTiles > 1))
                 throw 'Image doesn\'t have index table while it should do. JXR Picturase cannot digest it.';
 
-            var leftBoundariesofTiles: number[] = [0];
+            var leftBoundariesofTiles: number[] = [0];//
             var topBoundariesofTiles: number[] = [0];
             for (var i = 1; i < numberOfVerticalTiles; i++)
                 leftBoundariesofTiles.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + leftBoundariesofTiles[i - 1]);
-            leftBoundariesofTiles.push(
+            //leftBoundariesofTiles.push(
             for (var i = 1; i < numberOfHorizontalTiles; i++)
                 topBoundariesofTiles.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + topBoundariesofTiles[i - 1]);
+
+            //var macroblocksInEachTile: number[] = [];
+            //{
+            //    var n = 0;
+            //    for (var i = 0; i < numberOfHorizontalTiles; i++) {
+            //        for (var i2 = 0; i2 < numberOfVerticalTiles; i2++) {
+            //            macroblocksInEachTile[i + i2] = 
+            //        }   
+            //    }
+            //}
+            //cannot count it completely because we don't know tiles' total width and height
+
+            var topMargin = 0;
+            var leftMargin = 0;
+            var bottomMargin = 0;
+            var rightMargin = 0;
+            if (useWindowing) {
+                topMargin = bitstream.readBits(6);
+                leftMargin = bitstream.readBits(6);
+                bottomMargin = bitstream.readBits(6);
+                rightMargin = bitstream.readBits(6);
+            }
+
         }
     }
 
