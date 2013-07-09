@@ -71,6 +71,11 @@ module JxrPicturase {
         metadataSubject: String;
     }
 
+    export class ImageHeader {
+        isHardTileUsed: Boolean;
+
+    }
+
     export class ImageOrientationState {
         constructor(
             public RotatedClockwise: Boolean,
