@@ -95,6 +95,7 @@ module JxrPicturase {
         numberOfHorizontalTiles = 1;
         tileBoundariesLeft: number[] = [0];
         tileBoundariesTop: number[] = [0];
+        macroblocksInEachTile: number[] = [];
 
         marginTop = 0;
         marginLeft = 0;

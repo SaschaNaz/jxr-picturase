@@ -1,4 +1,4 @@
-﻿///<reference path="arrayedstream.ts"/>
+///<reference path="arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
 ///<reference path="containerinfo.ts"/>
 ///<reference path="formatids.ts"/>
@@ -66,6 +66,8 @@ module JxrPicturase {
 
             var imageStream = stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount);
             var imageHeader = this.readImageHeader(imageStream);
+            //now imageStream position is changed by byte, not bit, as bits left should be ignored
+            var imagePlaneHeader = this.readImagePlaneHeader(imageStream, imageHeader);
             //var nextIfdOffset = stream.readAsUint32();
             //This can be used to read multiple subfiles, but HTML img tag doesn't support it, but anyway...
         }
@@ -419,23 +421,10 @@ module JxrPicturase {
                 imageHeader.tileBoundariesLeft.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + imageHeader.tileBoundariesLeft[i - 1]);
-            //leftBoundariesofTiles.push(width in macroblock unit);
             for (var i = 1; i < imageHeader.numberOfHorizontalTiles; i++)
                 imageHeader.tileBoundariesTop.push(
                     bitstream.readBits(hasShortHeader ? 8 : 16)
                     + imageHeader.tileBoundariesTop[i - 1]);
-            //topBoundariesofTiles.push(height in macroblock unit);
-
-            //var macroblocksInEachTile: number[] = [];
-            //{
-            //    var n = 0;
-            //    for (var i = 0; i < numberOfHorizontalTiles; i++) {
-            //        for (var i2 = 0; i2 < numberOfVerticalTiles; i2++) {
-            //            macroblocksInEachTile[i + i2] = 
-            //        }   
-            //    }
-            //}
-            //cannot count it completely because we don't know tiles' total width and height
 
             if (useWindowing) {
                 imageHeader.marginTop = bitstream.readBits(6);
@@ -466,12 +455,32 @@ module JxrPicturase {
             if (imageHeader.marginRight % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image right margin is invalid';
 
-            if ((imageHeader.width + imageHeader.marginLeft + imageHeader.marginRight) % 16 != 0)
+            var extendedWidth = imageHeader.width + imageHeader.marginLeft + imageHeader.marginRight;
+            var extendedHeight = imageHeader.height + imageHeader.marginTop + imageHeader.marginBottom;
+            if (extendedWidth % 16 != 0)
                 throw 'invalid width and horizontal margins';
-            if ((imageHeader.height + imageHeader.marginTop + imageHeader.marginBottom) % 16 != 0)
+            if (extendedHeight % 16 != 0)
                 throw 'invalid height and vertical margins';
+            imageHeader.tileBoundariesLeft.push(extendedWidth / 16);
+            imageHeader.tileBoundariesTop.push(extendedHeight / 16);
+            
+            for (var i = 0; i < imageHeader.numberOfHorizontalTiles; i++) {
+                var tilesHorizontal = (imageHeader.tileBoundariesLeft[i + 1] - imageHeader.tileBoundariesLeft[i]);
+                for (var i2 = 0; i2 < imageHeader.numberOfVerticalTiles; i2++) {
+                    imageHeader.macroblocksInEachTile.push(
+                        tilesHorizontal * (imageHeader.tileBoundariesTop[i + 1] - imageHeader.tileBoundariesTop[i]));//tilesVertical
+                }
+            }
 
             return imageHeader;
+        }
+
+        private readImagePlaneHeader(imageSubstream: ArrayedStream, imageHeader: ImageHeader) {
+            var bitstream = new ArrayedBitStream(imageSubstream);
+
+            var internalColorFormat: InternalColorFormat = bitstream.readBits(3);
+            var willBeScaled = (bitstream.readBits(1) == 1);
+
         }
     }
 
