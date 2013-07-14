@@ -6,11 +6,18 @@
         Yuv444 = 3,
         Cmyk = 4,
         CmykDirect = 5,
-        NComponent = 6, 
-
-        //formats for external
+        NComponent = 6,
         Rgb = 7, 
         RgbExtended = 8
+    }
+
+    export enum InternalColorFormat {
+        YOnly = 0,
+        Yuv420 = 1,
+        Yuv422 = 2,
+        Yuv444 = 3,
+        Yuvk = 4,
+        NComponent = 6
     }
 
     export enum BitDepth {
