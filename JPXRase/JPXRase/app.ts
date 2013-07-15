@@ -405,26 +405,21 @@ module JxrPicturase {
                 imageHeader.width = bitstream.readBits(32) + 1;
                 imageHeader.height = bitstream.readBits(32) + 1;
             }
-            if (imageHeader.width % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
-                throw 'invalid image width';
-            if (imageHeader.height % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
-                throw 'invalid image height';
 
             if (imageHeader.hasMultipleTiles) {
                 imageHeader.numberOfVerticalTiles = bitstream.readBits(12) + 1;
                 imageHeader.numberOfHorizontalTiles = bitstream.readBits(12) + 1;
             }
+            //JPEG XR validity test, 8.3.9
             if (!imageHeader.hasIndexTable && (imageHeader.isFrequencyMode || imageHeader.numberOfVerticalTiles > 1 || imageHeader.numberOfHorizontalTiles > 1))
                 throw 'Image doesn\'t have index table while it should do. JXR Picturase cannot digest it.';
-
-            for (var i = 1; i < imageHeader.numberOfVerticalTiles; i++)
-                imageHeader.tileBoundariesLeft.push(
-                    bitstream.readBits(hasShortHeader ? 8 : 16)
-                    + imageHeader.tileBoundariesLeft[i - 1]);
-            for (var i = 1; i < imageHeader.numberOfHorizontalTiles; i++)
-                imageHeader.tileBoundariesTop.push(
-                    bitstream.readBits(hasShortHeader ? 8 : 16)
-                    + imageHeader.tileBoundariesTop[i - 1]);
+            
+            for (var i = 0; i < imageHeader.numberOfVerticalTiles - 1; i++)
+                imageHeader.tileWidthsInMacroblocks.push(
+                    bitstream.readBits(hasShortHeader ? 8 : 16));
+            for (var i = 0; i < imageHeader.numberOfHorizontalTiles - 1; i++)
+                imageHeader.tileHeightsInMacroblocks.push(
+                    bitstream.readBits(hasShortHeader ? 8 : 16));
 
             if (useWindowing) {
                 imageHeader.marginTop = bitstream.readBits(6);
@@ -432,10 +427,13 @@ module JxrPicturase {
                 imageHeader.marginBottom = bitstream.readBits(6);
                 imageHeader.marginRight = bitstream.readBits(6);
             }
+            //JPEG XR validity test, 8.3.27
             if (imageHeader.marginTop % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image top margin is invalid';
+            //JPEG XR validity test, 8.3.28
             if (imageHeader.marginLeft % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image left margin is invalid';
+            //JPEG XR validity test, 8.3.29
             if (imageHeader.height % 16 == 0) {
                 if (imageHeader.marginBottom != 0)
                     throw 'image bottom margin is invalid';
@@ -445,6 +443,7 @@ module JxrPicturase {
                     throw 'image bottom margin is invalid';
             if (imageHeader.marginBottom % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image bottom margin is invalid';
+            //JPEG XR validity test, 8.3.30
             if (imageHeader.width % 16 == 0) {
                 if (imageHeader.marginRight != 0)
                     throw 'image right margin is invalid';
@@ -457,21 +456,14 @@ module JxrPicturase {
 
             var extendedWidth = imageHeader.width + imageHeader.marginLeft + imageHeader.marginRight;
             var extendedHeight = imageHeader.height + imageHeader.marginTop + imageHeader.marginBottom;
+            //JPEG XR validity test, 8.3.21 and 8.3.22
             if (extendedWidth % 16 != 0)
                 throw 'invalid width and horizontal margins';
             if (extendedHeight % 16 != 0)
                 throw 'invalid height and vertical margins';
-            imageHeader.tileBoundariesLeft.push(extendedWidth / 16);
-            imageHeader.tileBoundariesTop.push(extendedHeight / 16);
+            imageHeader.tileWidthsInMacroblocks.push(extendedWidth / 16 - imageHeader.tileWidthsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
+            imageHeader.tileHeightsInMacroblocks.push(extendedHeight / 16 - imageHeader.tileHeightsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
             
-            for (var i = 0; i < imageHeader.numberOfHorizontalTiles; i++) {
-                var tilesHorizontal = (imageHeader.tileBoundariesLeft[i + 1] - imageHeader.tileBoundariesLeft[i]);
-                for (var i2 = 0; i2 < imageHeader.numberOfVerticalTiles; i2++) {
-                    imageHeader.macroblocksInEachTile.push(
-                        tilesHorizontal * (imageHeader.tileBoundariesTop[i + 1] - imageHeader.tileBoundariesTop[i]));//tilesVertical
-                }
-            }
-
             return imageHeader;
         }
 
@@ -480,7 +472,8 @@ module JxrPicturase {
 
             var internalColorFormat: InternalColorFormat = bitstream.readBits(3);
             var willBeScaled = (bitstream.readBits(1) == 1);
-
+            var bandsPresent: BandsPresent = bitstream.readBits(4);
+            //var 
         }
     }
 
