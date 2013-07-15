@@ -93,9 +93,32 @@ module JxrPicturase {
 
         numberOfVerticalTiles = 1;
         numberOfHorizontalTiles = 1;
-        tileBoundariesLeft: number[] = [0];
-        tileBoundariesTop: number[] = [0];
-        macroblocksInEachTile: number[] = [];
+        tileWidthsInMacroblocks: number[] = [];
+        tileHeightsInMacroblocks: number[] = [];
+        getTileBoundariesLeft() {
+            var tileBoundariesLeft: number[] = [0];
+            for (var i = 0; i < this.numberOfVerticalTiles; i++)
+                tileBoundariesLeft.push(
+                    this.tileWidthsInMacroblocks[i]
+                    + tileBoundariesLeft[i]);//actually adding tileBoundariesRight
+        }
+        getTileBoundariesTop() {
+            var tileBoundariesTop: number[] = [0];
+            for (var i = 0; i < this.numberOfHorizontalTiles; i++)
+                tileBoundariesTop.push(
+                    this.tileHeightsInMacroblocks[i]
+                    + tileBoundariesTop[i]);
+        }
+        getMacroblocksInEachTile() {
+            var macroblocksInEachTile: number[] = [];
+            for (var i = 0; i < this.numberOfHorizontalTiles; i++) {
+                for (var i2 = 0; i2 < this.numberOfVerticalTiles; i2++) {
+                    macroblocksInEachTile.push(
+                        this.tileWidthsInMacroblocks[i] * this.tileHeightsInMacroblocks[i]);
+                }
+            }
+            return macroblocksInEachTile;
+        }
 
         marginTop = 0;
         marginLeft = 0;
