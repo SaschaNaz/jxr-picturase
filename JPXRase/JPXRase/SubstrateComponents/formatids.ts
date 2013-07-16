@@ -1,4 +1,4 @@
-﻿module JxrPicturase {
+﻿module JxrPicturase.SubstrateComponents {
     export class TagIds {
         /** Returns 0x010D. This is descriptive metadata tag.  */ static get DocumentName() { return 0x010D; }
         /** Returns 0x010E. This is descriptive metadata tag.  */ static get ImageDescription() { return 0x010E; }

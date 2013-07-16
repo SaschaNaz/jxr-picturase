@@ -1,6 +1,6 @@
-﻿///<reference path="arrayedstream.ts"/>
+﻿///<reference path="../arrayedstream.ts"/>
 ///<reference path="formatids.ts"/>
-module JxrPicturase {
+module JxrPicturase.SubstrateComponents {
     export class PropertyReader {
         constructor(public basestream: ArrayedStream, public type: number, public count: number, public valueAsSubstream: ArrayedStream) {
             //if count is larger than 4, then the value is an offset rather than the property value.

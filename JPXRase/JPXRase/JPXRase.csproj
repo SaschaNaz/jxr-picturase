@@ -31,6 +31,8 @@
       <DependentUpon>arrayedstream.ts</DependentUpon>
     </Content>
     <Content Include="containerinfo.ts" />
+    <Content Include="SubstrateComponents\datatypes.ts" />
+    <Content Include="SubstrateComponents\ifdentry.ts" />
     <Content Include="default.htm" />
     <Content Include="app.js">
       <DependentUpon>app.ts</DependentUpon>
@@ -41,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="arrayedstream.ts" />
-    <Content Include="jxrproperties.ts" />
+    <Content Include="headervalidator.ts" />
+    <Content Include="SubstrateComponents\jxrproperties.ts" />
     <Content Include="pixelformats.js">
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
@@ -49,8 +52,9 @@
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
     <Content Include="pixelformats.ts" />
-    <Content Include="formatids.ts" />
+    <Content Include="SubstrateComponents\formatids.ts" />
     <Content Include="rationalnumber.ts" />
+    <Content Include="SubstrateComponents\imageheader.ts" />
     <Content Include="temp.jxr" />
     <Content Include="web.config" />
     <Content Include="app.js.map">
