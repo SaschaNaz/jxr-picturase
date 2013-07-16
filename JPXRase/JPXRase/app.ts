@@ -56,7 +56,7 @@ module JxrPicturase {
             var imageStream = stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount);
             var imageHeader = SubstrateComponents.ImageHeader.Parse(imageStream);
             //now imageStream position is changed by byte, not bit, as bits left should be ignored
-            var imagePlaneHeader = SubstrateComponents.ImagePlaneHeader.Parse(imageStream, imageHeader);
+            var imagePlaneHeader = SubstrateComponents.ImagePlaneHeader.Parse(imageStream, imageHeader, false);
             //var nextIfdOffset = stream.readAsUint32();
             //This can be used to read multiple subfiles, but HTML img tag doesn't support it, but anyway...
         }
@@ -79,7 +79,12 @@ module JxrPicturase {
         xhr.onload = () => {
             if (xhr.status == 200) {
                 var jxrase = new CatalyticDomain();
-                jxrase.react(xhr.response);
+                try {
+                    jxrase.react(xhr.response);
+                }
+                catch (e) {
+                    console.log((<Error>e).message);
+                }
             }
             else
                 console.log('Image URL is invalid.');
