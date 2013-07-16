@@ -140,6 +140,12 @@ module JxrPicturase.SubstrateComponents {
                 imageHeader.marginBottom = bitstream.readBits(6);
                 imageHeader.marginRight = bitstream.readBits(6);
             }
+            else {
+                if (imageHeader.height % 16 != 0)
+                    imageHeader.marginBottom = 16 - (imageHeader.height % 16);
+                if (imageHeader.width % 16 != 0)
+                    imageHeader.marginRight = 16 - (imageHeader.width % 16);
+            }
             //JPEG XR validity test, 8.3.27
             if (imageHeader.marginTop % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image top margin is invalid';
@@ -147,23 +153,9 @@ module JxrPicturase.SubstrateComponents {
             if (imageHeader.marginLeft % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image left margin is invalid';
             //JPEG XR validity test, 8.3.29
-            if (imageHeader.height % 16 == 0) {
-                if (imageHeader.marginBottom != 0)
-                    throw 'image bottom margin is invalid';
-            }
-            else
-                if (imageHeader.marginBottom != 16 - (imageHeader.height % 16))
-                    throw 'image bottom margin is invalid';
             if (imageHeader.marginBottom % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
                 throw 'image bottom margin is invalid';
             //JPEG XR validity test, 8.3.30
-            if (imageHeader.width % 16 == 0) {
-                if (imageHeader.marginRight != 0)
-                    throw 'image right margin is invalid';
-            }
-            else
-                if (imageHeader.marginRight != 16 - (imageHeader.width % 16))
-                    throw 'image right margin is invalid';
             if (imageHeader.marginRight % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
                 throw 'image right margin is invalid';
 

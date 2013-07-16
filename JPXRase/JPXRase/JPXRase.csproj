@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="arrayedstream.ts" />
-    <Content Include="SubstrateComponents\consolelogger.ts" />
+    <Content Include="SubstrateComponents\errorobjectprovider.ts" />
     <Content Include="SubstrateComponents\imageplaneheader.ts" />
     <Content Include="SubstrateComponents\jxrproperties.ts" />
     <Content Include="SubstrateComponents\pixelformats.js">
