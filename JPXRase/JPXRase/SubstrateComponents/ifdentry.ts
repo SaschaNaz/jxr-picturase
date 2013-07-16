@@ -1,4 +1,4 @@
-﻿///<reference path="../pixelformats.ts"/>
+﻿///<reference path="pixelformats.ts"/>
 ///<reference path="../rationalnumber.ts"/>
 ///<reference path="../arrayedstream.ts"/>
 ///<reference path="datatypes.ts"/>

@@ -1,8 +1,7 @@
 ///<reference path="arrayedstream.ts"/>
-///<reference path="pixelformats.ts"/>
 ///<reference path="SubstrateComponents/ifdentry.ts"/>
 ///<reference path="SubstrateComponents/imageheader.ts"/>
-///<reference path="headervalidator.ts"/>
+///<reference path="SubstrateComponents/imageplaneheader.ts"/>
 module JxrPicturase {
     class SubstrateWithCoenzyme {
         stream: ArrayedStream;
@@ -57,22 +56,9 @@ module JxrPicturase {
             var imageStream = stream.cleaveStream(ifdEntry.imageOffset, ifdEntry.imageByteCount);
             var imageHeader = SubstrateComponents.ImageHeader.Parse(imageStream);
             //now imageStream position is changed by byte, not bit, as bits left should be ignored
-            var imagePlaneHeader = this.readImagePlaneHeader(imageStream, imageHeader);
+            var imagePlaneHeader = SubstrateComponents.ImagePlaneHeader.Parse(imageStream, imageHeader);
             //var nextIfdOffset = stream.readAsUint32();
             //This can be used to read multiple subfiles, but HTML img tag doesn't support it, but anyway...
-        }
-
-        
-
-       
-
-        private readImagePlaneHeader(imageSubstream: ArrayedStream, imageHeader: SubstrateComponents.ImageHeader) {
-            var bitstream = new ArrayedBitStream(imageSubstream);
-
-            var internalColorFormat: InternalColorFormat = bitstream.readBits(3);
-            var willBeScaled = (bitstream.readBits(1) == 1);
-            var bandsPresent: BandsPresent = bitstream.readBits(4);
-            //var 
         }
     }
 

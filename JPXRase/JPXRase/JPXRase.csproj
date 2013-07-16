@@ -30,7 +30,6 @@
     <Content Include="arrayedstream.min.js">
       <DependentUpon>arrayedstream.ts</DependentUpon>
     </Content>
-    <Content Include="containerinfo.ts" />
     <Content Include="SubstrateComponents\datatypes.ts" />
     <Content Include="SubstrateComponents\ifdentry.ts" />
     <Content Include="default.htm" />
@@ -43,15 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="arrayedstream.ts" />
-    <Content Include="headervalidator.ts" />
+    <Content Include="SubstrateComponents\consolelogger.ts" />
+    <Content Include="SubstrateComponents\imageplaneheader.ts" />
     <Content Include="SubstrateComponents\jxrproperties.ts" />
-    <Content Include="pixelformats.js">
+    <Content Include="SubstrateComponents\pixelformats.js">
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
-    <Content Include="pixelformats.min.js">
+    <Content Include="SubstrateComponents\pixelformats.min.js">
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
-    <Content Include="pixelformats.ts" />
+    <Content Include="SubstrateComponents\pixelformats.ts" />
     <Content Include="SubstrateComponents\formatids.ts" />
     <Content Include="rationalnumber.ts" />
     <Content Include="SubstrateComponents\imageheader.ts" />
@@ -63,7 +63,7 @@
     <Content Include="arrayedstream.js.map">
       <DependentUpon>arrayedstream.ts</DependentUpon>
     </Content>
-    <Content Include="pixelformats.js.map">
+    <Content Include="SubstrateComponents\pixelformats.js.map">
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
