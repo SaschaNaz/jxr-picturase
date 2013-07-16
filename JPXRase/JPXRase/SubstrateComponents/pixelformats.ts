@@ -1,4 +1,4 @@
-﻿module JxrPicturase {
+﻿module JxrPicturase.SubstrateComponents {
     export enum ColorFormat {
 	    YOnly = 0,
         Yuv420 = 1,

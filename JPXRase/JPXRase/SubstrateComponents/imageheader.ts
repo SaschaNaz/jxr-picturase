@@ -1,5 +1,5 @@
-﻿///<reference path="../pixelformats.ts"/>
-///<reference path="../arrayedstream.ts"/>
+﻿///<reference path="../arrayedstream.ts"/>
+///<reference path="pixelformats.ts"/>
 ///<reference path="datatypes.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class ImageHeader {
