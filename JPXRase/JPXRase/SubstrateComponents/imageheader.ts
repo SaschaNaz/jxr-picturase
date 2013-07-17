@@ -1,6 +1,7 @@
 ﻿///<reference path="../arrayedstream.ts"/>
 ///<reference path="pixelformats.ts"/>
 ///<reference path="datatypes.ts"/>
+///<reference path="errorobjectprovider.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class ImageHeader {
         isHardTileUsed: Boolean;
@@ -60,14 +61,14 @@ module JxrPicturase.SubstrateComponents {
             var imageHeader = new ImageHeader();
 
             //signature
-            if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\u0000')
-                throw 'Contained image is not valid JPEG XR image';
+            if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\0')
+                throw new JxrInvalidSignatureError();
 
             var bitstream = new ArrayedBitStream(imageSubstream);
 
             //codec version check
             if (bitstream.readBits(4) != 1)
-                throw 'Image cannot be digested with this version of JXR Picturase as the version of image is unsupported.';
+                throw new JxrUnsupportedEnumError("RESERVED_B")
 
             imageHeader.isHardTileUsed = (bitstream.readBits(1) == 1);
 
@@ -85,7 +86,7 @@ module JxrPicturase.SubstrateComponents {
             imageHeader.hasIndexTable = (bitstream.readBits(1) == 1);
 
             imageHeader.overlapMode = bitstream.readBits(2);
-            if (imageHeader.overlapMode == 3)
+            if (!ImageOverlapMode[imageHeader.overlapMode])
                 throw 'Image cannot be digested with this version of JXR Picturase as the image uses unsupported overlap mode.';
 
             var hasShortHeader = (bitstream.readBits(1) == 1);

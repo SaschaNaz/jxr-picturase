@@ -110,7 +110,7 @@ module JxrPicturase.SubstrateComponents {
                     {
                         var value = propertyInStream.getAnyUintPropertyFromStream();
                         if (value == 0)
-                            throw 'Invalid width tag';
+                            throw new Error('Invalid width tag');
                         ifdEntry.sizeX = value;
                         break;
                     }
@@ -118,44 +118,44 @@ module JxrPicturase.SubstrateComponents {
                     {
                         var value = propertyInStream.getAnyUintPropertyFromStream();
                         if (value == 0)
-                            throw 'Invalid height tag';
+                            throw new Error('Invalid height tag');
                         ifdEntry.sizeY = value;
                         break;
                     }
                 case TagIds.ImageOffset: //image offset tag
                     {
                         if ((ifdEntry.imageOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with image offset.';
+                            throw new Error('cannot parse this image because of the critical format error with image offset.');
                         break;
                     }
                 case TagIds.ImageByteCount: //image byte count tag
                     {
                         if ((ifdEntry.imageByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with image byte count.';
+                            throw new Error('cannot parse this image because of the critical format error with image byte count.');
                         break;
                     }
                 case TagIds.AlphaOffset: //alpha offset tag
                     {
                         if ((ifdEntry.alphaOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with alpha offset.';
+                            throw new Error('cannot parse this image because of the critical format error with alpha offset.');
                         break;
                     }
                 case TagIds.AlphaByteCount: // alpha byte count tag
                     {
                         if ((ifdEntry.alphaByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with alpha byte count.';
+                            throw new Error('cannot parse this image because of the critical format error with alpha byte count.');
                         break;
                     }
                 case TagIds.ResolutionX: // x resolution tag
                     {
                         if ((ifdEntry.resolutionX = propertyInStream.getFloatPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with x resolution.';
+                            throw new Error('cannot parse this image because of the critical format error with x resolution.');
                         break;
                     }
                 case TagIds.ResolutionY: // y resolution tag
                     {
                         if ((ifdEntry.resolutionY = propertyInStream.getFloatPropertyFromStream()) === undefined)
-                            throw 'cannot parse this image because of the critical format error with y resolution.';
+                            throw new Error('cannot parse this image because of the critical format error with y resolution.');
                         break;
                     }
                 case TagIds.IccProfile: // ICC profile tag - same as TIFF
@@ -355,7 +355,7 @@ module JxrPicturase.SubstrateComponents {
                 var datasize: number;
 
                 if (type == 0 || type >= 13)
-                    throw "The image has unsupported IFD type";
+                    throw new Error("The image has unsupported IFD type");
 
                 var datasize = PropertyReader.getPropertyDataSize(type, count);
                 if (datasize > 4)//real value would be in position right after the IFD

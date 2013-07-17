@@ -19,7 +19,7 @@ module JxrPicturase {
     class CatalyticDomain {
         react(file: ArrayBuffer) {
             //porting ReadContainer method
-            var JxrInvalidMessage = "This format is not a valid JPEG XR format for JXR Picturase.";
+            var JxrInvalidMessage = new Error("This format is not a valid JPEG XR format for JXR Picturase.");
 
             var substrate = new SubstrateWithCoenzyme(file);
             var stream = substrate.stream;
@@ -34,7 +34,7 @@ module JxrPicturase {
             {
                 var versionNumber = stream.readAsUint8();
                 if (versionNumber != 1)
-                    throw "Current version of JXR Picturase doesn't support this version of JPEG XR.";
+                    throw new Error("Current version of JXR Picturase doesn't support this version of JPEG XR.");
             }
 
             //PFD - what is PFD? format decoder?
