@@ -14,8 +14,9 @@ module JxrPicturase.SubstrateComponents {
             return "JXR Picturase: Failed to digest the image which " + message;
         }
         /** returns "JXR Picturase: May fail to digest the image which " + message */
-        static getMayFailBecauseMessage(message: String) {
-            return "JXR Picturase: May fail to digest the image which " + message;
+        static getMayFailBecauseUnsupportedEnumMessage(varname: String) {
+            return "JXR Picturase: May fail to digest the image which has unsupported type of "
+                + varname + " by JPEG XR specification ITU-T T.832 (01/2012)";
         }
     }
 
@@ -28,26 +29,29 @@ module JxrPicturase.SubstrateComponents {
         }
     }
 
+    export class JxrInvalidSignatureError {
+        name = "JxrInvalidSignatureError";
+        message: String;
+        constructor(signaturename: String) {
+            this.message = JxrErrorMessage.getFailedBecauseMessage("has invalid" + signaturename + "signature");
+        }
+    }
+
     export class JxrUnsupportedEnumError {
         name = "JxrUnsupportedEnumError";
         message: String;
         constructor(varname: String) {
             this.message = JxrErrorMessage.getFailedBecauseMessage("has unsupported type of "
-                + varname + " as JPEG XR specification ITU-T T.832 (01/2012)");
+                + varname + " by JPEG XR specification ITU-T T.832 (01/2012)");
         }
     }
 
-    export class JxrInvalidSignatureError {
-        name = "JxrInvalidSignatureError";
-        message: String;
-        constructor(expected: String) {
-            this.message = JxrErrorMessage.getFailedBecauseMessage("has invalid signature.");
-        }
+    export class JxrIfdEntryErrors {
     }
 
     export class JxrHeaderErrors {
         static get IndexTableError() {
-            return new JxrInvalidParameterError("8.3.9", "If FREQUENCY_MODE_CODESTREAM_FLAG is equal to TRUE, or NUM_VER_TILES_MINUS1 is greater than 0, or NUM_HOR_TILES_MINUS1 is greater than 0, it is a requirement of codestream conformance that INDEX_TABLE_PRESENT_FLAG shall be equal to TRUE.If FREQUENCY_MODE_CODESTREAM_FLAG is equal to TRUE, or NUM_VER_TILES_MINUS1 is greater than 0, or NUM_HOR_TILES_MINUS1 is greater than 0, it is a requirement of codestream conformance that INDEX_TABLE_PRESENT_FLAG shall be equal to TRUE");
+            return new JxrInvalidParameterError("8.3.9", "If FREQUENCY_MODE_CODESTREAM_FLAG is equal to TRUE, or NUM_VER_TILES_MINUS1 is greater than 0, or NUM_HOR_TILES_MINUS1 is greater than 0, INDEX_TABLE_PRESENT_FLAG shall be equal to TRUE.");
         }
         static get OutputColorFormatError() {
             return new JxrInvalidParameterError("8.3.19", "If IsCurrPlaneAlphaFlag is equal to TRUE, the value of OUTPUT_CLR_FMT shall be equal to 0");
