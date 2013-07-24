@@ -11,7 +11,7 @@
 
         ColorFormat[ColorFormat["Rgb"] = 7] = "Rgb";
 
-        ColorFormat[ColorFormat["RgbExtended"] = 8] = "RgbExtended";
+        ColorFormat[ColorFormat["RgbExponent"] = 8] = "RgbExponent";
     })(JxrPicturase.ColorFormat || (JxrPicturase.ColorFormat = {}));
     var ColorFormat = JxrPicturase.ColorFormat;
 

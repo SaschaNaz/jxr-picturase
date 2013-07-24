@@ -13,8 +13,6 @@ module JxrPicturase.SubstrateComponents {
         resolutionTiffY: RationalNumber;
         resolutionTiffUnit: ResolutionTiffUnit;
 
-        hasAlpha: Boolean;
-
         orientationState: ImageOrientationState;//initally null
 
         sizeX: number;
@@ -23,9 +21,8 @@ module JxrPicturase.SubstrateComponents {
         get height() { return (this.orientationState != null && this.orientationState.RotatedClockwise) ? this.sizeX : this.sizeY; }
         colorFormat: ColorFormat;
         bitDepth: BitDepth;
-        bitsPerUnit: number;
         leadingPadding: number;
-        isRgb: Boolean;
+        pixelFormat: PixelFormat;
 
         //user buffer is always padded to whole Macroblock
         //Anyway it is used for optimization for SSE command set, which is not possible with JavaScript.
@@ -92,13 +89,8 @@ module JxrPicturase.SubstrateComponents {
             switch (tag) {
                 case TagIds.PixelFormat: //pixel format tag
                     {
-                        var pixelFormat
+                        ifdEntry.pixelFormat
                             = PixelFormats.getPixelFormatByGuid(propertyInStream.getByteStreamFromStream().readAsHexString(16));
-
-                        var containerInfo = ifdEntry;
-                        containerInfo.hasAlpha = pixelFormat.hasAlpha;
-                        containerInfo.bitsPerUnit = pixelFormat.bitsPerUnit;
-                        containerInfo.isRgb = !pixelFormat.isBgr;
                         break;
                     }
                 case TagIds.Transformation: //transformation tag

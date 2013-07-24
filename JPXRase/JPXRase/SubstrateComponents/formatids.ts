@@ -54,18 +54,18 @@
         /** Returns 0xEA1C */ static get PaddingData() { return 0xEA1C; }
     }
 
-    export class DataTypeIds {
-        static get Byte() { return 1 }
-        static get TextUtf8() { return 2; }
-        static get Uint16() { return 3; }
-        static get Uint32() { return 4; }
-        static get URationalNumber() { return 5; }
-        static get Int8() { return 6; }
-        static get Undefined() { return 7; }
-        static get Int16() { return 8; }
-        static get Int32() { return 9; }
-        static get RationalNumber() { return 10; }
-        static get Float() { return 11; }
-        static get Double() { return 12; }
+    export enum DataType {
+        Byte = 1,
+        TextUtf8 = 2,
+        Uint16 = 3,
+        Uint32 = 4,
+        URationalNumber = 5,
+        Int8 = 6,
+        Undefined = 7,
+        Int16 = 8,
+        Int32 = 9,
+        RationalNumber = 10,
+        Float = 11,
+        Double = 12
     }
 }
