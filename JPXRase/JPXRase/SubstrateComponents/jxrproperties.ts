@@ -15,34 +15,34 @@ module JxrPicturase.SubstrateComponents {
             var datasize: number;
             switch (type) {
                 //case 0://reserved, not specified
-                case DataTypeIds.Byte://byte
-                case DataTypeIds.TextUtf8://utf8text
-                case DataTypeIds.Int8://Signed byte
-                case DataTypeIds.Undefined://Undefined
+                case DataType.Byte://byte
+                case DataType.TextUtf8://utf8text
+                case DataType.Int8://Signed byte
+                case DataType.Undefined://Undefined
                     datasize = 1 * count; break;
-                case DataTypeIds.Uint16://Uint16
-                case DataTypeIds.Int16://Int16
+                case DataType.Uint16://Uint16
+                case DataType.Int16://Int16
                     datasize = 2 * count; break;
-                case DataTypeIds.Uint32://UInt32
-                case DataTypeIds.Int32://Int32
-                case DataTypeIds.Float://Float
+                case DataType.Uint32://UInt32
+                case DataType.Int32://Int32
+                case DataType.Float://Float
                     datasize = 4 * count; break;
-                case DataTypeIds.URationalNumber://URationalNumber
-                case DataTypeIds.RationalNumber://RationalNumber
-                case DataTypeIds.Double://Double
+                case DataType.URationalNumber://URationalNumber
+                case DataType.RationalNumber://RationalNumber
+                case DataType.Double://Double
                     datasize = 8 * count; break;
             }
             return datasize;
         }
 
         getTextPropertyFromStream() {
-            if (this.type != DataTypeIds.TextUtf8 && this.type != DataTypeIds.Byte) {
+            if (this.type != DataType.TextUtf8 && this.type != DataType.Byte) {
                 console.log('Text is expected, but type ' + this.type.toString() + ' is observed. The only type exceptionally accepted is \'Byte\'.');
                 return;
             }
 
             var text: String;
-            if (this.type == DataTypeIds.TextUtf8)
+            if (this.type == DataType.TextUtf8)
                 text = this.valueAsSubstream.readAsUtf8Text(this.count);
             else
                 text = this.valueAsSubstream.readAsUtf16Text(this.count);
@@ -56,7 +56,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getAnyUintPropertyFromStream() {
-            if (this.type != DataTypeIds.Byte && this.type != DataTypeIds.Uint16 && this.type != DataTypeIds.Uint32) {
+            if (this.type != DataType.Byte && this.type != DataType.Uint16 && this.type != DataType.Uint32) {
                 console.log('Number is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -66,17 +66,17 @@ module JxrPicturase.SubstrateComponents {
             }
 
             switch (this.type) {
-                case DataTypeIds.Byte:
+                case DataType.Byte:
                     return this.valueAsSubstream.readAsUint8();
-                case DataTypeIds.Uint16:
+                case DataType.Uint16:
                     return this.valueAsSubstream.readAsUint16();
-                case DataTypeIds.Uint32:
+                case DataType.Uint32:
                     return this.valueAsSubstream.readAsUint32();
             }
         }
 
         getUint16PropertyFromStream() {
-            if (this.type != DataTypeIds.Uint16) {
+            if (this.type != DataType.Uint16) {
                 console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -89,7 +89,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getUint32PropertyFromStream() {
-            if (this.type != DataTypeIds.Uint32) {
+            if (this.type != DataType.Uint32) {
                 console.log('Uint32 is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -102,7 +102,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getUint16ArrayFromStream() {
-            if (this.type != DataTypeIds.Uint16) {
+            if (this.type != DataType.Uint16) {
                 console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -111,7 +111,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getUint16ArrayFromStreamFixedLength(length: number) {
-            if (this.type != DataTypeIds.Uint16) {
+            if (this.type != DataType.Uint16) {
                 console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -124,7 +124,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getFloatPropertyFromStream() {
-            if (this.type != DataTypeIds.Float) {
+            if (this.type != DataType.Float) {
                 console.log('Float is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -137,7 +137,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getURationalPropertyFromStream() {
-            if (this.type != DataTypeIds.URationalNumber) {
+            if (this.type != DataType.URationalNumber) {
                 console.log('URationalNumber is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -154,7 +154,7 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getByteStreamFromStreamFixedLength(length: number) {
-            if (this.type != DataTypeIds.Byte) {
+            if (this.type != DataType.Byte) {
                 console.log('Byte is expected, but type ' + this.type.toString() + ' is observed');
                 return;
             }
@@ -172,20 +172,20 @@ module JxrPicturase.SubstrateComponents {
         //        return null;
 
         //    switch (this.type) {
-        //        case DataTypeIds.TextUtf8: {
+        //        case DataType.TextUtf8: {
         //            return this.valueAsSubstream.readAsUtf8Text(this.count);
         //        }
-        //        case DataTypeIds.Byte: {
+        //        case DataType.Byte: {
         //            if (this.count == 1)
         //                return this.valueAsSubstream.readAsUint8();
         //            else
         //                return this.valueAsSubstream.readAsSubstream(this.count);
         //            break;
         //        }
-        //        case DataTypeIds.Undefined: {
+        //        case DataType.Undefined: {
         //            return this.valueAsSubstream.readAsSubstream(this.count);
         //        }
-        //        case DataTypeIds.Uint16: {
+        //        case DataType.Uint16: {
         //            if (this.count == 1) {
         //                return this.valueAsSubstream.readAsUint16();
         //            }
