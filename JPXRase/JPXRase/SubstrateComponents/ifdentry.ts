@@ -6,68 +6,65 @@
 ///<reference path="formatids.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class IfdEntry {
+        //JPEG XR descriptive metedata
+        documentName: String;
+        imageDescription: String;
+        cameraManufacturer: String;
+        cameraModel: String;
+        pageName: String;
+        pageNumber: Uint16Array;
+        softwareInformation: String;
+        dateAndTime: String;
+        artistName: String;
+        hostComputer: String;
+        copyrightNotice: String;
+
+        colorSpace: number
+        pixelFormat: PixelFormat;
+        transformation: TransformationState;
+        //imageType: ?
+        //ptmColorInformation: ?
+        //profileLevelContainer: ?
+
+        imageSizeX: number;
+        imageSizeY: number;
         resolutionX: number;
         resolutionY: number;
 
-        resolutionTiffX: RationalNumber;
-        resolutionTiffY: RationalNumber;
-        resolutionTiffUnit: ResolutionTiffUnit;
-
-        orientationState: ImageOrientationState;//initally null
-
-        sizeX: number;
-        sizeY: number;
-        get width() { return (this.orientationState != null && this.orientationState.RotatedClockwise) ? this.sizeY : this.sizeX; }
-        get height() { return (this.orientationState != null && this.orientationState.RotatedClockwise) ? this.sizeX : this.sizeY; }
-        colorFormat: ColorFormat;
-        bitDepth: BitDepth;
-        leadingPadding: number;
-        pixelFormat: PixelFormat;
-
-        //user buffer is always padded to whole Macroblock
-        //Anyway it is used for optimization for SSE command set, which is not possible with JavaScript.
-        //paddedUserBuffer: Boolean;
-
-        //misc
         imageOffset: number;
         imageByteCount: number;
         alphaOffset: number;
         alphaByteCount: number;
+        //imageBandPresence: ?
+        //alphaBandPresence: ?
+        //paddingData: ?
+
+        //resolutionTiffX: RationalNumber;
+        //resolutionTiffY: RationalNumber;
+        //resolutionTiffUnit: ResolutionTiffUnit;
+
+        //orientationState: ImageOrientationState;//initally null
+
+        //colorFormat: ColorFormat;
+        //bitDepth: BitDepth;
+        //leadingPadding: number;
 
         iccProfileByteStream: ArrayedStream;
-
         xmpMetadataByteStream: ArrayedStream;
-
         exifMetadataByteStream: ArrayedStream;
-
         gpsInfoMetadataByteStream: ArrayedStream;
-
         iptcNaaMetadataByteStream: ArrayedStream;
-
         photoshopMetadataByteStream: ArrayedStream;
 
-        //descriptive metadata
-        metadataDocumentName: String;
-        metadataDescription: String;
-        metadataCameraManufacturer: String;
-        metadataCameraModel: String;
-        metadataPageName: String;
-        metadataPageNumber: Uint16Array;
-        metadataSoftware: String;
-        metadataDateAndTime: String;
-        metadataArtistName: String;
-        metadataHostComputer: String;
-        metadataCopyrightNotice: String;
+        //Windows descriptive metadata
+        //metadataRatingStars: number;
+        //metadataRatingPercent: number;
 
-        //non-EXIF descriptive metadata
-        metadataRatingStars: number;
-        metadataRatingPercent: number;
-
-        metadataTitle: String;
-        metadataComment: String;
-        metadataAuthor: String;
-        metadataKeywords: String;
-        metadataSubject: String;
+        //metadataTitle: String;
+        //metadataComment: String;
+        //metadataAuthor: String;
+        //metadataKeywords: String;
+        //metadataSubject: String;
 
         static Parse(stream: ArrayedStream, entries: number) {
             var ifdEntry = new IfdEntry();
@@ -87,80 +84,171 @@ module JxrPicturase.SubstrateComponents {
         //ported version of ParsePFDEntry
         private static parseIfdEntry(ifdEntry: IfdEntry, tag: number, propertyInStream: PropertyReader) {
             switch (tag) {
-                case TagIds.PixelFormat: //pixel format tag
+                //descriptive metadata
+                case IfdTag.DocumentName:
+                    {
+                        ifdEntry.documentName = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.ImageDescription:
+                    {
+                        ifdEntry.imageDescription = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.CameraManufacturer:
+                    {
+                        ifdEntry.cameraManufacturer = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.CameraModel:
+                    {
+                        ifdEntry.cameraModel = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.PageName:
+                    {
+                        ifdEntry.pageName = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.PageNumber:
+                    {
+                        ifdEntry.pageNumber = propertyInStream.getUint16ArrayFromStreamFixedLength(2);
+                        break;
+                    }
+                case IfdTag.Software:
+                    {
+                        ifdEntry.softwareInformation = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.DateAndTime:
+                    {
+                        ifdEntry.dateAndTime = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.ArtistName:
+                    {
+                        ifdEntry.artistName = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.HostComputer:
+                    {
+                        ifdEntry.hostComputer = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.CopyrightNotice:
+                    {
+                        ifdEntry.copyrightNotice = propertyInStream.getTextPropertyFromStream();
+                        break;
+                    }
+                case IfdTag.ColorSpace:
+                    {
+                        ifdEntry.colorSpace = propertyInStream.getUint16PropertyFromStream();
+                        if (!ColorSpace[ifdEntry.colorSpace])
+                            ifdEntry.colorSpace = ColorSpace.sRGBMayNotPrefered;
+                        break;
+                    }
+                case IfdTag.PixelFormat:
                     {
                         ifdEntry.pixelFormat
                             = PixelFormats.getPixelFormatByGuid(propertyInStream.getByteStreamFromStream().readAsHexString(16));
                         break;
                     }
-                case TagIds.Transformation: //transformation tag
+                case IfdTag.Transformation:
                     {
-                        ifdEntry.orientationState = ImageOrientationState.getOrientationState(propertyInStream.getAnyUintPropertyFromStream());
+                        ifdEntry.transformation = TransformationState.getTransformationState(propertyInStream.getAnyUintPropertyFromStream());
                         break;
                     }
-                case TagIds.ImageSizeX: //image width tag
+                case IfdTag.ImageType:
+                    {
+                        var imagetype = (propertyInStream.getUint32PropertyFromStream() >> 30);
+                        var isImagePreview = ((imagetype & 1) == 1);
+                        var isOneOfMultipleImages = (((imagetype >> 1) & 1) == 1);
+                        break;
+                    }
+                case IfdTag.ColorInformation:
+                    {
+                        break;
+                    }
+                case IfdTag.ProfileLevelContainer: 
+                    {
+                        break;
+                    }
+                case IfdTag.ImageSizeX:
                     {
                         var value = propertyInStream.getAnyUintPropertyFromStream();
                         if (value == 0)
                             throw new Error('Invalid width tag');
-                        ifdEntry.sizeX = value;
+                        ifdEntry.imageSizeX = value;
                         break;
                     }
-                case TagIds.ImageSizeY: //image height tag
+                case IfdTag.ImageSizeY:
                     {
                         var value = propertyInStream.getAnyUintPropertyFromStream();
                         if (value == 0)
                             throw new Error('Invalid height tag');
-                        ifdEntry.sizeY = value;
+                        ifdEntry.imageSizeY = value;
                         break;
                     }
-                case TagIds.ImageOffset: //image offset tag
-                    {
-                        if ((ifdEntry.imageOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with image offset.');
-                        break;
-                    }
-                case TagIds.ImageByteCount: //image byte count tag
-                    {
-                        if ((ifdEntry.imageByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with image byte count.');
-                        break;
-                    }
-                case TagIds.AlphaOffset: //alpha offset tag
-                    {
-                        if ((ifdEntry.alphaOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with alpha offset.');
-                        break;
-                    }
-                case TagIds.AlphaByteCount: // alpha byte count tag
-                    {
-                        if ((ifdEntry.alphaByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with alpha byte count.');
-                        break;
-                    }
-                case TagIds.ResolutionX: // x resolution tag
+                case IfdTag.ResolutionX:
                     {
                         if ((ifdEntry.resolutionX = propertyInStream.getFloatPropertyFromStream()) === undefined)
                             throw new Error('cannot parse this image because of the critical format error with x resolution.');
                         break;
                     }
-                case TagIds.ResolutionY: // y resolution tag
+                case IfdTag.ResolutionY:
                     {
                         if ((ifdEntry.resolutionY = propertyInStream.getFloatPropertyFromStream()) === undefined)
                             throw new Error('cannot parse this image because of the critical format error with y resolution.');
                         break;
                     }
-                case TagIds.IccProfile: // ICC profile tag - same as TIFF
+                case IfdTag.ImageOffset:
+                    {
+                        if ((ifdEntry.imageOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
+                            throw new Error('cannot parse this image because of the critical format error with image offset.');
+                        break;
+                    }
+                case IfdTag.ImageByteCount:
+                    {
+                        if ((ifdEntry.imageByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
+                            throw new Error('cannot parse this image because of the critical format error with image byte count.');
+                        break;
+                    }
+                case IfdTag.AlphaOffset:
+                    {
+                        if ((ifdEntry.alphaOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
+                            throw new Error('cannot parse this image because of the critical format error with alpha offset.');
+                        break;
+                    }
+                case IfdTag.AlphaByteCount:
+                    {
+                        if ((ifdEntry.alphaByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
+                            throw new Error('cannot parse this image because of the critical format error with alpha byte count.');
+                        break;
+                    }
+                case IfdTag.ImageBandPresence:
+                    {
+                        break;
+                    }
+                case IfdTag.AlphaBandPresence:
+                    {
+                        break;
+                    }
+                case IfdTag.PaddingData:
+                    {
+                        break;
+                    }
+
+                case IfdTag.IccProfile:
                     {
                         ifdEntry.iccProfileByteStream = propertyInStream.getByteStreamFromStream();
                         break;
                     }
-                case TagIds.XmpMetadata: // XMP metadata tag
+                case IfdTag.XmpMetadata:
                     {
                         ifdEntry.xmpMetadataByteStream = propertyInStream.getByteStreamFromStream();
                         break;
                     }
-                case TagIds.ExifMetadata: // EXIF metadata tag
+                case IfdTag.ExifMetadata:
                     {
                         //var value = valueAsSubstream.readAsUint32();
                         //ifdEntry.exifMetadataOffset = value;
@@ -169,7 +257,7 @@ module JxrPicturase.SubstrateComponents {
                         ifdEntry.exifMetadataByteStream = this.getIfdSubstreamFromStream(propertyInStream.basestream, propertyInStream.getAnyUintPropertyFromStream());
                         break;
                     }
-                case TagIds.GpsInfoMetadata: // GPS info metadata tag
+                case IfdTag.GpsInfoMetadata:
                     {
                         //var value = valueAsSubstream.readAsUint32();
                         //ifdEntry.gpsInfoMetadataOffset = value;
@@ -183,147 +271,78 @@ module JxrPicturase.SubstrateComponents {
                 //        this.getIfdSubstreamFromStream(substrate.stream, propertyXbox.getUintPropertyFromStream());
                 //        break;
                 //    }
-                case TagIds.IptcNaaMetadata: // IPTC-NAA metadata tag
+                case IfdTag.IptcNaaMetadata:
                     {
                         ifdEntry.iptcNaaMetadataByteStream = propertyInStream.getByteStreamFromStream();
                         break;
                     }
-                case TagIds.PhotoshopMetadata: // Photoshop metadata tag
+                case IfdTag.PhotoshopMetadata:
                     {
                         ifdEntry.photoshopMetadataByteStream = propertyInStream.getByteStreamFromStream();
                         break;
                     }
-                case TagIds.Compression: // compression tag
-                case TagIds.ImageDataDiscarded: // (discarded) image data tag
-                case TagIds.AlphaDataDiscarded: // (discarded) alpha data tag
-                case TagIds.PaddingData:
-                    break;
 
-                case TagIds.ImageType: // image type tag
-                    {
-                        var imagetype = (propertyInStream.getUint32PropertyFromStream() >> 30);
-                        var isImagePreview = ((imagetype & 1) == 1);
-                        var isOneOfMultipleImages = (((imagetype >> 1) & 1) == 1);
-                        break;
-                    }
-
-                //descriptive metadata
-                case TagIds.DocumentName: // document name tag
-                    {
-                        ifdEntry.metadataDocumentName = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.ImageDescription: // image description tag
-                    {
-                        ifdEntry.metadataDescription = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.CameraManufacturer: // camera manufacturer tag
-                    {
-                        ifdEntry.metadataCameraManufacturer = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.CameraModel: // camera model name tag
-                    {
-                        ifdEntry.metadataDescription = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.PageName: // page name tag
-                    {
-                        ifdEntry.metadataPageName = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.PageNumber: // page number tag
-                    {
-                        ifdEntry.metadataPageNumber = propertyInStream.getUint16ArrayFromStreamFixedLength(2);
-                        break;
-                    }
-                case TagIds.Software: // software tag
-                    {
-                        ifdEntry.metadataSoftware = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.DateAndTime: // date and time tag
-                    {
-                        ifdEntry.metadataDateAndTime = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.ArtistName: // artist tag
-                    {
-                        ifdEntry.metadataArtistName = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.HostComputer: // host computer tag
-                    {
-                        ifdEntry.metadataHostComputer = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.CopyrightNotice: // copyright tag
-                    {
-                        ifdEntry.metadataCopyrightNotice = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.RatingStars: // rating stars tag
-                    {
-                        ifdEntry.metadataRatingStars = propertyInStream.getUint16PropertyFromStream();
-                        break;
-                    }
-                case TagIds.RatingValue: // rating value tag
-                    {
-                        ifdEntry.metadataRatingPercent = propertyInStream.getUint16PropertyFromStream();
-                        break;
-                    }
-                case TagIds.Title:
-                    {
-                        ifdEntry.metadataTitle = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.Comment:
-                    {
-                        ifdEntry.metadataComment = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.Author:
-                    {
-                        ifdEntry.metadataAuthor = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.Keywords:
-                    {
-                        ifdEntry.metadataKeywords = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.Subject:
-                    {
-                        ifdEntry.metadataSubject = propertyInStream.getTextPropertyFromStream();
-                        break;
-                    }
-                case TagIds.ResolutionTiffX:
-                    {
-                        ifdEntry.resolutionTiffX = propertyInStream.getURationalPropertyFromStream();
-                        break;
-                    }
-                case TagIds.ResolutionTiffY:
-                    {
-                        ifdEntry.resolutionTiffY = propertyInStream.getURationalPropertyFromStream();
-                        break;
-                    }
-                case TagIds.ResolutionTiffUnit:
-                    {
-                        switch (propertyInStream.getUint16PropertyFromStream()) {
-                            case 2:
-                                {
-                                    ifdEntry.resolutionTiffUnit = ResolutionTiffUnit.Inches;
-                                    break;
-                                }
-                            case 3:
-                                {
-                                    ifdEntry.resolutionTiffUnit = ResolutionTiffUnit.Centimeters;
-                                    break;
-                                }
-                        }
-                        break;
-                    }
+                //case TagIds.RatingStars:
+                //    {
+                //        ifdEntry.metadataRatingStars = propertyInStream.getUint16PropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.RatingValue:
+                //    {
+                //        ifdEntry.metadataRatingPercent = propertyInStream.getUint16PropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.Title:
+                //    {
+                //        ifdEntry.metadataTitle = propertyInStream.getTextPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.Comment:
+                //    {
+                //        ifdEntry.metadataComment = propertyInStream.getTextPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.Author:
+                //    {
+                //        ifdEntry.metadataAuthor = propertyInStream.getTextPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.Keywords:
+                //    {
+                //        ifdEntry.metadataKeywords = propertyInStream.getTextPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.Subject:
+                //    {
+                //        ifdEntry.metadataSubject = propertyInStream.getTextPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.ResolutionTiffX:
+                //    {
+                //        ifdEntry.resolutionTiffX = propertyInStream.getURationalPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.ResolutionTiffY:
+                //    {
+                //        ifdEntry.resolutionTiffY = propertyInStream.getURationalPropertyFromStream();
+                //        break;
+                //    }
+                //case TagIds.ResolutionTiffUnit:
+                //    {
+                //        switch (propertyInStream.getUint16PropertyFromStream()) {
+                //            case 2:
+                //                {
+                //                    ifdEntry.resolutionTiffUnit = ResolutionTiffUnit.Inches;
+                //                    break;
+                //                }
+                //            case 3:
+                //                {
+                //                    ifdEntry.resolutionTiffUnit = ResolutionTiffUnit.Centimeters;
+                //                    break;
+                //                }
+                //        }
+                //        break;
+                //    }
                 default:
                     {
                         break;

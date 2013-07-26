@@ -7,7 +7,7 @@ module JxrPicturase.SubstrateComponents {
         isHardTileUsed: Boolean;
         hasMultipleTiles: Boolean;
         isFrequencyMode: Boolean;
-        spatialTransformation: ImageOrientationState;
+        spatialTransformation: TransformationState;
         hasIndexTable: Boolean;
 
         overlapMode: ImageOverlapMode;
@@ -79,7 +79,7 @@ module JxrPicturase.SubstrateComponents {
             imageHeader.hasMultipleTiles = (bitstream.readBits(1) == 1);
             imageHeader.isFrequencyMode = (bitstream.readBits(1) == 1);
             imageHeader.spatialTransformation
-            = new ImageOrientationState(
+            = new TransformationState(
                 (bitstream.readBits(1) == 1),
                 (bitstream.readBits(1) == 1),
                 (bitstream.readBits(1) == 1));
