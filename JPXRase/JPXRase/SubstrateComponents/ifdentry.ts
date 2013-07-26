@@ -19,7 +19,7 @@ module JxrPicturase.SubstrateComponents {
         hostComputer: String;
         copyrightNotice: String;
 
-        colorSpace: number
+        colorSpace: ColorSpace;
         pixelFormat: PixelFormat;
         transformation: TransformationState;
         //imageType: ?
@@ -144,7 +144,7 @@ module JxrPicturase.SubstrateComponents {
                     {
                         ifdEntry.colorSpace = propertyInStream.getUint16PropertyFromStream();
                         if (!ColorSpace[ifdEntry.colorSpace])
-                            ifdEntry.colorSpace = ColorSpace.sRGBMayNotPrefered;
+                            ifdEntry.colorSpace = ColorSpace.Other;
                         break;
                     }
                 case IfdTag.PixelFormat:
