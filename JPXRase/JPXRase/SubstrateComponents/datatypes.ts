@@ -3,26 +3,31 @@
         None, SecondLevel, FirstAndSecondLevel
     }
 
-    export class ImageOrientationState {
+    export class TransformationState {
         constructor(
             public RotatedClockwise: Boolean,
             public FlippedHorizontally: Boolean,
             public FlippedVertically: Boolean) {
         }
 
-        static getOrientationState(state: number) {
+        static getTransformationState(state: number) {
             switch (state) {
-                case 0: return new ImageOrientationState(false, false, false);
-                case 1: return new ImageOrientationState(false, false, true);
-                case 2: return new ImageOrientationState(false, true, false);
-                case 3: return new ImageOrientationState(false, true, true);
-                case 4: return new ImageOrientationState(true, false, false);
-                case 5: return new ImageOrientationState(true, false, true);
-                case 6: return new ImageOrientationState(true, true, false);
-                case 7: return new ImageOrientationState(true, true, true);
-                default: return null;
+                default://should be equal to value 0
+                case 0: return new TransformationState(false, false, false);
+
+                case 1: return new TransformationState(false, false, true);
+                case 2: return new TransformationState(false, true, false);
+                case 3: return new TransformationState(false, true, true);
+                case 4: return new TransformationState(true, false, false);
+                case 5: return new TransformationState(true, false, true);
+                case 6: return new TransformationState(true, true, false);
+                case 7: return new TransformationState(true, true, true);
             }
         }
+    }
+    
+    export enum ColorSpace {
+        sRGBPrefered = 1, sRGBMayNotPrefered = 0xFFFF
     }
 
     export enum ResolutionTiffUnit {
