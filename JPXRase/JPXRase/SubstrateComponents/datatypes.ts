@@ -27,7 +27,7 @@
     }
     
     export enum ColorSpace {
-        sRGBPrefered = 1, sRGBMayNotPrefered = 0xFFFF
+        sRGB = 1, Other = 0xFFFF
     }
 
     export enum ResolutionTiffUnit {
