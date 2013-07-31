@@ -47,6 +47,8 @@ module JxrPicturase.SubstrateComponents {
     }
 
     export class JxrIfdEntryErrors {
+        //static get error() {
+        //}
     }
 
     export class JxrHeaderErrors {

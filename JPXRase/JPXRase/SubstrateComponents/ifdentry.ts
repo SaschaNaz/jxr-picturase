@@ -167,6 +167,13 @@ module JxrPicturase.SubstrateComponents {
                     }
                 case IfdTag.ColorInformation:
                     {
+                        var colorInfoStream = (propertyInStream.getByteStreamFromStreamFixedLength(4));
+                        //IFD용 에러 마련.
+                        //각 하부 데이터 에러 메시지 따로 출력
+                        var colorPrimaries = ColorPrimaries.getColorPrimaries(colorInfoStream.readAsUint8());
+                        var transferCharacteristics = colorInfoStream.readAsUint8();
+                        var matrixCoeffecients = colorInfoStream.readAsUint8();
+                        var isFullRange = (colorInfoStream.readAsUint8() & 1) == 1;
                         break;
                     }
                 case IfdTag.ProfileLevelContainer: 
