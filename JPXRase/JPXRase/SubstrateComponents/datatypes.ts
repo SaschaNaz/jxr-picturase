@@ -39,7 +39,9 @@
         blueY: number;
         redY: number;
         whiteY: number;
-        constructor(greenX, blueX, redX, whiteX, greenY, blueY, redY, whiteY) {
+        constructor(
+            greenX: number, blueX: number, redX: number, whiteX: number,
+            greenY: number, blueY: number, redY: number, whiteY: number) {
             this.greenX = greenX;
             this.blueX = blueX;
             this.redX = redX;
@@ -49,17 +51,28 @@
             this.redY = redY;
             this.whiteY = whiteY;
         }
+        
+        isSpecified() {
+            return (this.greenX != undefined
+                && this.blueX != undefined
+                && this.redX != undefined
+                && this.whiteX != undefined
+                && this.greenY != undefined
+                && this.blueY != undefined
+                && this.redY != undefined
+                && this.whiteY != undefined);
+        }
 
-        static getColorPrimaries(primaries: number) {
-            switch (primaries) {
+        static getColorPrimaries(primariesNumber: number) {
+            switch (primariesNumber) {
                 case 0:
                 case 3:
                 default:
                     throw new Error("Unsupported ColorPrimaries value");
+                case 2://unspecified
+                    return new ColorPrimaries(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
                 case 1:
                     return new ColorPrimaries(0.300, 0.150, 0.640, 0.3127, 0.600, 0.060, 0.330, 0.3290);
-                case 2:
-                    return null;
                 case 4:
                     return new ColorPrimaries(0.210, 0.140, 0.670, 0.3100, 0.710, 0.080, 0.330, 0.3160);
                 case 5:
@@ -72,15 +85,24 @@
     }
 
     export class TransferCharacteristics {
-        private conv1(vLc: number) {
-            if (vLc >= 0.018)
+        private transferer: Function;
+        constructor(characteresticsFunction: Function) {
 
         }
-    }
 
-    export enum 
+        transfer(opticalIntensityInput: number) {
+            if (opticalIntensityInput < 0 || opticalIntensityInput > 1)
+                throw "invalid optical intensity input";
+        }
 
-    export enum ResolutionTiffUnit {
-        Inches = 2, Centimeters = 3
+        getTransferCharacteristics(characteresticsNumber: number) {
+            switch (characteresticsNumber) {
+                case 0:
+                case 3:
+                default:
+                    throw new Error("Unsupported TransferCharacteristics value");
+                case 
+            }
+        }
     }
 }

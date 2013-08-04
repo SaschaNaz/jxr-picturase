@@ -4,19 +4,23 @@ module JxrPicturase.SubstrateComponents {
     /** Validate JPEG XR header as Rec. ITU-T T.832 (01/2012) */
     //export class ErrorObjectProvider {
     //    static getErrorObject(specNumber: String, message: String) {
-    //        return new Error("JXR Picturase: Failed to digest the image which has a problem. "
+    //        return new Error("Failed to digest the image which has a problem. "
     //            + message + ", as JPEG XR specification ITU-T T.832 (01/2012) " + specNumber);
     //    }
     //}
     export class JxrErrorMessage {
-        /** returns "JXR Picturase: Failed to digest the image which " + message */
+        /** returns "Failed to digest the image which " + message */
         static getFailedBecauseMessage(message: String) {
-            return "JXR Picturase: Failed to digest the image which " + message;
+            return "Failed to digest the image which " + message;//최상단 console.error로 전환
         }
-        /** returns "JXR Picturase: May fail to digest the image which " + message */
+        /** returns "May fail to digest the image which " + message */
         static getMayFailBecauseUnsupportedEnumMessage(varname: String) {
-            return "JXR Picturase: May fail to digest the image which has unsupported type of "
-                + varname + " by JPEG XR specification ITU-T T.832 (01/2012)";
+            return "May fail to digest the image which has unsupported type of "
+                + varname + " by JPEG XR specification ITU-T T.832 (01/2012)";//부르는 곳에서 console.warn으로 전환. May fail은 warn 자체로 대체 가능하니 이 메시지는 필요 없을 듯
+        }
+
+        static getInvalidParameterMessage(varname: String, syntaxname: String) {
+            return "Invalid value of " + varname + " is detected in " + syntaxname;
         }
     }
 

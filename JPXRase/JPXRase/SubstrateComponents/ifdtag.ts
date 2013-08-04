@@ -2,8 +2,8 @@
     export enum IfdTag {
         /** Returns 0x010D. This is descriptive metadata tag. */ DocumentName = 0x010D,
         /** Returns 0x010E. This is descriptive metadata tag. */ ImageDescription = 0x010E,
-        /** Returns 0x010F. This is descriptive metadata tag. */ CameraManufacturer = 0x010F,
-        /** Returns 0x0110. This is descriptive metadata tag. */ CameraModel = 0x0110,
+        /** Returns 0x010F. This is descriptive metadata tag. */ DeviceManufacturer = 0x010F,
+        /** Returns 0x0110. This is descriptive metadata tag. */ DeviceModel = 0x0110,
         /** Returns 0x011D. This is descriptive metadata tag. */ PageName = 0x011D,
         /** Returns 0x0129. This is descriptive metadata tag. */ PageNumber = 0x0129,
         /** Returns 0x0131. This is descriptive metadata tag. */ Software = 0x131,
