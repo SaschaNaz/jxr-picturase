@@ -1,5 +1,5 @@
 ﻿///<reference path="../arrayedstream.ts"/>
-///<reference path="formatids.ts"/>
+///<reference path="ifdtag.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class PropertyReader {
         constructor(public basestream: ArrayedStream, public type: number, public count: number, public valueAsSubstream: ArrayedStream) {
@@ -37,8 +37,7 @@ module JxrPicturase.SubstrateComponents {
 
         getTextPropertyFromStream() {
             if (this.type != DataType.TextUtf8 && this.type != DataType.Byte) {
-                console.log('Text is expected, but type ' + this.type.toString() + ' is observed. The only type exceptionally accepted is \'Byte\'.');
-                return;
+                throw 'Text is expected, but type ' + this.type.toString() + ' is observed. The only type exceptionally accepted is \'Byte\'.';
             }
 
             var text: String;
@@ -48,7 +47,7 @@ module JxrPicturase.SubstrateComponents {
                 text = this.valueAsSubstream.readAsUtf16Text(this.count);
 
             if (text.charCodeAt(text.length - 1) != 0)
-                console.log('Possibly invalid text property, as it is not properly terminated.');
+                console.warn('Possibly invalid text property, as it is not properly terminated.');
             else
                 text = text.substr(0, text.length - 1);
             
@@ -57,12 +56,10 @@ module JxrPicturase.SubstrateComponents {
 
         getAnyUintPropertyFromStream() {
             if (this.type != DataType.Byte && this.type != DataType.Uint16 && this.type != DataType.Uint32) {
-                console.log('Number is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Number is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != 1) {
-                console.log('length 1 is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
             }
 
             switch (this.type) {
@@ -77,12 +74,10 @@ module JxrPicturase.SubstrateComponents {
 
         getUint16PropertyFromStream() {
             if (this.type != DataType.Uint16) {
-                console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != 1) {
-                console.log('length 1 is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsUint16();
@@ -90,12 +85,10 @@ module JxrPicturase.SubstrateComponents {
 
         getUint32PropertyFromStream() {
             if (this.type != DataType.Uint32) {
-                console.log('Uint32 is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Uint32 is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != 1) {
-                console.log('length 1 is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsUint32();
@@ -103,8 +96,7 @@ module JxrPicturase.SubstrateComponents {
 
         getUint16ArrayFromStream() {
             if (this.type != DataType.Uint16) {
-                console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
             }
 
             return this.valueAsSubstream.readAsUint16Array(this.count);
@@ -112,12 +104,10 @@ module JxrPicturase.SubstrateComponents {
 
         getUint16ArrayFromStreamFixedLength(length: number) {
             if (this.type != DataType.Uint16) {
-                console.log('Uint16 is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != length) {
-                console.log('length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsUint16Array(this.count);
@@ -125,12 +115,10 @@ module JxrPicturase.SubstrateComponents {
 
         getFloatPropertyFromStream() {
             if (this.type != DataType.Float) {
-                console.log('Float is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Float is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != 1) {
-                console.log('length 1 is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsFloat();
@@ -138,12 +126,10 @@ module JxrPicturase.SubstrateComponents {
 
         getURationalPropertyFromStream() {
             if (this.type != DataType.URationalNumber) {
-                console.log('URationalNumber is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'URationalNumber is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != 1) {
-                console.log('length 1 is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsURationalNumber();
@@ -155,12 +141,10 @@ module JxrPicturase.SubstrateComponents {
 
         getByteStreamFromStreamFixedLength(length: number) {
             if (this.type != DataType.Byte) {
-                console.log('Byte is expected, but type ' + this.type.toString() + ' is observed');
-                return;
+                throw 'Byte is expected, but type ' + this.type.toString() + ' is observed';
             }
             if (this.count != length) {
-                console.log('length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed');
-                return;
+                throw 'length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed';
             }
 
             return this.valueAsSubstream.readAsSubstream(this.count);

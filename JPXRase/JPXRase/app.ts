@@ -1,4 +1,5 @@
 ///<reference path="arrayedstream.ts"/>
+///<reference path="jxrmessagelogger.ts"/>
 ///<reference path="SubstrateComponents/ifdentry.ts"/>
 ///<reference path="SubstrateComponents/imageheader.ts"/>
 ///<reference path="SubstrateComponents/imageplaneheader.ts"/>
@@ -83,11 +84,12 @@ module JxrPicturase {
                     jxrase.react(xhr.response);
                 }
                 catch (e) {
-                    console.log((<Error>e).message);
+                    console.error((<Error>e).message);
+                    console.error("JXR Picturase: Failed to digest the image.");
                 }
             }
             else
-                console.log('Image URL is invalid.');
+                JxrMessageLogger.error('Image URL is invalid.');
         }
         xhr.send();
     }

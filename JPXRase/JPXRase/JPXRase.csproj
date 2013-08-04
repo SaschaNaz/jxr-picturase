@@ -30,6 +30,7 @@
     <Content Include="arrayedstream.min.js">
       <DependentUpon>arrayedstream.ts</DependentUpon>
     </Content>
+    <Content Include="jxrmessagelogger.ts" />
     <Content Include="SubstrateComponents\datatypes.ts" />
     <Content Include="SubstrateComponents\ifdentry.ts" />
     <Content Include="default.htm" />
@@ -52,7 +53,7 @@
       <DependentUpon>pixelformats.ts</DependentUpon>
     </Content>
     <Content Include="SubstrateComponents\pixelformats.ts" />
-    <Content Include="SubstrateComponents\formatids.ts" />
+    <Content Include="SubstrateComponents\ifdtag.ts" />
     <Content Include="rationalnumber.ts" />
     <Content Include="SubstrateComponents\imageheader.ts" />
     <Content Include="temp.jxr" />
@@ -73,6 +74,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -3,7 +3,7 @@
 ///<reference path="../arrayedstream.ts"/>
 ///<reference path="datatypes.ts"/>
 ///<reference path="jxrproperties.ts"/>
-///<reference path="formatids.ts"/>
+///<reference path="ifdtag.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class IfdEntry {
         //JPEG XR descriptive metedata
@@ -87,75 +87,159 @@ module JxrPicturase.SubstrateComponents {
                 //descriptive metadata
                 case IfdTag.DocumentName:
                     {
-                        ifdEntry.documentName = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.documentName = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("DOCUMENT_NAME", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ImageDescription:
                     {
-                        ifdEntry.imageDescription = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.imageDescription = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("IMAGE_DESCRIPTION", "IFD_ENTRY"));
+                        }
                         break;
                     }
-                case IfdTag.CameraManufacturer:
+                case IfdTag.DeviceManufacturer:
                     {
-                        ifdEntry.cameraManufacturer = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.cameraManufacturer = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EQUIPMENT_MAKE", "IFD_ENTRY"));
+                        }
                         break;
                     }
-                case IfdTag.CameraModel:
+                case IfdTag.DeviceModel:
                     {
-                        ifdEntry.cameraModel = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.cameraModel = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EQUIPMENT_MODEL", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.PageName:
                     {
-                        ifdEntry.pageName = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.pageName = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("PAGE_NAME", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.PageNumber:
                     {
-                        ifdEntry.pageNumber = propertyInStream.getUint16ArrayFromStreamFixedLength(2);
+                        try {
+                            ifdEntry.pageNumber = propertyInStream.getUint16ArrayFromStreamFixedLength(2);
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("PAGE_NUMBER", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.Software:
                     {
-                        ifdEntry.softwareInformation = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.softwareInformation = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("SOFTWARE_NAME_VERSION", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.DateAndTime:
                     {
-                        ifdEntry.dateAndTime = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.dateAndTime = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("DATE_TIME", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ArtistName:
                     {
-                        ifdEntry.artistName = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.artistName = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ARTIST_NAME", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.HostComputer:
                     {
-                        ifdEntry.hostComputer = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.hostComputer = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("HOST_COMPUTER", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.CopyrightNotice:
                     {
-                        ifdEntry.copyrightNotice = propertyInStream.getTextPropertyFromStream();
+                        try {
+                            ifdEntry.copyrightNotice = propertyInStream.getTextPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("COPYRIGHT_NOTICE", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ColorSpace:
                     {
-                        ifdEntry.colorSpace = propertyInStream.getUint16PropertyFromStream();
-                        if (!ColorSpace[ifdEntry.colorSpace])
-                            ifdEntry.colorSpace = ColorSpace.Other;
+                        try {
+                            ifdEntry.colorSpace = propertyInStream.getUint16PropertyFromStream();
+                            if (!ColorSpace[ifdEntry.colorSpace])
+                                ifdEntry.colorSpace = ColorSpace.Other;
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("COLOR_SPACE", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.PixelFormat:
                     {
-                        ifdEntry.pixelFormat
+                        try {
+                            ifdEntry.pixelFormat
                             = PixelFormats.getPixelFormatByGuid(propertyInStream.getByteStreamFromStream().readAsHexString(16));
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            throw JxrErrorMessage.getInvalidParameterMessage("PIXEL_FORMAT", "IFD_ENTRY");
+                        }
                         break;
                     }
                 case IfdTag.Transformation:
                     {
-                        ifdEntry.transformation = TransformationState.getTransformationState(propertyInStream.getAnyUintPropertyFromStream());
+                        try {
+                            ifdEntry.transformation = TransformationState.getTransformationState(propertyInStream.getAnyUintPropertyFromStream());
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("SPATIAL_XFRM_PRIMARY", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ImageType:
@@ -182,54 +266,97 @@ module JxrPicturase.SubstrateComponents {
                     }
                 case IfdTag.ImageSizeX:
                     {
-                        var value = propertyInStream.getAnyUintPropertyFromStream();
-                        if (value == 0)
-                            throw new Error('Invalid width tag');
-                        ifdEntry.imageSizeX = value;
+                        try {
+                            var value = propertyInStream.getAnyUintPropertyFromStream();
+                            if (value == 0)
+                                throw new Error('Width shall not be 0');
+                            ifdEntry.imageSizeX = value;
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_WIDTH", "IFD_ENTRY");
+                        }
                         break;
                     }
                 case IfdTag.ImageSizeY:
                     {
-                        var value = propertyInStream.getAnyUintPropertyFromStream();
-                        if (value == 0)
-                            throw new Error('Invalid height tag');
-                        ifdEntry.imageSizeY = value;
+                        try {
+                            var value = propertyInStream.getAnyUintPropertyFromStream();
+                            if (value == 0)
+                                throw new Error('Height shall not be 0');
+                            ifdEntry.imageSizeY = value;
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_HEIGHT", "IFD_ENTRY");
+                        }
                         break;
                     }
                 case IfdTag.ResolutionX:
                     {
-                        if ((ifdEntry.resolutionX = propertyInStream.getFloatPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with x resolution.');
+                        try {
+                            ifdEntry.resolutionX = propertyInStream.getFloatPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("WIDTH_RESOLUTION", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ResolutionY:
                     {
-                        if ((ifdEntry.resolutionY = propertyInStream.getFloatPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with y resolution.');
+                        try {
+                            ifdEntry.resolutionY = propertyInStream.getFloatPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("HEIGHT_RESOLUTION", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ImageOffset:
                     {
-                        if ((ifdEntry.imageOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with image offset.');
+                        try {
+                            ifdEntry.imageOffset = propertyInStream.getAnyUintPropertyFromStream();
+                        }
+                        catch(e) {
+                            console.warn((<Error>e).message);
+                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_OFFSET", "IFD_ENTRY");
+                        }
                         break;
                     }
                 case IfdTag.ImageByteCount:
                     {
-                        if ((ifdEntry.imageByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with image byte count.');
+                        try {
+                            ifdEntry.imageByteCount = propertyInStream.getAnyUintPropertyFromStream();
+                        }
+                        
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_BYTE_COUNT", "IFD_ENTRY");
+                        }
                         break;
                     }
                 case IfdTag.AlphaOffset:
                     {
-                        if ((ifdEntry.alphaOffset = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with alpha offset.');
+                        try {
+                            ifdEntry.alphaOffset = propertyInStream.getAnyUintPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ALPHA_OFFSET", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.AlphaByteCount:
                     {
-                        if ((ifdEntry.alphaByteCount = propertyInStream.getAnyUintPropertyFromStream()) === undefined)
-                            throw new Error('cannot parse this image because of the critical format error with alpha byte count.');
+                        try {
+                            ifdEntry.alphaByteCount = propertyInStream.getAnyUintPropertyFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ALPHA_BYTE_COUNT", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ImageBandPresence:
@@ -247,30 +374,46 @@ module JxrPicturase.SubstrateComponents {
 
                 case IfdTag.IccProfile:
                     {
-                        ifdEntry.iccProfileByteStream = propertyInStream.getByteStreamFromStream();
+                        try {
+                            ifdEntry.iccProfileByteStream = propertyInStream.getByteStreamFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ICC color profile", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.XmpMetadata:
                     {
-                        ifdEntry.xmpMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        try {
+                            ifdEntry.xmpMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("XMP metadata", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ExifMetadata:
                     {
-                        //var value = valueAsSubstream.readAsUint32();
-                        //ifdEntry.exifMetadataOffset = value;
-                        //ifdEntry.exifMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
-
-                        ifdEntry.exifMetadataByteStream = this.getIfdSubstreamFromStream(propertyInStream.basestream, propertyInStream.getAnyUintPropertyFromStream());
+                        try {
+                            ifdEntry.exifMetadataByteStream = this.getIfdSubstreamFromStream(propertyInStream.basestream, propertyInStream.getAnyUintPropertyFromStream());
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EXIF metadata", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.GpsInfoMetadata:
                     {
-                        //var value = valueAsSubstream.readAsUint32();
-                        //ifdEntry.gpsInfoMetadataOffset = value;
-                        //ifdEntry.gpsInfoMetadataByteCount = this.getIfdSizeFromStream(substrate.stream, value);
-
-                        ifdEntry.gpsInfoMetadataByteStream = this.getIfdSubstreamFromStream(propertyInStream.basestream, propertyInStream.getAnyUintPropertyFromStream());
+                        try {
+                            ifdEntry.gpsInfoMetadataByteStream = this.getIfdSubstreamFromStream(propertyInStream.basestream, propertyInStream.getAnyUintPropertyFromStream());
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("GPS information metadata", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 //case TagIds.InteroperabilityIfd: //JPEG XR cannot be DCF basic file (that always uses normal JPEG format) or THM file.
@@ -280,15 +423,26 @@ module JxrPicturase.SubstrateComponents {
                 //    }
                 case IfdTag.IptcNaaMetadata:
                     {
-                        ifdEntry.iptcNaaMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        try {
+                            ifdEntry.iptcNaaMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("IPTC-NAA metadata", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.PhotoshopMetadata:
                     {
-                        ifdEntry.photoshopMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        try {
+                            ifdEntry.photoshopMetadataByteStream = propertyInStream.getByteStreamFromStream();
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidParameterMessage("Adobe Photoshop metadata", "IFD_ENTRY"));
+                        }
                         break;
                     }
-
                 //case TagIds.RatingStars:
                 //    {
                 //        ifdEntry.metadataRatingStars = propertyInStream.getUint16PropertyFromStream();
@@ -373,7 +527,7 @@ module JxrPicturase.SubstrateComponents {
                 var datasize: number;
 
                 if (type == 0 || type >= 13)
-                    throw new Error("The image has unsupported IFD type");
+                    throw new Error("Unsupported IFD type is detected");
 
                 var datasize = PropertyReader.getPropertyDataSize(type, count);
                 if (datasize > 4)//real value would be in position right after the IFD
