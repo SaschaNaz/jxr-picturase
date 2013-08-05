@@ -56,6 +56,7 @@
     <Content Include="SubstrateComponents\ifdtag.ts" />
     <Content Include="rationalnumber.ts" />
     <Content Include="SubstrateComponents\imageheader.ts" />
+    <Content Include="SubstrateComponents\validator.ts" />
     <Content Include="temp.jxr" />
     <Content Include="web.config" />
     <Content Include="app.js.map">

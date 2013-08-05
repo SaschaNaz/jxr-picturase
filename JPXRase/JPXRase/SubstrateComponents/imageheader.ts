@@ -22,6 +22,12 @@ module JxrPicturase.SubstrateComponents {
         outputBitDepth: BitDepth;
         width: number;
         height: number;
+        getExtendedWidth() {
+            return this.width + this.marginLeft + this.marginRight;
+        }
+        getExtendedHeight() {
+            return this.height + this.marginTop + this.marginBottom;
+        }
 
         numberOfVerticalTiles = 1;
         numberOfHorizontalTiles = 1;
@@ -62,19 +68,19 @@ module JxrPicturase.SubstrateComponents {
 
             //signature
             if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\0')
-                throw new JxrInvalidSignatureError("GDI_SIGNATURE");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("GDI_SIGNATURE", "IMAGE_HEADER"));
 
             var bitstream = new ArrayedBitStream(imageSubstream);
 
             //reserved B
             if (bitstream.readBits(4) != 1)
-                throw new JxrUnsupportedEnumError("RESERVED_B");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_B", "IMAGE_HEADER"));
 
             imageHeader.isHardTileUsed = (bitstream.readBits(1) == 1);
 
             //codec version check 2
             if (bitstream.readBits(3) != 1)
-                JxrErrorMessage.getMayFailBecauseUnsupportedEnumMessage("RESERVED_C");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_C", "IMAGE_HEADER"));
 
             imageHeader.hasMultipleTiles = (bitstream.readBits(1) == 1);
             imageHeader.isFrequencyMode = (bitstream.readBits(1) == 1);
@@ -87,7 +93,7 @@ module JxrPicturase.SubstrateComponents {
 
             imageHeader.overlapMode = bitstream.readBits(2);
             if (!ImageOverlapMode[imageHeader.overlapMode])
-                throw new JxrUnsupportedEnumError("OVERLAP_MODE");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("OVERLAP_MODE", "IMAGE_HEADER"));
 
             var hasShortHeader = (bitstream.readBits(1) == 1);
             imageHeader.useLongValues = (bitstream.readBits(1) == 1);
@@ -96,17 +102,17 @@ module JxrPicturase.SubstrateComponents {
 
             //codec version check 3
             if (bitstream.readBits(1) != 0)
-                JxrErrorMessage.getMayFailBecauseUnsupportedEnumMessage("RESERVED_D");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_D", "IMAGE_HEADER"));
 
             imageHeader.isNotBgr = (bitstream.readBits(1) == 1);
             imageHeader.isAlphaPremultiplied = (bitstream.readBits(1) == 1);
             imageHeader.hasAlphaImagePlane = (bitstream.readBits(1) == 1);
             imageHeader.outputColorFormat = bitstream.readBits(4);
             if (!ColorFormat[imageHeader.outputColorFormat])
-                throw new JxrUnsupportedEnumError("OUTPUT_CLR_FMT");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("OUTPUT_CLR_FMT", "IMAGE_HEADER"));
             imageHeader.outputBitDepth = bitstream.readBits(4);
             if (!BitDepth[imageHeader.outputBitDepth])
-                throw new JxrUnsupportedEnumError("OUTPUT_BITDEPTH");
+                throw new Error(JxrErrorMessage.getInvalidValueMessage("OUTPUT_BITDEPTH", "IMAGE_HEADER"));
             if (hasShortHeader) {
                 imageHeader.width = bitstream.readBits(16) + 1;
                 imageHeader.height = bitstream.readBits(16) + 1;
@@ -115,22 +121,11 @@ module JxrPicturase.SubstrateComponents {
                 imageHeader.width = bitstream.readBits(32) + 1;
                 imageHeader.height = bitstream.readBits(32) + 1;
             }
-            //JPEG XR validity test, 8.3.21 and 8.3.22
-            if (imageHeader.width % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
-                throw JxrHeaderErrors.WidthError;
-            if (imageHeader.height % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
-                throw JxrHeaderErrors.HeightError;
 
             if (imageHeader.hasMultipleTiles) {
                 imageHeader.numberOfVerticalTiles = bitstream.readBits(12) + 1;
                 imageHeader.numberOfHorizontalTiles = bitstream.readBits(12) + 1;
             }
-            //JPEG XR validity test, 8.3.9
-            if ((!imageHeader.hasIndexTable &&
-                (imageHeader.isFrequencyMode ||
-                imageHeader.numberOfVerticalTiles > 1 ||
-                imageHeader.numberOfHorizontalTiles > 1)))
-                throw JxrHeaderErrors.IndexTableError;
 
             for (var i = 0; i < imageHeader.numberOfVerticalTiles - 1; i++)
                 imageHeader.tileWidthsInMacroblocks.push(
@@ -149,28 +144,9 @@ module JxrPicturase.SubstrateComponents {
                 imageHeader.marginBottom = (16 - (imageHeader.height % 16)) % 16;
                 imageHeader.marginRight = (16 - (imageHeader.width % 16)) % 16;
             }
-            //JPEG XR validity test, 8.3.27
-            if (imageHeader.marginTop % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
-                throw JxrHeaderErrors.TopMarginError;
-            //JPEG XR validity test, 8.3.28
-            if (imageHeader.marginLeft % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
-                throw JxrHeaderErrors.LeftMarginError;
-            //JPEG XR validity test, 8.3.29
-            if (imageHeader.marginBottom % 2 != 0 && imageHeader.outputColorFormat == ColorFormat.Yuv420)
-                throw JxrHeaderErrors.BottomMarginError;
-            //JPEG XR validity test, 8.3.30
-            if (imageHeader.marginRight % 2 != 0 && (imageHeader.outputColorFormat == ColorFormat.Yuv420 || imageHeader.outputColorFormat == ColorFormat.Yuv422))
-                throw JxrHeaderErrors.RightMarginError;
 
-            var extendedWidth = imageHeader.width + imageHeader.marginLeft + imageHeader.marginRight;
-            var extendedHeight = imageHeader.height + imageHeader.marginTop + imageHeader.marginBottom;
-            //JPEG XR validity test, 8.3.21 and 8.3.22
-            if (extendedWidth % 16 != 0)
-                throw JxrHeaderErrors.ExtendedWidthError;
-            if (extendedHeight % 16 != 0)
-                throw JxrHeaderErrors.ExtendedHeightError;
-            imageHeader.tileWidthsInMacroblocks.push(extendedWidth / 16 - imageHeader.tileWidthsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
-            imageHeader.tileHeightsInMacroblocks.push(extendedHeight / 16 - imageHeader.tileHeightsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
+            imageHeader.tileWidthsInMacroblocks.push(imageHeader.getExtendedWidth() / 16 - imageHeader.tileWidthsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
+            imageHeader.tileHeightsInMacroblocks.push(imageHeader.getExtendedHeight() / 16 - imageHeader.tileHeightsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
 
             return imageHeader;
         }
