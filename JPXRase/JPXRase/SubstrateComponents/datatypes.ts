@@ -101,7 +101,16 @@
                 case 3:
                 default:
                     throw new Error("Unsupported TransferCharacteristics value");
-                case 
+                case 1:
+                    return new TransferCharacteristics(
+                        (vLc: number) => { 
+                            if (vLc >= 0.018 && vLc <= 1)
+                                return (1.099 * Math.pow(vLc, 0.45) - 0.099);
+                            else if (vLc >= 0 && vLc < 0.018)
+                                return (4.500 * vLc)
+                            else
+                                throw new Error("TransferCharacterestics value is not valid");
+                        });
             }
         }
     }

@@ -92,7 +92,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("DOCUMENT_NAME", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("DOCUMENT_NAME", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -103,7 +103,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("IMAGE_DESCRIPTION", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("IMAGE_DESCRIPTION", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -114,7 +114,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EQUIPMENT_MAKE", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("EQUIPMENT_MAKE", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -125,7 +125,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EQUIPMENT_MODEL", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("EQUIPMENT_MODEL", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -136,7 +136,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("PAGE_NAME", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("PAGE_NAME", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -147,7 +147,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("PAGE_NUMBER", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("PAGE_NUMBER", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -158,7 +158,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("SOFTWARE_NAME_VERSION", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("SOFTWARE_NAME_VERSION", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -169,7 +169,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("DATE_TIME", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("DATE_TIME", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -180,7 +180,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ARTIST_NAME", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("ARTIST_NAME", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -191,7 +191,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("HOST_COMPUTER", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("HOST_COMPUTER", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -202,7 +202,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("COPYRIGHT_NOTICE", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("COPYRIGHT_NOTICE", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -215,7 +215,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("COLOR_SPACE", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("COLOR_SPACE", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -227,7 +227,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            throw JxrErrorMessage.getInvalidParameterMessage("PIXEL_FORMAT", "IFD_ENTRY");
+                            throw new Error(JxrErrorMessage.getInvalidValueMessage("PIXEL_FORMAT", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -238,7 +238,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("SPATIAL_XFRM_PRIMARY", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("SPATIAL_XFRM_PRIMARY", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -274,7 +274,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_WIDTH", "IFD_ENTRY");
+                            throw new Error(JxrErrorMessage.getInvalidValueMessage("IMAGE_WIDTH", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -288,7 +288,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_HEIGHT", "IFD_ENTRY");
+                            throw new Error(JxrErrorMessage.getInvalidValueMessage("IMAGE_HEIGHT", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -299,7 +299,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("WIDTH_RESOLUTION", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("WIDTH_RESOLUTION", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -310,7 +310,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("HEIGHT_RESOLUTION", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("HEIGHT_RESOLUTION", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -321,7 +321,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch(e) {
                             console.warn((<Error>e).message);
-                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_OFFSET", "IFD_ENTRY");
+                            throw new Error(JxrErrorMessage.getInvalidValueMessage("IMAGE_OFFSET", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -333,7 +333,7 @@ module JxrPicturase.SubstrateComponents {
                         
                         catch (e) {
                             console.warn((<Error>e).message);
-                            throw JxrErrorMessage.getInvalidParameterMessage("IMAGE_BYTE_COUNT", "IFD_ENTRY");
+                            throw new Error(JxrErrorMessage.getInvalidValueMessage("IMAGE_BYTE_COUNT", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -344,7 +344,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ALPHA_OFFSET", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("ALPHA_OFFSET", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -355,7 +355,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ALPHA_BYTE_COUNT", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("ALPHA_BYTE_COUNT", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -379,7 +379,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("ICC color profile", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("ICC color profile", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -390,7 +390,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("XMP metadata", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("XMP metadata", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -401,7 +401,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("EXIF metadata", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("EXIF metadata", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -412,7 +412,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("GPS information metadata", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("GPS information metadata", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -428,7 +428,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("IPTC-NAA metadata", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("IPTC-NAA metadata", "IFD_ENTRY"));
                         }
                         break;
                     }
@@ -439,7 +439,7 @@ module JxrPicturase.SubstrateComponents {
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
-                            console.warn(JxrErrorMessage.getInvalidParameterMessage("Adobe Photoshop metadata", "IFD_ENTRY"));
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("Adobe Photoshop metadata", "IFD_ENTRY"));
                         }
                         break;
                     }
