@@ -85,11 +85,12 @@
     }
 
     export class TransferCharacteristics {
-        private transferer: Function;
-        constructor(characteresticsFunction: Function) {
-
+        private transferer: (vLc: number) => number;
+        constructor(characteresticsFunction: (vLc: number) => number) {
+            this.transferer = characteresticsFunction;
         }
 
+        /** get vV value from vLc value */
         transfer(opticalIntensityInput: number) {
             if (opticalIntensityInput < 0 || opticalIntensityInput > 1)
                 throw "invalid optical intensity input";
@@ -99,19 +100,83 @@
             switch (characteresticsNumber) {
                 case 0:
                 case 3:
+                case 8:
+                case 9:
                 default:
                     throw new Error("Unsupported TransferCharacteristics value");
+                case 2://unspecified
+                    return new TransferCharacteristics(undefined);
                 case 1:
+                case 6:
                     return new TransferCharacteristics(
                         (vLc: number) => { 
                             if (vLc >= 0.018 && vLc <= 1)
                                 return (1.099 * Math.pow(vLc, 0.45) - 0.099);
-                            else if (vLc >= 0 && vLc < 0.018)
-                                return (4.500 * vLc)
+                            else if (vLc < 0.018 && vLc >= 0)
+                                return (4.500 * vLc);
                             else
                                 throw new Error("TransferCharacterestics value is not valid");
                         });
+                case 4:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            return Math.pow(vLc, 2.2);
+                        });
+                case 5:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            return Math.pow(vLc, 2.8);
+                        });
+                case 7:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            if (vLc >= 0.0228 && vLc <= 1)
+                                return (1.1115 * Math.pow(vLc, 0.45) - 0.1115);
+                            else if (vLc < 0.0228 && vLc >= 0)
+                                return (4.0 * vLc);
+                            else
+                                throw new Error("TransferCharacterestics value is not valid");
+                        });
+                case 8:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            return vLc;
+                        });
+                case 11:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            if (vLc >= 0.018)
+                                return (1.099 * Math.pow(vLc, 0.45) - 0.099);
+                            else if (vLc > -0.018)
+                                return (4.500 * vLc);
+                            else
+                                return (-1.099 * Math.pow(-vLc, 0.45) + 0.099);
+                        });
+                case 12:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            if (vLc <= 0.018 && vLc < 1.33)
+                                return (1.099 * Math.pow(vLc, 0.45) - 0.099);
+                            else if (vLc >= -0.0045 && vLc < 0.018)
+                                return (4.500 * vLc);
+                            else if (vLc >= -0.25 && vLc < -0.0045)
+                                return (-(1.099 * Math.pow(-4 * vLc, 0.45) - 0.099) / 4)
+                            else
+                                throw new Error("TransferCharacterestics value is not valid");
+                        });
+                case 13:
+                    return new TransferCharacteristics(
+                        (vLc: number) => {
+                            if (vLc >= 0.0031308 && vLc < 1)
+                                return (1.055 * Math.pow(vLc, 1 / 2.4) - 0.055)
+                            else if (vLc >= 0 && vLc < 0.0031308)
+                                return (12.92 * vLc);
+                        });
             }
         }
+    }
+
+    export class MatrixCoefficients {
+
     }
 }
