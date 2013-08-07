@@ -5,7 +5,7 @@
 ///<reference path="errorobjectprovider.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class ImagePlaneHeader {
-        static Parse(imageSubstream: ArrayedStream, imageHeader: ImageHeader, isAlphaPlane: Boolean) {
+        static Parse(imageSubstream: ArrayedStream, imageHeader: ImageHeader, isAlphaPlane: boolean) {
             var bitstream = new ArrayedBitStream(imageSubstream);
 
             var internalColorFormat: InternalColorFormat = bitstream.readBits(3);

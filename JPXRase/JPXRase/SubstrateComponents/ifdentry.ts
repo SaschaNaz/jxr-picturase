@@ -7,17 +7,17 @@
 module JxrPicturase.SubstrateComponents {
     export class IfdEntry {
         //JPEG XR descriptive metedata
-        documentName: String;
-        imageDescription: String;
-        cameraManufacturer: String;
-        cameraModel: String;
-        pageName: String;
+        documentName: string;
+        imageDescription: string;
+        cameraManufacturer: string;
+        cameraModel: string;
+        pageName: string;
         pageNumber: Uint16Array;
-        softwareInformation: String;
-        dateAndTime: String;
-        artistName: String;
-        hostComputer: String;
-        copyrightNotice: String;
+        softwareInformation: string;
+        dateAndTime: string;
+        artistName: string;
+        hostComputer: string;
+        copyrightNotice: string;
 
         colorSpace: ColorSpace;
         pixelFormat: PixelFormat;
@@ -60,11 +60,11 @@ module JxrPicturase.SubstrateComponents {
         //metadataRatingStars: number;
         //metadataRatingPercent: number;
 
-        //metadataTitle: String;
-        //metadataComment: String;
-        //metadataAuthor: String;
-        //metadataKeywords: String;
-        //metadataSubject: String;
+        //metadataTitle: string;
+        //metadataComment: string;
+        //metadataAuthor: string;
+        //metadataKeywords: string;
+        //metadataSubject: string;
 
         static Parse(stream: ArrayedStream, entries: number) {
             var ifdEntry = new IfdEntry();

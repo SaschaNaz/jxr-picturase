@@ -1,31 +1,31 @@
 ﻿module JxrPicturase.SubstrateComponents {
     /** Validate JPEG XR header as Rec. ITU-T T.832 (01/2012) */
     //export class ErrorObjectProvider {
-    //    static getErrorObject(specNumber: String, message: String) {
+    //    static getErrorObject(specNumber: string, message: string) {
     //        return new Error("Failed to digest the image which has a problem. "
     //            + message + ", as JPEG XR specification ITU-T T.832 (01/2012) " + specNumber);
     //    }
     //}
     export class JxrErrorMessage {
         /** returns "Failed to digest the image which " + message */
-        //static getFailedBecauseMessage(message: String) {
+        //static getFailedBecauseMessage(message: string) {
         //    return "Failed to digest the image which " + message;//최상단 console.error로 전환
         //}
         /** returns "May fail to digest the image which " + message */
-        //static getMayFailBecauseUnsupportedEnumMessage(varname: String) {
+        //static getMayFailBecauseUnsupportedEnumMessage(varname: string) {
         //    return "May fail to digest the image which has unsupported type of "
         //        + varname + " by JPEG XR specification ITU-T T.832 (01/2012)";//부르는 곳에서 console.warn으로 전환. May fail은 warn 자체로 대체 가능하니 이 메시지는 필요 없을 듯
         //}
 
-        static getInvalidValueMessage(varname: String, syntaxname: String) {
+        static getInvalidValueMessage(varname: string, syntaxname: string) {
             return "Invalid value of " + varname + " is detected in " + syntaxname;
         }
     }
 
     //export class JxrInvalidParameterError {
     //    name = "JxrInvalidParameterError";
-    //    message: String;
-    //    constructor(specNumber: String, message: String) {
+    //    message: string;
+    //    constructor(specNumber: string, message: string) {
     //        this.message = JxrErrorMessage.getFailedBecauseMessage("has a problem. "
     //            + message + ", as JPEG XR specification ITU-T T.832 (01/2012) " + specNumber);
     //    }
@@ -33,16 +33,16 @@
 
     //export class JxrInvalidSignatureError {
     //    name = "JxrInvalidSignatureError";
-    //    message: String;
-    //    constructor(signaturename: String) {
+    //    message: string;
+    //    constructor(signaturename: string) {
     //        this.message = JxrErrorMessage.getFailedBecauseMessage("has invalid" + signaturename + "signature");
     //    }
     //}
 
     //export class JxrUnsupportedEnumError {
     //    name = "JxrUnsupportedEnumError";
-    //    message: String;
-    //    constructor(varname: String) {
+    //    message: string;
+    //    constructor(varname: string) {
     //        this.message = JxrErrorMessage.getFailedBecauseMessage("has unsupported type of "
     //            + varname + " by JPEG XR specification ITU-T T.832 (01/2012)");
     //    }

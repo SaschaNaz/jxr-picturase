@@ -4,20 +4,20 @@
 ///<reference path="errorobjectprovider.ts"/>
 module JxrPicturase.SubstrateComponents {
     export class ImageHeader {
-        isHardTileUsed: Boolean;
-        hasMultipleTiles: Boolean;
-        isFrequencyMode: Boolean;
+        isHardTileUsed: boolean;
+        hasMultipleTiles: boolean;
+        isFrequencyMode: boolean;
         spatialTransformation: TransformationState;
-        hasIndexTable: Boolean;
+        hasIndexTable: boolean;
 
         overlapMode: ImageOverlapMode;
 
-        useLongValues: Boolean;
-        hasTrimFlexbits: Boolean;
+        useLongValues: boolean;
+        hasTrimFlexbits: boolean;
 
-        isNotBgr: Boolean;
-        isAlphaPremultiplied: Boolean;
-        hasAlphaImagePlane: Boolean;
+        isNotBgr: boolean;
+        isAlphaPremultiplied: boolean;
+        hasAlphaImagePlane: boolean;
         outputColorFormat: ColorFormat;
         outputBitDepth: BitDepth;
         width: number;
