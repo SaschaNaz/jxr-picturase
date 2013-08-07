@@ -42,7 +42,7 @@
     export class PixelFormat {
         constructor(
             public channelCount: number,
-            public hasAlpha: Boolean,
+            public hasAlpha: boolean,
             public bitDepthPerChannel: BitDepth,
             public colorDataType: NumberType,
             public colorFormat: ColorFormat
@@ -139,7 +139,7 @@
         static get Bpp64Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Yuv444); }
         static get Bpp64Ycc444AlphaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit16S, NumberType.Int, ColorFormat.Yuv444); }
 
-        static getPixelFormatByGuid(guid: String) {
+        static getPixelFormatByGuid(guid: string) {
             switch (guid) {
                 case "24C3DD6F034EFE4BB1853D77768DC90D": return PixelFormats.Bpp24Rgb;
                 case "24C3DD6F034EFE4BB1853D77768DC90C": return PixelFormats.Bpp24Bgr;

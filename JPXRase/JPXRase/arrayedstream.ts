@@ -88,7 +88,7 @@ module JxrPicturase {
         readAsHexString(length: number) {
             var byteToHex = (i: number) => { var hexstring = i.toString(length).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };
 
-            return <String>String.prototype.concat.apply('', (Array.prototype.map.call(this.readAsByteArray(16), byteToHex)));
+            return <string>String.prototype.concat.apply('', (Array.prototype.map.call(this.readAsByteArray(16), byteToHex)));
         }
 
         readAsUtf16Text(bytelength: number) {

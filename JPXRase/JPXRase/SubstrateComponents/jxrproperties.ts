@@ -36,11 +36,10 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getTextPropertyFromStream() {
-            if (this.type != DataType.TextUtf8 && this.type != DataType.Byte) {
+            if (this.type != DataType.TextUtf8 && this.type != DataType.Byte)
                 throw 'Text is expected, but type ' + this.type.toString() + ' is observed. The only type exceptionally accepted is \'Byte\'.';
-            }
 
-            var text: String;
+            var text: string;
             if (this.type == DataType.TextUtf8)
                 text = this.valueAsSubstream.readAsUtf8Text(this.count);
             else
@@ -55,12 +54,10 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getAnyUintPropertyFromStream() {
-            if (this.type != DataType.Byte && this.type != DataType.Uint16 && this.type != DataType.Uint32) {
+            if (this.type != DataType.Byte && this.type != DataType.Uint16 && this.type != DataType.Uint32) 
                 throw 'Number is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != 1) {
+            if (this.count != 1)
                 throw 'length 1 is expected, but length ' + this.count + ' is observed';
-            }
 
             switch (this.type) {
                 case DataType.Byte:
@@ -73,64 +70,53 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getUint16PropertyFromStream() {
-            if (this.type != DataType.Uint16) {
+            if (this.type != DataType.Uint16)
                 throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != 1) {
+            if (this.count != 1)
                 throw 'length 1 is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsUint16();
         }
 
         getUint32PropertyFromStream() {
-            if (this.type != DataType.Uint32) {
+            if (this.type != DataType.Uint32)
                 throw 'Uint32 is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != 1) {
+            if (this.count != 1)
                 throw 'length 1 is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsUint32();
         }
 
         getUint16ArrayFromStream() {
-            if (this.type != DataType.Uint16) {
+            if (this.type != DataType.Uint16)
                 throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsUint16Array(this.count);
         }
 
         getUint16ArrayFromStreamFixedLength(length: number) {
-            if (this.type != DataType.Uint16) {
+            if (this.type != DataType.Uint16)
                 throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != length) {
+            if (this.count != length)
                 throw 'length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsUint16Array(this.count);
         }
 
         getFloatPropertyFromStream() {
-            if (this.type != DataType.Float) {
+            if (this.type != DataType.Float)
                 throw 'Float is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != 1) {
+            if (this.count != 1)
                 throw 'length 1 is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsFloat();
         }
 
         getURationalPropertyFromStream() {
-            if (this.type != DataType.URationalNumber) {
+            if (this.type != DataType.URationalNumber)
                 throw 'URationalNumber is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != 1) {
+            if (this.count != 1)
                 throw 'length 1 is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsURationalNumber();
         }
@@ -140,46 +126,12 @@ module JxrPicturase.SubstrateComponents {
         }
 
         getByteStreamFromStreamFixedLength(length: number) {
-            if (this.type != DataType.Byte) {
+            if (this.type != DataType.Byte)
                 throw 'Byte is expected, but type ' + this.type.toString() + ' is observed';
-            }
-            if (this.count != length) {
+            if (this.count != length)
                 throw 'length ' + length.toString() + ' is expected, but length ' + this.count + ' is observed';
-            }
 
             return this.valueAsSubstream.readAsSubstream(this.count);
         }
-
-        //should be able to receive all kinds of types
-        //getAnyPropertyFromStream() {
-        //    if (this.count == 0)
-        //        return null;
-
-        //    switch (this.type) {
-        //        case DataType.TextUtf8: {
-        //            return this.valueAsSubstream.readAsUtf8Text(this.count);
-        //        }
-        //        case DataType.Byte: {
-        //            if (this.count == 1)
-        //                return this.valueAsSubstream.readAsUint8();
-        //            else
-        //                return this.valueAsSubstream.readAsSubstream(this.count);
-        //            break;
-        //        }
-        //        case DataType.Undefined: {
-        //            return this.valueAsSubstream.readAsSubstream(this.count);
-        //        }
-        //        case DataType.Uint16: {
-        //            if (this.count == 1) {
-        //                return this.valueAsSubstream.readAsUint16();
-        //            }
-        //            else
-        //                return this.valueAsSubstream.readAsUint16Array(this.count);//no it's not uint32, it shouln't be as A.7.11 PAGE NUMBER uses real TWO numbers. Is it to be devided later?
-        //        }
-        //        default: {
-        //            throw 'This property type is not supported yet.';
-        //        }
-        //    }
-        //}
     }
 }
