@@ -32,8 +32,8 @@
 
     export class ColorPrimaries {
         constructor(
-            public greenX: number = undefined, public blueX: number = undefined, public redX: number = undefined, public whiteX: number = undefined,
-            public greenY: number = undefined, public blueY: number = undefined, public redY: number = undefined, public whiteY: number = undefined) {
+            public greenX?: number, public blueX?: number, public redX?: number, public whiteX?: number,
+            public greenY?: number, public blueY?: number, public redY?: number, public whiteY?: number) {
         }
         
         isSpecified() {
@@ -69,12 +69,12 @@
     }
 
     export class Transferer {
-        constructor(private transferFunction: (vLc: number) => number = undefined) {
+        constructor(private transferFunction?: (vLc: number) => number, public isValueInZeroToOneRange = true) {
         }
 
         /** get vV value from vLc value */
         transfer(opticalIntensityInput: number) {
-            if (opticalIntensityInput < 0 || opticalIntensityInput > 1)
+            if (this.isValueInZeroToOneRange && opticalIntensityInput < 0 || opticalIntensityInput > 1)
                 throw "invalid optical intensity input";
             return this.transferFunction(opticalIntensityInput);
         }
@@ -102,7 +102,7 @@
                             else if (vLc < 0.018 && vLc >= 0)
                                 return (4.500 * vLc);
                             else
-                                throw new Error("TransferCharacterestics value is not valid");
+                                throw new Error("invalid optical intensity input");
                         });
                 case 4:
                     return new Transferer(
@@ -122,7 +122,7 @@
                             else if (vLc < 0.0228 && vLc >= 0)
                                 return (4.0 * vLc);
                             else
-                                throw new Error("TransferCharacterestics value is not valid");
+                                throw new Error("invalid optical intensity input");
                         });
                 case 8:
                     return new Transferer(
@@ -138,7 +138,7 @@
                                 return (4.500 * vLc);
                             else
                                 return (-1.099 * Math.pow(-vLc, 0.45) + 0.099);
-                        });
+                        }, false);
                 case 12:
                     return new Transferer(
                         (vLc: number) => {
@@ -149,8 +149,8 @@
                             else if (vLc >= -0.25 && vLc < -0.0045)
                                 return (-(1.099 * Math.pow(-4 * vLc, 0.45) - 0.099) / 4)
                             else
-                                throw new Error("TransferCharacterestics value is not valid");
-                        });
+                                throw new Error("invalid optical intensity input");
+                        }, false);
                 case 13:
                     return new Transferer(
                         (vLc: number) => {
@@ -164,12 +164,18 @@
     }
 
     export class MatrixTransformer {
-        constructor(public colorSpace: MatrixColorSpace = undefined, public vKr: number = undefined, public vKb: number = undefined) {
-        
+        constructor(public colorSpace?: MatrixColorSpace, public vKr?: number, public vKb?: number) {
         }
 
-        transform(isRangeFull: boolean) {
-
+        transform(transferer: Transferer, outputBitDepth: BitDepth, isRangeFull: boolean) {
+            var er: number, eg: number, eb: number;
+            var valueBitDepthWhite: number;
+            switch (outputBitDepth) {
+                case BitDepth.Bit8: valueBitDepthWhite = 8; break;
+                case BitDepth.Bit10: valueBitDepthWhite = 10; break;
+                case BitDepth.Bit16S: valueBitDepthWhite = 13; break;
+                case BitDepth.Bit16: valueBitDepthWhite = 16; break;
+            }
         }
 
         isSpecified() {
