@@ -52,7 +52,7 @@
                 case 0:
                 case 3:
                 default:
-                    throw new Error("Unsupported ColorPrimaries value");
+                    throw new Error("Unsupported COLOR_PRIMARIES value");
                 case 2://unspecified
                     return new ColorPrimaries();
                 case 1:
@@ -90,7 +90,7 @@
                 case 8:
                 case 9:
                 default:
-                    throw new Error("Unsupported TransferCharacteristics value");
+                    throw new Error("Unsupported TRANSFER_CHARACTERISTICS value");
                 case 2://unspecified
                     return new Transferer();
                 case 1:
@@ -163,20 +163,8 @@
         }
     }
 
-    export class MatrixTransformer {
+    export class MatrixCoefficients {
         constructor(public colorSpace?: MatrixColorSpace, public vKr?: number, public vKb?: number) {
-        }
-
-        transform(transferer: Transferer, outputBitDepth: BitDepth, isRangeFull: boolean) {
-            var valueBitDepthWhite: number;
-            switch (outputBitDepth) {
-                case BitDepth.Bit8: valueBitDepthWhite = 8; break;
-                case BitDepth.Bit10: valueBitDepthWhite = 10; break;
-                case BitDepth.Bit16S: valueBitDepthWhite = 13; break;
-                case BitDepth.Bit16: valueBitDepthWhite = 16; break;
-                default: throw new Error("No guideline for this bit depth with FULL_RANGE_FLAG");
-            }
-
         }
 
         isSpecified() {
@@ -185,31 +173,118 @@
                 && this.vKb != undefined);
         }
 
-        static getMatrixTransformer(matrixNumber: number) {
+        static getMatrixCoefficients(matrixNumber: number) {
             switch (matrixNumber) {
                 case 3:
                 default:
-                    throw new Error("MatrixTransformer value is not valid");
+                    throw new Error("Unsupported MATRIX_COEFFICIENTS value");
                 case 2://unspecified
-                    return new MatrixTransformer();
+                    return new MatrixCoefficients();
                 case 0://RGB
-                    return new MatrixTransformer(MatrixColorSpace.RGB);
+                    return new MatrixCoefficients(MatrixColorSpace.RGB);
                 case 8://YCgCo
-                    return new MatrixTransformer(MatrixColorSpace.YCgCo);
+                    return new MatrixCoefficients(MatrixColorSpace.YCgCo);
                 case 1:
-                    return new MatrixTransformer(MatrixColorSpace.YCbCr, 0.2126, 0.0772);
+                    return new MatrixCoefficients(MatrixColorSpace.YCbCr, 0.2126, 0.0772);
                 case 4:
-                    return new MatrixTransformer(MatrixColorSpace.YCbCr, 0.30, 0.11);
+                    return new MatrixCoefficients(MatrixColorSpace.YCbCr, 0.30, 0.11);
                 case 5:
                 case 6:
-                    return new MatrixTransformer(MatrixColorSpace.YCbCr, 0.299, 0.114);
+                    return new MatrixCoefficients(MatrixColorSpace.YCbCr, 0.299, 0.114);
                 case 7:
-                    return new MatrixTransformer(MatrixColorSpace.YCbCr, 0.212, 0.087);
+                    return new MatrixCoefficients(MatrixColorSpace.YCbCr, 0.212, 0.087);
             }
         }
     }
 
     export enum MatrixColorSpace {
         RGB, YCgCo, YCbCr
+    }
+
+    export class MatrixTransformer {
+        constructor(private transferer: Transferer, private coeffecients: MatrixCoefficients, private outputBitDepth: BitDepth, private isRangeFull: boolean) {
+        }
+
+        transform(photon: RgbPhoton): Photon {
+            var valueWhite = this.getValueWhite(this.outputBitDepth);
+            var chromaOffset = this.getChromaOffset(this.outputBitDepth, valueWhite);
+            if (this.coeffecients.colorSpace == MatrixColorSpace.RGB || this.coeffecients.colorSpace == MatrixColorSpace.YCgCo) {
+                var outputRgbPhoton
+                    = new RgbPhoton(
+                        valueWhite / 256 * (219 * photon.r + 16),
+                        valueWhite / 256 * (219 * photon.g + 16),
+                        valueWhite / 256 * (219 * photon.b + 16));
+                if (this.coeffecients.colorSpace == MatrixColorSpace.RGB) {
+                    outputRgbPhoton.r = Math.round(outputRgbPhoton.r);
+                    outputRgbPhoton.g = Math.round(outputRgbPhoton.g);
+                    outputRgbPhoton.b = Math.round(outputRgbPhoton.b);
+                    return outputRgbPhoton;
+                }
+                else {//YCgCo
+                    return new YcgcoPhoton(
+                        Math.round(0.5 * outputRgbPhoton.g + 0.25 * (outputRgbPhoton.r + outputRgbPhoton.b)),
+                        Math.round(0.5 * outputRgbPhoton.g - 0.25 * (outputRgbPhoton.r + outputRgbPhoton.b)) + chromaOffset,
+                        Math.round(0.5 * (outputRgbPhoton.r - outputRgbPhoton.b)) + chromaOffset);
+                }
+            }
+            else {//YCbCr
+                var ycbcrPhoton
+                    = new YcbcrPhoton(this.coeffecients.vKr * photon.r + (1 - this.coeffecients.vKr - this.coeffecients.vKb) * photon.g + this.coeffecients.vKb * photon.b);
+                ycbcrPhoton.cb = 0.5 * (photon.b - ycbcrPhoton.y) / (1 - this.coeffecients.vKb);
+                ycbcrPhoton.cr = 0.5 * (photon.r - ycbcrPhoton.y) / (1 - this.coeffecients.vKr);
+                if (this.isRangeFull) {
+                }
+                else {
+                }
+            }
+        }
+
+        private getValueWhite(outputBitDepth: BitDepth) {
+            var valueBitDepthWhite: number;
+            switch (outputBitDepth) {
+                case BitDepth.Bit8: valueBitDepthWhite = 8; break;
+                case BitDepth.Bit10: valueBitDepthWhite = 10; break;
+                case BitDepth.Bit16S: valueBitDepthWhite = 13; break;
+                case BitDepth.Bit16: valueBitDepthWhite = 16; break;
+                default: throw new Error("No guideline for this bit depth in PTM_COLOR_INFO");
+            }
+            return (1 << valueBitDepthWhite);
+        }
+
+        private getChromaOffset(outputBitDepth: BitDepth, valueWhite: number) {
+            var chromaOffset: number;
+            switch (outputBitDepth) {
+                case BitDepth.Bit8: 
+                case BitDepth.Bit10: 
+                case BitDepth.Bit16:
+                    chromaOffset = valueWhite / 2; break;
+                case BitDepth.Bit16S:
+                    chromaOffset = 0; break;
+                default: throw new Error("No guideline for this bit depth in PTM_COLOR_INFO");
+            }
+            return chromaOffset;
+        }
+    }
+
+    export interface Photon {
+        colorSpace: MatrixColorSpace;
+    }
+
+    export class RgbPhoton {
+        colorSpace = MatrixColorSpace.RGB;
+        constructor(public r?: number, public g?: number, public b?: number) {
+        }
+    }
+
+    export class YcgcoPhoton {
+        colorSpace = MatrixColorSpace.YCgCo;
+        constructor(public y?: number, public cg?: number, public co?: number) {
+        }
+    }
+
+    export class YcbcrPhoton {
+        colorSpace = MatrixColorSpace.YCbCr;
+        constructor(public y?: number, public cb?: number, public cr?: number) {
+        }
     }
 }
