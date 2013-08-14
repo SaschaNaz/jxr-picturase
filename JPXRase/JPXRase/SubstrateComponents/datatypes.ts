@@ -168,14 +168,15 @@
         }
 
         transform(transferer: Transferer, outputBitDepth: BitDepth, isRangeFull: boolean) {
-            var er: number, eg: number, eb: number;
             var valueBitDepthWhite: number;
             switch (outputBitDepth) {
                 case BitDepth.Bit8: valueBitDepthWhite = 8; break;
                 case BitDepth.Bit10: valueBitDepthWhite = 10; break;
                 case BitDepth.Bit16S: valueBitDepthWhite = 13; break;
                 case BitDepth.Bit16: valueBitDepthWhite = 16; break;
+                default: throw new Error("No guideline for this bit depth with FULL_RANGE_FLAG");
             }
+
         }
 
         isSpecified() {
