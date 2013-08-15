@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="SubstrateComponents\jxrmath.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="arrayedstream.ts" />

@@ -1,4 +1,5 @@
-﻿module JxrPicturase.SubstrateComponents {
+﻿///<reference path="jxrmath.ts"/>
+module JxrPicturase.SubstrateComponents {
     export enum ImageOverlapMode {
         None, SecondLevel, FirstAndSecondLevel
     }
@@ -232,9 +233,28 @@
                     = new YcbcrPhoton(this.coeffecients.vKr * photon.r + (1 - this.coeffecients.vKr - this.coeffecients.vKb) * photon.g + this.coeffecients.vKb * photon.b);
                 ycbcrPhoton.cb = 0.5 * (photon.b - ycbcrPhoton.y) / (1 - this.coeffecients.vKb);
                 ycbcrPhoton.cr = 0.5 * (photon.r - ycbcrPhoton.y) / (1 - this.coeffecients.vKr);
-                if (this.isRangeFull) {
+                if (!this.isRangeFull) {
+                    var outputYcbcrPhoton = new YcbcrPhoton(
+                        Math.round(valueWhite / 256 * (219 * ycbcrPhoton.y + 16)),
+                        Math.round(valueWhite / 256 * (224 * ycbcrPhoton.cb) + chromaOffset),
+                        Math.round(valueWhite / 256 * (224 * ycbcrPhoton.cr) + chromaOffset));
+                    switch (this.outputBitDepth) {
+                        case BitDepth.Bit8:
+                        case BitDepth.Bit10:
+                        case BitDepth.Bit16:
+                            {
+                                outputYcbcrPhoton.y = JxrMath.clip(outputYcbcrPhoton.y, 0, valueWhite - 1);
+                                outputYcbcrPhoton.cb = JxrMath.clip(outputYcbcrPhoton.cb, 0, valueWhite - 1);
+                                outputYcbcrPhoton.cr = JxrMath.clip(outputYcbcrPhoton.cr, 0, valueWhite - 1);
+                            }
+                    }
+                    return outputYcbcrPhoton;
                 }
                 else {
+                    return new YcbcrPhoton(
+                        Math.round((valueWhite - 1) * ycbcrPhoton.y),
+                        Math.round((valueWhite - 1) * ycbcrPhoton.cb + chromaOffset),
+                        Math.round((valueWhite - 1) * ycbcrPhoton.cr + chromaOffset));
                 }
             }
         }
