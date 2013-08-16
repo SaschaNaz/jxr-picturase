@@ -81,9 +81,9 @@ module JxrPicturase {
             return minussign ? (-1) * (fraction * Math.pow(2, exponential - 127)) : (fraction * Math.pow(2, exponential - 127));
         }
 
-        readAsURationalNumber() {
-            return new RationalNumber(this.readAsUint32(), this.readAsUint32());
-        }
+        //readAsURationalNumber() {
+        //    return new RationalNumber(this.readAsUint32(), this.readAsUint32());
+        //}
 
         readAsHexString(length: number) {
             var byteToHex = (i: number) => { var hexstring = i.toString(length).toUpperCase(); return hexstring.length == 2 ? hexstring : hexstring = '0' + hexstring; };

@@ -112,14 +112,14 @@ module JxrPicturase.SubstrateComponents {
             return this.valueAsSubstream.readAsFloat();
         }
 
-        getURationalPropertyFromStream() {
-            if (this.type != DataType.URationalNumber)
-                throw 'URationalNumber is expected, but type ' + this.type.toString() + ' is observed';
-            if (this.count != 1)
-                throw 'length 1 is expected, but length ' + this.count + ' is observed';
+        //getURationalPropertyFromStream() {
+        //    if (this.type != DataType.URationalNumber)
+        //        throw 'URationalNumber is expected, but type ' + this.type.toString() + ' is observed';
+        //    if (this.count != 1)
+        //        throw 'length 1 is expected, but length ' + this.count + ' is observed';
 
-            return this.valueAsSubstream.readAsURationalNumber();
-        }
+        //    return this.valueAsSubstream.readAsURationalNumber();
+        //}
 
         getByteStreamFromStream() {
             return this.valueAsSubstream.readAsSubstream(this.count);

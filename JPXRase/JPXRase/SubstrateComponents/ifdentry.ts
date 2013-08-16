@@ -22,8 +22,8 @@ module JxrPicturase.SubstrateComponents {
         colorSpace: ColorSpace;
         pixelFormat: PixelFormat;
         transformation: TransformationState;
-        //imageType: ?
-        //ptmColorInformation: ?
+        imageType: ImageType;
+        colorInformation: ColorInformation
         //profileLevelContainer: ?
 
         imageSizeX: number;
@@ -244,22 +244,43 @@ module JxrPicturase.SubstrateComponents {
                     }
                 case IfdTag.ImageType:
                     {
-                        var imagetype = (propertyInStream.getUint32PropertyFromStream() >> 30);
-                        var isImagePreview = ((imagetype & 1) == 1);
-                        var isOneOfMultipleImages = (((imagetype >> 1) & 1) == 1);
+                        try {
+                            var imagetype = (propertyInStream.getUint32PropertyFromStream() >> 30);
+                            var isImagePreview = ((imagetype & 1) == 1);
+                            var isOneOfMultipleImages = (((imagetype >> 1) & 1) == 1);
+                            ifdEntry.imageType = new ImageType(isImagePreview, isOneOfMultipleImages);
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("IMAGE_TYPE", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ColorInformation:
                     {
-                        var colorInfoStream = (propertyInStream.getByteStreamFromStreamFixedLength(4));
-                        var colorPrimaries = ColorPrimaries.getColorPrimaries(colorInfoStream.readAsUint8());
-                        var transferCharacteristics = colorInfoStream.readAsUint8();
-                        var matrixCoeffecients = colorInfoStream.readAsUint8();
-                        var isFullRange = (colorInfoStream.readAsUint8() & 1) == 1;
+                        try {
+                            var colorInfoStream = propertyInStream.getByteStreamFromStreamFixedLength(4);
+                            var colorPrimaries = ColorPrimaries.getColorPrimaries(colorInfoStream.readAsUint8());
+                            var transferer = Transferer.getTransferer(colorInfoStream.readAsUint8());
+                            var matrixCoeffecients = MatrixCoefficients.getMatrixCoefficients(colorInfoStream.readAsUint8());
+                            var isFullRange = (colorInfoStream.readAsUint8() & 1) == 1;
+                            ifdEntry.colorInformation = new ColorInformation(colorPrimaries, transferer, matrixCoeffecients, isFullRange);
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("PTM_COLOR_INFO", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ProfileLevelContainer: 
                     {
+                        try {
+                            
+                        }
+                        catch (e) {
+                            console.warn((<Error>e).message);
+                            console.warn(JxrErrorMessage.getInvalidValueMessage("PROFILE_LEVEL_CONTAINER", "IFD_ENTRY"));
+                        }
                         break;
                     }
                 case IfdTag.ImageSizeX:
