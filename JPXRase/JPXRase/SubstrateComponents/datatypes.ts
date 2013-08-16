@@ -31,6 +31,16 @@ module JxrPicturase.SubstrateComponents {
         sRGB = 1, Other = 0xFFFF
     }
 
+    export class ImageType {
+        constructor(public isImagePreview: boolean, public isOneOfMultipleImages: boolean) {
+        }
+    }
+
+    export class ColorInformation {
+        constructor(public colorPrimaries: ColorPrimaries, public transferer: Transferer, public matrixCoefficients: MatrixCoefficients, public isRangeFull: boolean) {
+        }
+    }
+
     export class ColorPrimaries {
         constructor(
             public greenX?: number, public blueX?: number, public redX?: number, public whiteX?: number,
@@ -84,7 +94,7 @@ module JxrPicturase.SubstrateComponents {
             return (this.transferFunction != undefined);
         }
 
-        getTransferCharacteristics(characteresticsNumber: number) {
+        static getTransferer(characteresticsNumber: number) {
             switch (characteresticsNumber) {
                 case 0:
                 case 3:
@@ -203,7 +213,7 @@ module JxrPicturase.SubstrateComponents {
     }
 
     export class MatrixTransformer {
-        constructor(private transferer: Transferer, private coeffecients: MatrixCoefficients, private outputBitDepth: BitDepth, private isRangeFull: boolean) {
+        constructor(private coeffecients: MatrixCoefficients, private outputBitDepth: BitDepth, private isRangeFull: boolean) {
         }
 
         transform(photon: RgbPhoton): Photon {
