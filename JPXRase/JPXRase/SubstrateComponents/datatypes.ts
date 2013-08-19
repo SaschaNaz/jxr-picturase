@@ -317,4 +317,113 @@ module JxrPicturase.SubstrateComponents {
         constructor(public y?: number, public cb?: number, public cr?: number) {
         }
     }
+
+    export enum Profile {
+        SubBaseline = 44,
+        Baseline = 55,
+        Main = 66,
+        Advanced = 111
+    }
+
+    export class ProfileAndLevelConformance {
+        private useLongValues: boolean;
+        private overlapModeList: ImageOverlapMode[] = [];
+        private pixelFormatList: PixelFormat[] = [];
+
+        private maxBitImageDimension: number;
+        private maxBitDimensionInTiles: number;
+        private maxBitTileDimension: number;
+        /** size in bytes */
+        private MaxBitBufferSize: number;
+
+        constructor(profile = Profile.Advanced, level = 255) {
+            if (profile == Profile.SubBaseline) {
+                this.useLongValues = false;
+                this.overlapModeList.push(ImageOverlapMode.None, ImageOverlapMode.SecondLevel);
+            }
+            switch (profile) {
+                case 66:
+                    this.pixelFormatList.push(
+                        PixelFormats.Bpp48RgbHalf,
+                        PixelFormats.Bpp96RgbFixedPoint,
+                        PixelFormats.Bpp64RgbHalf,
+                        PixelFormats.Bpp128RgbFixedPoint,
+                        PixelFormats.Bpp128RgbFloat,
+                        PixelFormats.Bpp32Bgra,
+                        PixelFormats.Bpp64Rgba,
+                        PixelFormats.Bpp64RgbaFixedPoint,
+                        PixelFormats.Bpp64RgbaHalf,
+                        PixelFormats.Bpp128RgbaFixedPoint,
+                        PixelFormats.Bpp128RgbaFloat,
+                        PixelFormats.Bpp32Pbgra,
+                        PixelFormats.Bpp64Prgba,
+                        PixelFormats.Bpp128PrgbaFloat,
+                        PixelFormats.Bpp32Cmyk,
+                        PixelFormats.Bpp40CmykAlpha,
+                        PixelFormats.Bpp64Cmyk,
+                        PixelFormats.Bpp80CmykAlpha,
+                        PixelFormats.Bpp24Channels3,
+                        PixelFormats.Bpp32Channels4,
+                        PixelFormats.Bpp40Channels5,
+                        PixelFormats.Bpp48Channels6,
+                        PixelFormats.Bpp56Channels7,
+                        PixelFormats.Bpp64Channels8,
+                        PixelFormats.Bpp32Channels3Alpha,
+                        PixelFormats.Bpp40Channels4Alpha,
+                        PixelFormats.Bpp48Channels5Alpha,
+                        PixelFormats.Bpp56Channels6Alpha,
+                        PixelFormats.Bpp64Channels7Alpha,
+                        PixelFormats.Bpp72Channels8Alpha,
+                        PixelFormats.Bpp48Channels3,
+                        PixelFormats.Bpp64Channels4,
+                        PixelFormats.Bpp80Channels5,
+                        PixelFormats.Bpp96Channels6,
+                        PixelFormats.Bpp112Channels7,
+                        PixelFormats.Bpp128Channels8,
+                        PixelFormats.Bpp64Channels3Alpha,
+                        PixelFormats.Bpp80Channels4Alpha,
+                        PixelFormats.Bpp96Channels5Alpha,
+                        PixelFormats.Bpp112Channels6Alpha,
+                        PixelFormats.Bpp128Channels7Alpha,
+                        PixelFormats.Bpp144Channels8Alpha,
+                        PixelFormats.Bpp16GrayHalf,
+                        PixelFormats.Bpp32GrayFixedPoint,
+                        PixelFormats.Bpp32GrayFloat,
+                        PixelFormats.Bpp32RgbExponent);
+                    //no break
+                case 55:
+                    this.pixelFormatList.push(
+                        PixelFormats.Bpp48Rgb,
+                        PixelFormats.Bpp48RgbFixedPoint,
+                        PixelFormats.Bpp64RgbFixedPoint,
+                        PixelFormats.Bpp16Gray,
+                        PixelFormats.Bpp16GrayFixedPoint);
+                    //no break
+                case 44:
+                    this.pixelFormatList.push(
+                        PixelFormats.Bpp24Rgb,
+                        PixelFormats.Bpp24Bgr,
+                        PixelFormats.Bpp32Bgr,
+                        PixelFormats.Bpp8Gray,
+                        PixelFormats.BlackWhite,
+                        PixelFormats.Bpp16Bgr555,
+                        PixelFormats.Bpp16Bgr565,
+                        PixelFormats.Bpp32Bgr101010);
+                    break;
+            }
+        }
+
+        check(ifdEntry: IfdEntry, imageHeader: ImageHeader) {
+            if (this.useLongValues !== undefined && this.useLongValues != imageHeader.useLongValues)
+                return false;
+            if (this.overlapModeList.length != 0 && this.overlapModeList.indexOf(imageHeader.overlapMode) == -1)
+                return false;
+            if (this.pixelFormatList.length != 0 && this.pixelFormatList.indexOf(ifdEntry.pixelFormat) == -1)
+                return false;
+
+            //level check
+
+            return true;
+        }
+    }
 }

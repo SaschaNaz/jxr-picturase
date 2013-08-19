@@ -79,34 +79,34 @@
         static get Bpp32Pbgra() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
         static get Bpp64Prgba() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Rgb); }
         static get Bpp128PrgbaFloat() { return new PixelFormat(4, true, BitDepth.Bit32F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp32CMYK() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp40CMYKAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp64CMYK() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp80CMYKAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp243Channels() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp324Channels() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp405Channels() { return new PixelFormat(5, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp486Channels() { return new PixelFormat(6, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp567Channels() { return new PixelFormat(7, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp648Channels() { return new PixelFormat(8, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp323ChannelsAlpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp404ChannelsAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp485ChannelsAlpha() { return new PixelFormat(6, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp566ChannelsAlpha() { return new PixelFormat(7, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp647ChannelsAlpha() { return new PixelFormat(8, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp728ChannelsAlpha() { return new PixelFormat(9, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp483Channels() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp644Channels() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp805Channels() { return new PixelFormat(5, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp966Channels() { return new PixelFormat(6, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp1127Channels() { return new PixelFormat(7, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp1288Channels() { return new PixelFormat(8, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp643ChannelsAlpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp804ChannelsAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp965ChannelsAlpha() { return new PixelFormat(6, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp1126ChannelsAlpha() { return new PixelFormat(7, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp1287ChannelsAlpha() { return new PixelFormat(8, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp1448ChannelsAlpha() { return new PixelFormat(9, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp32Cmyk() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
+        static get Bpp40CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
+        static get Bpp64Cmyk() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
+        static get Bpp80CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
+        static get Bpp24Channels3() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp32Channels4() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp40Channels5() { return new PixelFormat(5, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels6() { return new PixelFormat(6, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp56Channels7() { return new PixelFormat(7, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels8() { return new PixelFormat(8, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp32Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp40Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp56Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp72Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels3() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels4() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp80Channels5() { return new PixelFormat(5, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp96Channels6() { return new PixelFormat(6, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp112Channels7() { return new PixelFormat(7, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp128Channels8() { return new PixelFormat(8, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp80Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp96Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp112Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp128Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
+        static get Bpp144Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
         static get Bpp8Gray() { return new PixelFormat(1, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.YOnly); }
         static get Bpp16Gray() { return new PixelFormat(1, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.YOnly); }
         static get Bpp16GrayFixedPoint() { return new PixelFormat(1, false, BitDepth.Bit16S, NumberType.Int, ColorFormat.YOnly); }
@@ -117,7 +117,7 @@
         static get Bpp16Bgr555() { return new PixelFormat(3, false, BitDepth.Bit5, NumberType.Uint, ColorFormat.Rgb); }
         static get Bpp16Bgr565() { return new PixelFormat(3, false, BitDepth.Bit565, NumberType.Uint, ColorFormat.Rgb); }
         static get Bpp32Bgr101010() { return new PixelFormat(3, false, BitDepth.Bit10, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp32RgbE() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Float, ColorFormat.RgbExponent); }
+        static get Bpp32RgbExponent() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Float, ColorFormat.RgbExponent); }
         static get Bpp32CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.CmykDirect); }
         static get Bpp64CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.CmykDirect); }
         static get Bpp40CmykDirectAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.CmykDirect); }
@@ -161,34 +161,34 @@
                 case "24C3DD6F034EFE4BB1853D77768DC910": return PixelFormats.Bpp32Pbgra;
                 case "24C3DD6F034EFE4BB1853D77768DC917": return PixelFormats.Bpp64Prgba;
                 case "24C3DD6F034EFE4BB1853D77768DC91A": return PixelFormats.Bpp128PrgbaFloat;
-                case "24C3DD6F034EFE4BB1853D77768DC91C": return PixelFormats.Bpp32CMYK;
-                case "24C3DD6F034EFE4BB1853D77768DC92C": return PixelFormats.Bpp40CMYKAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC91F": return PixelFormats.Bpp64CMYK;
-                case "24C3DD6F034EFE4BB1853D77768DC92D": return PixelFormats.Bpp80CMYKAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC920": return PixelFormats.Bpp243Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC921": return PixelFormats.Bpp324Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC922": return PixelFormats.Bpp405Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC923": return PixelFormats.Bpp486Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC924": return PixelFormats.Bpp567Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC925": return PixelFormats.Bpp648Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC92E": return PixelFormats.Bpp323ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC92F": return PixelFormats.Bpp404ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC930": return PixelFormats.Bpp485ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC931": return PixelFormats.Bpp566ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC932": return PixelFormats.Bpp647ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC933": return PixelFormats.Bpp728ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC926": return PixelFormats.Bpp483Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC927": return PixelFormats.Bpp644Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC928": return PixelFormats.Bpp805Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC929": return PixelFormats.Bpp966Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC92A": return PixelFormats.Bpp1127Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC92B": return PixelFormats.Bpp1288Channels;
-                case "24C3DD6F034EFE4BB1853D77768DC934": return PixelFormats.Bpp643ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC935": return PixelFormats.Bpp804ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC936": return PixelFormats.Bpp965ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC937": return PixelFormats.Bpp1126ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC938": return PixelFormats.Bpp1287ChannelsAlpha;
-                case "24C3DD6F034EFE4BB1853D77768DC939": return PixelFormats.Bpp1448ChannelsAlpha;
+                case "24C3DD6F034EFE4BB1853D77768DC91C": return PixelFormats.Bpp32Cmyk;
+                case "24C3DD6F034EFE4BB1853D77768DC92C": return PixelFormats.Bpp40CmykAlpha;
+                case "24C3DD6F034EFE4BB1853D77768DC91F": return PixelFormats.Bpp64Cmyk;
+                case "24C3DD6F034EFE4BB1853D77768DC92D": return PixelFormats.Bpp80CmykAlpha;
+                case "24C3DD6F034EFE4BB1853D77768DC920": return PixelFormats.Bpp24Channels3;
+                case "24C3DD6F034EFE4BB1853D77768DC921": return PixelFormats.Bpp32Channels4;
+                case "24C3DD6F034EFE4BB1853D77768DC922": return PixelFormats.Bpp40Channels5;
+                case "24C3DD6F034EFE4BB1853D77768DC923": return PixelFormats.Bpp48Channels6;
+                case "24C3DD6F034EFE4BB1853D77768DC924": return PixelFormats.Bpp56Channels7;
+                case "24C3DD6F034EFE4BB1853D77768DC925": return PixelFormats.Bpp64Channels8;
+                case "24C3DD6F034EFE4BB1853D77768DC92E": return PixelFormats.Bpp32Channels3Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC92F": return PixelFormats.Bpp40Channels4Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC930": return PixelFormats.Bpp48Channels5Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC931": return PixelFormats.Bpp56Channels6Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC932": return PixelFormats.Bpp64Channels7Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC933": return PixelFormats.Bpp72Channels8Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC926": return PixelFormats.Bpp48Channels3;
+                case "24C3DD6F034EFE4BB1853D77768DC927": return PixelFormats.Bpp64Channels4;
+                case "24C3DD6F034EFE4BB1853D77768DC928": return PixelFormats.Bpp80Channels5;
+                case "24C3DD6F034EFE4BB1853D77768DC929": return PixelFormats.Bpp96Channels6;
+                case "24C3DD6F034EFE4BB1853D77768DC92A": return PixelFormats.Bpp112Channels7;
+                case "24C3DD6F034EFE4BB1853D77768DC92B": return PixelFormats.Bpp128Channels8;
+                case "24C3DD6F034EFE4BB1853D77768DC934": return PixelFormats.Bpp64Channels3Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC935": return PixelFormats.Bpp80Channels4Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC936": return PixelFormats.Bpp96Channels5Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC937": return PixelFormats.Bpp112Channels6Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC938": return PixelFormats.Bpp128Channels7Alpha;
+                case "24C3DD6F034EFE4BB1853D77768DC939": return PixelFormats.Bpp144Channels8Alpha;
                 case "24C3DD6F034EFE4BB1853D77768DC908": return PixelFormats.Bpp8Gray;
                 case "24C3DD6F034EFE4BB1853D77768DC90B": return PixelFormats.Bpp16Gray;
                 case "24C3DD6F034EFE4BB1853D77768DC913": return PixelFormats.Bpp16GrayFixedPoint;
@@ -199,7 +199,7 @@
                 case "24C3DD6F034EFE4BB1853D77768DC909": return PixelFormats.Bpp16Bgr555;
                 case "24C3DD6F034EFE4BB1853D77768DC90A": return PixelFormats.Bpp16Bgr565;
                 case "24C3DD6F034EFE4BB1853D77768DC914": return PixelFormats.Bpp32Bgr101010;
-                case "24C3DD6F034EFE4BB1853D77768DC93D": return PixelFormats.Bpp32RgbE;
+                case "24C3DD6F034EFE4BB1853D77768DC93D": return PixelFormats.Bpp32RgbExponent;
                 case "24C3DD6F034EFE4BB1853D77768DC954": return PixelFormats.Bpp32CmykDirect;
                 case "24C3DD6F034EFE4BB1853D77768DC955": return PixelFormats.Bpp64CmykDirect;
                 case "24C3DD6F034EFE4BB1853D77768DC956": return PixelFormats.Bpp40CmykDirectAlpha;
