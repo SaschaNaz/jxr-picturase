@@ -336,13 +336,13 @@ module JxrPicturase.SubstrateComponents {
         /** size in bytes */
         private MaxBitBufferSize: number;
 
-        constructor(profile = Profile.Advanced, level = 255) {
+        constructor(public isInIfdEntry: boolean, profile = Profile.Advanced, level = 255) {
             if (profile == Profile.SubBaseline) {
                 this.useLongValues = false;
                 this.overlapModeList.push(ImageOverlapMode.None, ImageOverlapMode.SecondLevel);
             }
             switch (profile) {
-                case 66:
+                case Profile.Main:
                     this.pixelFormatList.push(
                         PixelFormats.Bpp48RgbHalf,
                         PixelFormats.Bpp96RgbFixedPoint,
@@ -391,7 +391,7 @@ module JxrPicturase.SubstrateComponents {
                         PixelFormats.Bpp32GrayFloat,
                         PixelFormats.Bpp32RgbExponent);
                     //no break
-                case 55:
+                case Profile.Baseline:
                     this.pixelFormatList.push(
                         PixelFormats.Bpp48Rgb,
                         PixelFormats.Bpp48RgbFixedPoint,
@@ -399,7 +399,7 @@ module JxrPicturase.SubstrateComponents {
                         PixelFormats.Bpp16Gray,
                         PixelFormats.Bpp16GrayFixedPoint);
                     //no break
-                case 44:
+                case Profile.SubBaseline:
                     this.pixelFormatList.push(
                         PixelFormats.Bpp24Rgb,
                         PixelFormats.Bpp24Bgr,
@@ -411,9 +411,71 @@ module JxrPicturase.SubstrateComponents {
                         PixelFormats.Bpp32Bgr101010);
                     break;
             }
+
+            switch (level) {
+                case 4:
+                    {
+                        this.maxBitImageDimension = 10;
+                        this.maxBitDimensionInTiles = 4;
+                        this.maxBitTileDimension = 10;
+                        this.MaxBitBufferSize = 22;
+                        break;
+                    }
+                case 8:
+                    {
+                        this.maxBitImageDimension = 11;
+                        this.maxBitDimensionInTiles = 5;
+                        this.maxBitTileDimension = 11;
+                        this.MaxBitBufferSize = 24;
+                        break;
+                    }
+                case 16:
+                    {
+                        this.maxBitImageDimension = 12;
+                        this.maxBitDimensionInTiles = 6;
+                        this.maxBitTileDimension = 12;
+                        this.MaxBitBufferSize = 26;
+                        break;
+                    }
+                case 32:
+                    {
+                        this.maxBitImageDimension = 13;
+                        this.maxBitDimensionInTiles = 7;
+                        this.maxBitTileDimension = 12;
+                        this.MaxBitBufferSize = 28;
+                        break;
+                    }
+                case 64:
+                    {
+                        this.maxBitImageDimension = 14;
+                        this.maxBitDimensionInTiles = 8;
+                        this.maxBitTileDimension = 12;
+                        this.MaxBitBufferSize = 30;
+                        break;
+                    }
+                case 128:
+                    {
+                        this.maxBitImageDimension = 16;
+                        this.maxBitDimensionInTiles = 10;
+                        this.maxBitTileDimension = 12;
+                        this.MaxBitBufferSize = 32;
+                        break;
+                    }
+                case 255:
+                    {
+                        this.maxBitImageDimension = 32;
+                        this.maxBitDimensionInTiles = 12;
+                        this.maxBitTileDimension = 32;
+                        //no buffersize limit
+                        break;
+                    }
+                default:
+                    throw new Error("This level is not supported");
+            }
         }
 
-        check(ifdEntry: IfdEntry, imageHeader: ImageHeader) {
+        check(ifdEntry: IfdEntry, imageHeader: ImageHeader, imagePlaneHeader: ImagePlaneHeader) {
+            //profile check
             if (this.useLongValues !== undefined && this.useLongValues != imageHeader.useLongValues)
                 return false;
             if (this.overlapModeList.length != 0 && this.overlapModeList.indexOf(imageHeader.overlapMode) == -1)
@@ -422,8 +484,65 @@ module JxrPicturase.SubstrateComponents {
                 return false;
 
             //level check
+            var lumaExtendedWidth = imageHeader.getLumaExtendedWidth();
+            if (lumaExtendedWidth > Math.pow(2, this.maxBitImageDimension))
+                return false;
+            if (imageHeader.getLumaExtendedHeight() > Math.pow(2, this.maxBitImageDimension))
+                return false;
+            if (imageHeader.numberOfHorizontalTiles > Math.pow(2, this.maxBitDimensionInTiles))
+                return false;
+            for (var i = 0; i < imageHeader.numberOfVerticalTiles - 1; i++)
+                if (imageHeader.tileWidthsInMacroblocks[i] * 16 >= Math.pow(2, this.maxBitTileDimension))
+                    return false;
+            for (var i = 0; i < imageHeader.numberOfHorizontalTiles - 1; i++)
+                if (imageHeader.tileHeightsInMacroblocks[i] * 16 >= Math.pow(2, this.maxBitTileDimension))
+                    return false;
+            if (lumaExtendedWidth - imageHeader.getTileBoundariesTop()[imageHeader.numberOfHorizontalTiles - 1] * 16 >= Math.pow(2, this.maxBitTileDimension))
+                return false;
+            if (this.MaxBitBufferSize !== undefined) {
+                if (this.getImageBufferBytes(ifdEntry, imageHeader, imagePlaneHeader) >= Math.pow(2, this.MaxBitBufferSize))
+                    return false;
+            }
+            else
+                if (!imageHeader.hasShortHeader)
+                    return false;
 
             return true;
+        }
+
+        private getComponentCount(ifdEntry: IfdEntry, imageHeader: ImageHeader, imagePlaneHeader: ImagePlaneHeader) {
+            if (this.isInIfdEntry)
+                return ifdEntry.pixelFormat.componentCount;
+            else if (!imageHeader.hasAlphaImagePlane)
+                return imagePlaneHeader.getComponentCount();//
+            else
+                return imagePlaneHeader.getComponentCount() + 1;//
+        }
+
+        private getImageBufferBytes(ifdEntry: IfdEntry, imageHeader: ImageHeader, imagePlaneHeader: ImagePlaneHeader) {
+            var componentCount = this.getComponentCount(ifdEntry, imageHeader, imagePlaneHeader);
+            var lumaExtendedPlaneSize = imageHeader.getLumaExtendedWidth() * imageHeader.getLumaExtendedHeight();
+            switch (imageHeader.outputBitDepth) {
+                case BitDepth.Bit8: return componentCount * lumaExtendedPlaneSize;
+                case BitDepth.Bit16:
+                case BitDepth.Bit16S:
+                case BitDepth.Bit16F:
+                    return 2 * componentCount * lumaExtendedPlaneSize;
+                case BitDepth.Bit32S:
+                case BitDepth.Bit32F:
+                    return 4 * componentCount * lumaExtendedPlaneSize;
+                case BitDepth.Bit1White1:
+                case BitDepth.Bit1Black1:
+                    return lumaExtendedPlaneSize / 8;
+                case BitDepth.Bit5:
+                case BitDepth.Bit565:
+                    return 2 * lumaExtendedPlaneSize;
+                default: //Bit10
+                    if (imageHeader.outputColorFormat == ColorFormat.Rgb)
+                        return 4 * lumaExtendedPlaneSize;
+                    else
+                        return 2 * componentCount * lumaExtendedPlaneSize;
+            }
         }
     }
 }

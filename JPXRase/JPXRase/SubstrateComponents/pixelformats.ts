@@ -20,7 +20,7 @@
         NComponent = 6
     }
 
-    export enum NumberType {
+    export enum NumberDataType {
         Uint, Int, Float
     }
 
@@ -41,16 +41,16 @@
 
     export class PixelFormat {
         constructor(
-            public channelCount: number,
+            public componentCount: number,
             public hasAlpha: boolean,
             public bitDepthPerChannel: BitDepth,
-            public colorDataType: NumberType,
+            public colorDataType: NumberDataType,
             public colorFormat: ColorFormat
             ) {
         }
 
         isEqualFormat(format: PixelFormat) {
-            return (format.channelCount == this.channelCount
+            return (format.componentCount == this.componentCount
                 && format.hasAlpha == this.hasAlpha
                 && format.bitDepthPerChannel == this.bitDepthPerChannel
                 && format.colorDataType == this.colorDataType
@@ -59,85 +59,85 @@
     }
 
     export class PixelFormats {
-        static get Bpp24Rgb() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp24Bgr() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp32Bgr() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp48Rgb() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp48RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp48RgbHalf() { return new PixelFormat(3, false, BitDepth.Bit16F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp96RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit32S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp64RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp64RgbHalf() { return new PixelFormat(3, false, BitDepth.Bit16F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp128RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit32S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp128RgbFloat() { return new PixelFormat(3, false, BitDepth.Bit32F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp32Bgra() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp64Rgba() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp64RgbaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit16S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp64RgbaHalf() { return new PixelFormat(4, true, BitDepth.Bit16F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp128RgbaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit32S, NumberType.Int, ColorFormat.Rgb); }
-        static get Bpp128RgbaFloat() { return new PixelFormat(4, true, BitDepth.Bit32F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp32Pbgra() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp64Prgba() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp128PrgbaFloat() { return new PixelFormat(4, true, BitDepth.Bit32F, NumberType.Float, ColorFormat.Rgb); }
-        static get Bpp32Cmyk() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp40CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp64Cmyk() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp80CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Cmyk); }
-        static get Bpp24Channels3() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp32Channels4() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp40Channels5() { return new PixelFormat(5, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp48Channels6() { return new PixelFormat(6, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp56Channels7() { return new PixelFormat(7, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp64Channels8() { return new PixelFormat(8, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp32Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp40Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp48Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp56Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp64Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp72Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp48Channels3() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp64Channels4() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp80Channels5() { return new PixelFormat(5, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp96Channels6() { return new PixelFormat(6, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp112Channels7() { return new PixelFormat(7, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp128Channels8() { return new PixelFormat(8, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp64Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp80Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp96Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp112Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp128Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp144Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.NComponent); }
-        static get Bpp8Gray() { return new PixelFormat(1, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.YOnly); }
-        static get Bpp16Gray() { return new PixelFormat(1, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.YOnly); }
-        static get Bpp16GrayFixedPoint() { return new PixelFormat(1, false, BitDepth.Bit16S, NumberType.Int, ColorFormat.YOnly); }
-        static get Bpp16GrayHalf() { return new PixelFormat(1, false, BitDepth.Bit16F, NumberType.Float, ColorFormat.YOnly); }
-        static get Bpp32GrayFixedPoint() { return new PixelFormat(1, false, BitDepth.Bit32S, NumberType.Int, ColorFormat.YOnly); }
-        static get Bpp32GrayFloat() { return new PixelFormat(1, false, BitDepth.Bit32F, NumberType.Float, ColorFormat.YOnly); }
-        static get BlackWhite() { return new PixelFormat(1, false, BitDepth.Bit1White1, NumberType.Uint, ColorFormat.YOnly); }
-        static get Bpp16Bgr555() { return new PixelFormat(3, false, BitDepth.Bit5, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp16Bgr565() { return new PixelFormat(3, false, BitDepth.Bit565, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp32Bgr101010() { return new PixelFormat(3, false, BitDepth.Bit10, NumberType.Uint, ColorFormat.Rgb); }
-        static get Bpp32RgbExponent() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Float, ColorFormat.RgbExponent); }
-        static get Bpp32CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.CmykDirect); }
-        static get Bpp64CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.CmykDirect); }
-        static get Bpp40CmykDirectAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.CmykDirect); }
-        static get Bpp80CmykDirectAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.CmykDirect); }
-        static get Bpp12Ycc420() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv420); }
-        static get Bpp16Ycc422() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp20Ycc422() { return new PixelFormat(3, false, BitDepth.Bit10, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp32Ycc422() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp24Ycc444() { return new PixelFormat(3, false, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp30Ycc444() { return new PixelFormat(3, false, BitDepth.Bit10, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp48Ycc444() { return new PixelFormat(3, false, BitDepth.Bit16, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp48Ycc444FixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberType.Int, ColorFormat.Yuv444); }
-        static get Bpp20Ycc420Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv420); }
-        static get Bpp24Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp30Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit10, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp48Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Yuv422); }
-        static get Bpp32Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp40Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit10, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp64Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberType.Uint, ColorFormat.Yuv444); }
-        static get Bpp64Ycc444AlphaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit16S, NumberType.Int, ColorFormat.Yuv444); }
+        static get Bpp24Rgb() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp24Bgr() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp32Bgr() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp48Rgb() { return new PixelFormat(3, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp48RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp48RgbHalf() { return new PixelFormat(3, false, BitDepth.Bit16F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp96RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit32S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp64RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp64RgbHalf() { return new PixelFormat(3, false, BitDepth.Bit16F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp128RgbFixedPoint() { return new PixelFormat(3, false, BitDepth.Bit32S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp128RgbFloat() { return new PixelFormat(3, false, BitDepth.Bit32F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp32Bgra() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp64Rgba() { return new PixelFormat(4, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp64RgbaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp64RgbaHalf() { return new PixelFormat(4, true, BitDepth.Bit16F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp128RgbaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit32S, NumberDataType.Int, ColorFormat.Rgb); }
+        static get Bpp128RgbaFloat() { return new PixelFormat(4, true, BitDepth.Bit32F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp32Pbgra() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp64Prgba() { return new PixelFormat(4, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp128PrgbaFloat() { return new PixelFormat(4, true, BitDepth.Bit32F, NumberDataType.Float, ColorFormat.Rgb); }
+        static get Bpp32Cmyk() { return new PixelFormat(4, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Cmyk); }
+        static get Bpp40CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Cmyk); }
+        static get Bpp64Cmyk() { return new PixelFormat(4, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Cmyk); }
+        static get Bpp80CmykAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Cmyk); }
+        static get Bpp24Channels3() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp32Channels4() { return new PixelFormat(4, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp40Channels5() { return new PixelFormat(5, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels6() { return new PixelFormat(6, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp56Channels7() { return new PixelFormat(7, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels8() { return new PixelFormat(8, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp32Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp40Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp56Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp72Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp48Channels3() { return new PixelFormat(3, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels4() { return new PixelFormat(4, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp80Channels5() { return new PixelFormat(5, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp96Channels6() { return new PixelFormat(6, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp112Channels7() { return new PixelFormat(7, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp128Channels8() { return new PixelFormat(8, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp64Channels3Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp80Channels4Alpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp96Channels5Alpha() { return new PixelFormat(6, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp112Channels6Alpha() { return new PixelFormat(7, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp128Channels7Alpha() { return new PixelFormat(8, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp144Channels8Alpha() { return new PixelFormat(9, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.NComponent); }
+        static get Bpp8Gray() { return new PixelFormat(1, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.YOnly); }
+        static get Bpp16Gray() { return new PixelFormat(1, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.YOnly); }
+        static get Bpp16GrayFixedPoint() { return new PixelFormat(1, false, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.YOnly); }
+        static get Bpp16GrayHalf() { return new PixelFormat(1, false, BitDepth.Bit16F, NumberDataType.Float, ColorFormat.YOnly); }
+        static get Bpp32GrayFixedPoint() { return new PixelFormat(1, false, BitDepth.Bit32S, NumberDataType.Int, ColorFormat.YOnly); }
+        static get Bpp32GrayFloat() { return new PixelFormat(1, false, BitDepth.Bit32F, NumberDataType.Float, ColorFormat.YOnly); }
+        static get BlackWhite() { return new PixelFormat(1, false, BitDepth.Bit1White1, NumberDataType.Uint, ColorFormat.YOnly); }
+        static get Bpp16Bgr555() { return new PixelFormat(3, false, BitDepth.Bit5, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp16Bgr565() { return new PixelFormat(3, false, BitDepth.Bit565, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp32Bgr101010() { return new PixelFormat(3, false, BitDepth.Bit10, NumberDataType.Uint, ColorFormat.Rgb); }
+        static get Bpp32RgbExponent() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Float, ColorFormat.RgbExponent); }
+        static get Bpp32CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.CmykDirect); }
+        static get Bpp64CmykDirect() { return new PixelFormat(4, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.CmykDirect); }
+        static get Bpp40CmykDirectAlpha() { return new PixelFormat(5, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.CmykDirect); }
+        static get Bpp80CmykDirectAlpha() { return new PixelFormat(5, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.CmykDirect); }
+        static get Bpp12Ycc420() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv420); }
+        static get Bpp16Ycc422() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp20Ycc422() { return new PixelFormat(3, false, BitDepth.Bit10, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp32Ycc422() { return new PixelFormat(3, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp24Ycc444() { return new PixelFormat(3, false, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp30Ycc444() { return new PixelFormat(3, false, BitDepth.Bit10, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp48Ycc444() { return new PixelFormat(3, false, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp48Ycc444FixedPoint() { return new PixelFormat(3, false, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.Yuv444); }
+        static get Bpp20Ycc420Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv420); }
+        static get Bpp24Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp30Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit10, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp48Ycc422Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Yuv422); }
+        static get Bpp32Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit8, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp40Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit10, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp64Ycc444Alpha() { return new PixelFormat(4, true, BitDepth.Bit16, NumberDataType.Uint, ColorFormat.Yuv444); }
+        static get Bpp64Ycc444AlphaFixedPoint() { return new PixelFormat(4, true, BitDepth.Bit16S, NumberDataType.Int, ColorFormat.Yuv444); }
 
         static getPixelFormatByGuid(guid: string) {
             switch (guid) {

@@ -21,5 +21,17 @@ module JxrPicturase.SubstrateComponents {
             }; 
 
         }
+
+        getComponentCount() {
+            return 0;
+        }
+
+        getChromaExtendedWidth(imageHeader: ImageHeader) {
+            return 0;//6.2 Table 17
+        }
+
+        getChromaExtendedHeight(imageHeader: ImageHeader) {
+            return 0;
+        }
     }
 }

@@ -11,7 +11,7 @@ module JxrPicturase.SubstrateComponents {
         hasIndexTable: boolean;
 
         overlapMode: ImageOverlapMode;
-
+        hasShortHeader: boolean;
         useLongValues: boolean;
         hasTrimFlexbits: boolean;
 
@@ -22,10 +22,10 @@ module JxrPicturase.SubstrateComponents {
         outputBitDepth: BitDepth;
         width: number;
         height: number;
-        getExtendedWidth() {
+        getLumaExtendedWidth() {
             return this.width + this.marginLeft + this.marginRight;
         }
-        getExtendedHeight() {
+        getLumaExtendedHeight() {
             return this.height + this.marginTop + this.marginBottom;
         }
 
@@ -39,6 +39,7 @@ module JxrPicturase.SubstrateComponents {
                 tileBoundariesLeft.push(
                     this.tileWidthsInMacroblocks[i]
                     + tileBoundariesLeft[i]);//actually adding tileBoundariesRight
+            return tileBoundariesLeft;
         }
         getTileBoundariesTop() {
             var tileBoundariesTop: number[] = [0];
@@ -46,6 +47,7 @@ module JxrPicturase.SubstrateComponents {
                 tileBoundariesTop.push(
                     this.tileHeightsInMacroblocks[i]
                     + tileBoundariesTop[i]);
+            return tileBoundariesTop;
         }
         getMacroblocksInEachTile() {
             var macroblocksInEachTile: number[] = [];
@@ -95,7 +97,7 @@ module JxrPicturase.SubstrateComponents {
             if (!ImageOverlapMode[imageHeader.overlapMode])
                 throw new Error(JxrErrorMessage.getInvalidValueMessage("OVERLAP_MODE", "IMAGE_HEADER"));
 
-            var hasShortHeader = (bitstream.readBits(1) == 1);
+            imageHeader.hasShortHeader = (bitstream.readBits(1) == 1);
             imageHeader.useLongValues = (bitstream.readBits(1) == 1);
             var useWindowing = (bitstream.readBits(1) == 1);
             imageHeader.hasTrimFlexbits = (bitstream.readBits(1) == 1);
@@ -113,7 +115,7 @@ module JxrPicturase.SubstrateComponents {
             imageHeader.outputBitDepth = bitstream.readBits(4);
             if (!BitDepth[imageHeader.outputBitDepth])
                 throw new Error(JxrErrorMessage.getInvalidValueMessage("OUTPUT_BITDEPTH", "IMAGE_HEADER"));
-            if (hasShortHeader) {
+            if (imageHeader.hasShortHeader) {
                 imageHeader.width = bitstream.readBits(16) + 1;
                 imageHeader.height = bitstream.readBits(16) + 1;
             }
@@ -129,10 +131,10 @@ module JxrPicturase.SubstrateComponents {
 
             for (var i = 0; i < imageHeader.numberOfVerticalTiles - 1; i++)
                 imageHeader.tileWidthsInMacroblocks.push(
-                    bitstream.readBits(hasShortHeader ? 8 : 16));
+                    bitstream.readBits(imageHeader.hasShortHeader ? 8 : 16));
             for (var i = 0; i < imageHeader.numberOfHorizontalTiles - 1; i++)
                 imageHeader.tileHeightsInMacroblocks.push(
-                    bitstream.readBits(hasShortHeader ? 8 : 16));
+                    bitstream.readBits(imageHeader.hasShortHeader ? 8 : 16));
 
             if (useWindowing) {
                 imageHeader.marginTop = bitstream.readBits(6);
@@ -145,8 +147,8 @@ module JxrPicturase.SubstrateComponents {
                 imageHeader.marginRight = (16 - (imageHeader.width % 16)) % 16;
             }
 
-            imageHeader.tileWidthsInMacroblocks.push(imageHeader.getExtendedWidth() / 16 - imageHeader.tileWidthsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
-            imageHeader.tileHeightsInMacroblocks.push(imageHeader.getExtendedHeight() / 16 - imageHeader.tileHeightsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
+            imageHeader.tileWidthsInMacroblocks.push(imageHeader.getLumaExtendedWidth() / 16 - imageHeader.tileWidthsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
+            imageHeader.tileHeightsInMacroblocks.push(imageHeader.getLumaExtendedHeight() / 16 - imageHeader.tileHeightsInMacroblocks.reduce(function (a, b) { return a + b; }, 0));
 
             return imageHeader;
         }

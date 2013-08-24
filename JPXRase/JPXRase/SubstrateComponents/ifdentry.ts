@@ -24,7 +24,7 @@ module JxrPicturase.SubstrateComponents {
         transformation: TransformationState;
         imageType: ImageType;
         colorInformation: ColorInformation
-        //profileLevelContainer: ?
+        profileAndLevelContainer: ProfileAndLevelConformance[] = [];
 
         imageSizeX: number;
         imageSizeY: number;
@@ -263,7 +263,7 @@ module JxrPicturase.SubstrateComponents {
                             var colorPrimaries = ColorPrimaries.getColorPrimaries(colorInfoStream.readAsUint8());
                             var transferer = Transferer.getTransferer(colorInfoStream.readAsUint8());
                             var matrixCoeffecients = MatrixCoefficients.getMatrixCoefficients(colorInfoStream.readAsUint8());
-                            var isFullRange = (colorInfoStream.readAsUint8() & 1) == 1;
+                            var isFullRange = (colorInfoStream.readAsUint8() >> 7 == 1);
                             ifdEntry.colorInformation = new ColorInformation(colorPrimaries, transferer, matrixCoeffecients, isFullRange);
                         }
                         catch (e) {
@@ -272,10 +272,19 @@ module JxrPicturase.SubstrateComponents {
                         }
                         break;
                     }
-                case IfdTag.ProfileLevelContainer: 
+                case IfdTag.ProfileAndLevelContainer: 
                     {
                         try {
-                            
+                            var containerstream = propertyInStream.getByteStreamFromStream();
+                            var isLast = false;
+                            while (!isLast) {
+                                var profile: Profile = containerstream.readAsUint8();
+                                if (!Profile[profile])
+                                    throw new Error(JxrErrorMessage.getInvalidValueMessage("PROFILE_IDC", "PROFILE_LEVEL_CONTAINER"));
+                                var level = containerstream.readAsUint8();
+                                isLast = (containerstream.readAsUint16() >> 15 == 1);
+                                ifdEntry.profileAndLevelContainer.push(new ProfileAndLevelConformance(true, profile, level));
+                            }
                         }
                         catch (e) {
                             console.warn((<Error>e).message);
