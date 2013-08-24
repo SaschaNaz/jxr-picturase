@@ -35,9 +35,9 @@ module JxrPicturase.SubstrateComponents {
                 throw new Error(JxrErrorMessage.getInvalidValueMessage("RIGHT_MARGIN", "IMAGE_HEADER"));
             
             //JPEG XR validity test, 8.3.21 and 8.3.22
-            if (imageHeader.getExtendedWidth() % 16 != 0)
+            if (imageHeader.getLumaExtendedWidth() % 16 != 0)
                 throw new Error(JxrErrorMessage.getInvalidValueMessage("WIDTH_MINUS1", "IMAGE_HEADER"));
-            if (imageHeader.getExtendedHeight() % 16 != 0)
+            if (imageHeader.getLumaExtendedHeight() % 16 != 0)
                 throw new Error(JxrErrorMessage.getInvalidValueMessage("HEIGHT_MINUS1", "IMAGE_HEADER"));
         }
     }

@@ -17,7 +17,7 @@
         /** Returns 0xBC02 */ Transformation = 0xBC02,
         /** Returns 0xBC04 */ ImageType = 0xBC04,
         /** Returns 0xBC05 */ ColorInformation = 0xBC05,
-        /** Returns 0xBC06 */ ProfileLevelContainer = 0xBC06,
+        /** Returns 0xBC06 */ ProfileAndLevelContainer = 0xBC06,
 
         /** Returns 0xBC80 */ ImageSizeX = 0xBC80,
         /** Returns 0xBC81 */ ImageSizeY = 0xBC81,
