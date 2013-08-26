@@ -17,8 +17,17 @@
         //        + varname + " by JPEG XR specification ITU-T T.832 (01/2012)";//부르는 곳에서 console.warn으로 전환. May fail은 warn 자체로 대체 가능하니 이 메시지는 필요 없을 듯
         //}
 
-        static getInvalidValueMessage(varname: string, syntaxname: string) {
-            return "Invalid value of " + varname + " is detected in " + syntaxname;
+
+        static getUnsupportedValueMessage(dataname: string) {
+            return "Unsupported value for data " + dataname + " is detected";
+        }
+
+        static getUnsupportedPropertyMessage(paramname: string, structurename: string) {
+            return "Unsupported value for parameter " + paramname + " is detected in " + structurename;
+        }
+
+        static getIncompatibleValuesMessage(varname: string, structurename: string) {
+            return "Values incompatible with " + varname + " in " + structurename + " are detected";
         }
     }
 

@@ -69,6 +69,15 @@ module JxrPicturase.SubstrateComponents {
             }
         }
 
+        getUint8PropertyFromStream() {
+            if (this.type != DataType.Byte)
+                throw 'Byte is expected, but type ' + this.type.toString() + ' is observed';
+            if (this.count != 1)
+                throw 'length 1 is expected, but length ' + this.count + ' is observed';
+
+            return this.valueAsSubstream.readAsUint8();
+        }
+
         getUint16PropertyFromStream() {
             if (this.type != DataType.Uint16)
                 throw 'Uint16 is expected, but type ' + this.type.toString() + ' is observed';

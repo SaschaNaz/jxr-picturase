@@ -70,19 +70,19 @@ module JxrPicturase.SubstrateComponents {
 
             //signature
             if (imageSubstream.readAsUtf8Text(8) !== 'WMPHOTO\0')
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("GDI_SIGNATURE", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("GDI_SIGNATURE", "IMAGE_HEADER"));
 
             var bitstream = new ArrayedBitStream(imageSubstream);
 
             //reserved B
             if (bitstream.readBits(4) != 1)
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_B", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("RESERVED_B", "IMAGE_HEADER"));
 
             imageHeader.isHardTileUsed = (bitstream.readBits(1) == 1);
 
             //codec version check 2
             if (bitstream.readBits(3) != 1)
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_C", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("RESERVED_C", "IMAGE_HEADER"));
 
             imageHeader.hasMultipleTiles = (bitstream.readBits(1) == 1);
             imageHeader.isFrequencyMode = (bitstream.readBits(1) == 1);
@@ -95,7 +95,7 @@ module JxrPicturase.SubstrateComponents {
 
             imageHeader.overlapMode = bitstream.readBits(2);
             if (!ImageOverlapMode[imageHeader.overlapMode])
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("OVERLAP_MODE", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("OVERLAP_MODE", "IMAGE_HEADER"));
 
             imageHeader.hasShortHeader = (bitstream.readBits(1) == 1);
             imageHeader.useLongValues = (bitstream.readBits(1) == 1);
@@ -104,17 +104,17 @@ module JxrPicturase.SubstrateComponents {
 
             //codec version check 3
             if (bitstream.readBits(1) != 0)
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("RESERVED_D", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("RESERVED_D", "IMAGE_HEADER"));
 
             imageHeader.isNotBgr = (bitstream.readBits(1) == 1);
             imageHeader.isAlphaPremultiplied = (bitstream.readBits(1) == 1);
             imageHeader.hasAlphaImagePlane = (bitstream.readBits(1) == 1);
             imageHeader.outputColorFormat = bitstream.readBits(4);
             if (!ColorFormat[imageHeader.outputColorFormat])
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("OUTPUT_CLR_FMT", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("OUTPUT_CLR_FMT", "IMAGE_HEADER"));
             imageHeader.outputBitDepth = bitstream.readBits(4);
             if (!BitDepth[imageHeader.outputBitDepth])
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("OUTPUT_BITDEPTH", "IMAGE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("OUTPUT_BITDEPTH", "IMAGE_HEADER"));
             if (imageHeader.hasShortHeader) {
                 imageHeader.width = bitstream.readBits(16) + 1;
                 imageHeader.height = bitstream.readBits(16) + 1;
