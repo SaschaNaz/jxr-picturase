@@ -10,16 +10,11 @@ module JxrPicturase.SubstrateComponents {
 
             var internalColorFormat: InternalColorFormat = bitstream.readBits(3);
             if (!InternalColorFormat[internalColorFormat])
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("INTERNAL_CLR_FMT", "IMAGE_PLANE_HEADER"));
+                throw new Error(JxrErrorMessage.getUnsupportedPropertyMessage("INTERNAL_CLR_FMT", "IMAGE_PLANE_HEADER"));
             var willBeScaled = (bitstream.readBits(1) == 1);
-            var bandsPresent: BandsPresent = bitstream.readBits(4);
-            if (!BandsPresent[bandsPresent])
-                throw new Error(JxrErrorMessage.getInvalidValueMessage("BANDS_PRESENT", "IMAGE_PLANE_HEADER"));
-            
-            var getBandsNumber = () => {
-                return 4 - bandsPresent;//currently fine to use this algorithm
-            }; 
+            var bandsPresent = FrequencyBandsPresence.getBandsPresence(bitstream.readBits(4));
 
+            
         }
 
         getComponentCount() {

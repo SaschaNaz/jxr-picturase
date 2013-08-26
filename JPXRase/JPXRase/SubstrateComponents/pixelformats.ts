@@ -35,10 +35,6 @@
         Bit1Black1 = 0xf //Black is foreground
     }
 
-    export enum BandsPresent {
-        All, NoFlexbits, NoHighpass, DcOnly
-    }
-
     export class PixelFormat {
         constructor(
             public componentCount: number,

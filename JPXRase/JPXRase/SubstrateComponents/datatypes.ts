@@ -63,7 +63,7 @@ module JxrPicturase.SubstrateComponents {
                 case 0:
                 case 3:
                 default:
-                    throw new Error("Unsupported COLOR_PRIMARIES value");
+                    throw new Error(JxrErrorMessage.getUnsupportedValueMessage("COLOR_PRIMARIES"));
                 case 2://unspecified
                     return new ColorPrimaries();
                 case 1:
@@ -101,7 +101,7 @@ module JxrPicturase.SubstrateComponents {
                 case 8:
                 case 9:
                 default:
-                    throw new Error("Unsupported TRANSFER_CHARACTERISTICS value");
+                    throw new Error(JxrErrorMessage.getUnsupportedValueMessage("TRANSFER_CHARACTERISTICS"));
                 case 2://unspecified
                     return new Transferer();
                 case 1:
@@ -188,7 +188,7 @@ module JxrPicturase.SubstrateComponents {
             switch (matrixNumber) {
                 case 3:
                 default:
-                    throw new Error("Unsupported MATRIX_COEFFICIENTS value");
+                    throw new Error(JxrErrorMessage.getUnsupportedValueMessage("MATRIX_COEFFICIENTS"));
                 case 2://unspecified
                     return new MatrixCoefficients();
                 case 0://RGB
@@ -470,7 +470,7 @@ module JxrPicturase.SubstrateComponents {
                         break;
                     }
                 default:
-                    throw new Error("This level is not supported");
+                    throw new Error(JxrErrorMessage.getUnsupportedValueMessage("LEVEL_IDC"));
             }
         }
 
@@ -542,6 +542,21 @@ module JxrPicturase.SubstrateComponents {
                         return 4 * lumaExtendedPlaneSize;
                     else
                         return 2 * componentCount * lumaExtendedPlaneSize;
+            }
+        }
+    }
+
+    export class FrequencyBandsPresence {
+        constructor(public isDcPresent: boolean, public isLowpassPresent: boolean, public isHighpassPresent: boolean, public isFlexbitsPresent: boolean) {
+        }
+
+        static getBandsPresence(presenceNumber: number) {
+            switch (presenceNumber) {
+                case 0: return new FrequencyBandsPresence(true, true, true, true);
+                case 1: return new FrequencyBandsPresence(true, true, true, false);
+                case 2: return new FrequencyBandsPresence(true, true, false, false);
+                case 3: return new FrequencyBandsPresence(true, false, false, false);
+                default: throw new Error(JxrErrorMessage.getUnsupportedValueMessage("BANDS_PRESENT"));
             }
         }
     }
