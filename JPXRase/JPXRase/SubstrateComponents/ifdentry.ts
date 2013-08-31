@@ -21,7 +21,7 @@ module JxrPicturase.SubstrateComponents {
 
         colorSpace: ColorSpace;
         pixelFormat: PixelFormat;
-        transformation: TransformationState;
+        transformation = new TransformationState(false, false, false);
         imageType: ImageType;
         colorInformation: ColorInformation
         profileAndLevelContainer: ProfileAndLevelConformance[] = [];
@@ -35,8 +35,8 @@ module JxrPicturase.SubstrateComponents {
         imageByteCount: number;
         alphaOffset: number;
         alphaByteCount: number;
-        imageBandPresence: FrequencyBandsPresence;
-        alphaBandPresence: FrequencyBandsPresence;
+        imageBandPresence = new FrequencyBandsPresence(true, true, true, true);
+        alphaBandPresence = new FrequencyBandsPresence(true, true, true, true);
         //paddingData: ?
 
         //resolutionTiffX: RationalNumber;
